@@ -1,9 +1,13 @@
 package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.ArticleDTO;
+import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.Article;
+import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.mapper.ArticleMapper;
+import com.example.benomad.mapper.UserMapper;
 import com.example.benomad.repository.ArticleRepository;
+import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.dao.ArticleDAO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,23 +32,32 @@ public class ArticleDAOImpl implements ArticleDAO {
     }
 
     @Override
-    public ArticleDTO getArticleById(Long id) throws Exception {
+    public ArticleDTO getArticleById(Long id) throws ContentNotFoundException {
         return ArticleMapper.articleToArticleDto(articleRepository.findById(id).orElseThrow(
-                () -> new Exception("Article not found.")));
+                ContentNotFoundException::new));
     }
 
     @Override
-    public void updateArticleById(Long id, ArticleDTO articleDTO) {
-
+    public ArticleDTO updateArticleById(Long id, ArticleDTO articleDTO) throws ContentNotFoundException {
+        articleRepository.findById(id).orElseThrow(
+                ContentNotFoundException::new
+        );
+        articleRepository.save(ArticleMapper.articleDtoToArticle(articleDTO));
+        return articleDTO;
     }
 
     @Override
-    public void insertArticleById(Long id, ArticleDTO articleDTO) {
-
+    public ArticleDTO insertArticle(ArticleDTO articleDTO) {
+        articleRepository.save(ArticleMapper.articleDtoToArticle(articleDTO));
+        return articleDTO;
     }
 
     @Override
-    public void deleteArticleById(Long id) {
-
+    public ArticleDTO deleteArticleById(Long id) throws ContentNotFoundException {
+        Article article = articleRepository.findById(id).orElseThrow(
+                ContentNotFoundException::new
+        );
+        articleRepository.delete(article);
+        return ArticleMapper.articleToArticleDto(article);
     }
 }
