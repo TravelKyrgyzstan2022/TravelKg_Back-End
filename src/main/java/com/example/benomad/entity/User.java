@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "users")
-public class Users {
+@Table(name = "user")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,17 +23,17 @@ public class Users {
     private String email;
 
     @ManyToMany
-    @JoinTable(name = "users_roles",
+    @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
 
-    private Collection<Roles> roles;
+    private Collection<Role> roles;
 
-    public Users() {
+    public User() {
     }
 
-    public Users(Long id, String first_name, String last_name, String login, String password, String phone_number, String email, Collection<Roles> roles) {
+    public User(Long id, String first_name, String last_name, String login, String password, String phone_number, String email, Collection<Role> roles) {
         this.id = id;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -100,11 +100,11 @@ public class Users {
         this.email = email;
     }
 
-    public Collection<Roles> getRoles() {
+    public Collection<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Collection<Roles> roles) {
+    public void setRoles(Collection<Role> roles) {
         this.roles = roles;
     }
 }

@@ -3,18 +3,18 @@ package com.example.benomad.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name="roles")
-public class Roles {
+@Table(name="role")
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String role;
 
-    public Roles() {
+    public Role() {
     }
 
-    public Roles(Long id, String role) {
+    public Role(Long id, String role) {
         this.id = id;
         this.role = role;
     }
