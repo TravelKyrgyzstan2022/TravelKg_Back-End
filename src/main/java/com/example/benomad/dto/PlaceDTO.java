@@ -1,14 +1,21 @@
 package com.example.benomad.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.*;
 
+@Builder
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@JsonIgnoreProperties(value = {})
+@AllArgsConstructor
+
 public class PlaceDTO {
     private Long id;
+    private String name;
+    private RegionDTO regionDTO;
+    private PlaceTypeDTO placeTypeDTO;
+    private String description;
+    private String imageUrl;
+    private String linkUrl;
+    private String address;
 }

@@ -1,3 +1,4 @@
+
 package com.example.benomad.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -23,3 +24,4 @@ public class UserDTO {
     private String email;
     private List<PlaceDTO> placeDTOS;
 }
+

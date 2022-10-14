@@ -1,3 +1,4 @@
+
 package com.example.benomad.entity;
 
 import lombok.AllArgsConstructor;
@@ -45,3 +46,4 @@ public class User {
     private List<Place> places;
 
 }
+
