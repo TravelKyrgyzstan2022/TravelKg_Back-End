@@ -1,6 +1,7 @@
 package com.example.benomad.dto;
 
 
+
 import lombok.*;
 
 @Builder
@@ -8,6 +9,10 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class CommentDTO {
     private Long id;
+    private PlaceDTO placeDTO;
+    private UserDTO userDTO;
+    private String body;
+
 }
