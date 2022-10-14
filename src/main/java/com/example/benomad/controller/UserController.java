@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/users/")
 @RequiredArgsConstructor
-@Tag(name = "User Resource", description = "Everything you need to work with users :)")
+@Tag(name = "User Resource", description = "The User API ")
 public class UserController {
 
     private final UserServiceImpl userService;
 
-    @Operation(description = "Gets all the users")
+    @Operation(summary = "Gets all the users")
     @GetMapping("/")
     public ResponseEntity<?> getAllUsers(){
         try{
@@ -28,7 +28,7 @@ public class UserController {
         }
     }
 
-    @Operation(description = "Finds user by ID")
+    @Operation(summary = "Finds user by ID")
     @GetMapping("/{id}")
     public ResponseEntity<?> findUserById(@PathVariable Long id){
         try{
@@ -40,18 +40,18 @@ public class UserController {
         }
     }
 
-    @Operation(description = "Updates the user by ID")
+    @Operation(summary = "Updates user by ID")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUserById(@RequestBody UserDTO userDTO, @PathVariable Long id){
         try{
             userDTO.setId(id);
-            return ResponseEntity.status(HttpStatus.CREATED).body(userService.insertUser(userDTO));
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.updateUserById(id, userDTO));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
-    @Operation(description = "Deletes the user by ID")
+    @Operation(summary = "Deletes user by ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable Long id){
         try{

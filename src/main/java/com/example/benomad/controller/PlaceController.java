@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Data
-@RequestMapping("/api/v1/places")
+@RequestMapping("/api/v1/places/")
 @Tag(name = "Place resource", description = "The Place API ")
 public class PlaceController {
     private final PlaceServiceImpl placeServiceImpl;
 
-    @Operation(summary = "Get all places")
+    @Operation(summary = "Gets all places")
     @GetMapping( produces = "application/json")
     public ResponseEntity<?> getAllPlaces(){
         try{
@@ -29,7 +29,7 @@ public class PlaceController {
         }
     }
 
-    @Operation(summary = "Get place by id")
+    @Operation(summary = "Finds place by ID")
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> getPlaceById(@PathVariable Long id){
         try{
@@ -41,8 +41,8 @@ public class PlaceController {
         }
     }
 
-    @Operation(summary = "Save place")
-    @PostMapping(value = "", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "Inserts place into the database")
+    @PostMapping(value = "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> insertPlace(@RequestBody PlaceDTO placeDTO){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(placeServiceImpl.insertPlace(placeDTO));
@@ -51,7 +51,7 @@ public class PlaceController {
         }
     }
 
-    @Operation(summary = "Delete place")
+    @Operation(summary = "Deletes place by ID")
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> deletePlaceById(@PathVariable Long id){
         try{
@@ -63,7 +63,7 @@ public class PlaceController {
         }
     }
 
-    @Operation(summary = "Update place")
+    @Operation(summary = "Updates place by ID")
     @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> updatePlaceById(@PathVariable Long id, @RequestBody PlaceDTO placeDTO){
         try{

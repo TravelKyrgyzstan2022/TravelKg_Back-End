@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/articles/")
 @RequiredArgsConstructor
-@Tag(name = "Article Resource", description = "Everything needed to work with articles :)")
+@Tag(name = "Article Resource", description = "The Article API ")
 public class ArticleController {
 
     private final ArticleServiceImpl articleServiceImpl;
 
-    @Operation(description = "Gets all the articles")
+    @Operation(summary = "Gets all the articles")
     @GetMapping(value = "/", produces = "application/json")
     public ResponseEntity<?> getAllArticles(){
         try{
@@ -32,7 +32,7 @@ public class ArticleController {
         }
     }
 
-    @Operation(description = "Finds article by ID")
+    @Operation(summary = "Finds article by ID")
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> getArticleById(@PathVariable Long id){
         try{
@@ -44,7 +44,7 @@ public class ArticleController {
         }
     }
 
-    @Operation(description = "Inserts article to the database")
+    @Operation(summary = "Inserts article to the database")
     @PostMapping(value = "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> insertArticle(@RequestBody ArticleDTO articleDTO){
         try{
@@ -57,7 +57,7 @@ public class ArticleController {
         }
     }
 
-    @Operation(description = "Deletes article by ID")
+    @Operation(summary = "Deletes article by ID")
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> deleteArticleById(@PathVariable Long id){
         try{
@@ -69,7 +69,7 @@ public class ArticleController {
         }
     }
 
-    @Operation(description = "Updates article by ID")
+    @Operation(summary = "Updates article by ID")
     @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> updateArticleById(@PathVariable Long id, @RequestBody ArticleDTO articleDTO){
         try{

@@ -36,13 +36,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO insertUser(UserDTO userDTO) {
-        userRepository.save(UserMapper.dtoToEntity(userDTO));
-        userDTO.setId(userRepository.getLastValueOfArticleSequence());
-        return userDTO;
-    }
-
-    @Override
     public UserDTO updateUserById(Long id, UserDTO userDTO) throws ContentNotFoundException {
         userRepository.findById(id).orElseThrow(
                 ContentNotFoundException::new);

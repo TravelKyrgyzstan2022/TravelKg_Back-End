@@ -7,8 +7,8 @@ public class CommentMapper {
     public static Comment commentDtoToComment(CommentDTO commentDTO) {
         return Comment.builder()
                 .id(commentDTO.getId())
-                .place(PlaceMapper.placeDtoToPlace(commentDTO.getPlaceDTO()))
-                .user(UserMapper.userDtoToUser(commentDTO.getUserDTO()))
+                .place(PlaceMapper.dtoToEntity(commentDTO.getPlaceDTO()))
+                .user(UserMapper.dtoToEntity(commentDTO.getUserDTO()))
                 .body(commentDTO.getBody())
                 .build();
     }
@@ -16,8 +16,8 @@ public class CommentMapper {
     public static CommentDTO commentToCommentDto(Comment comment) {
         return CommentDTO.builder()
                 .id(comment.getId())
-                .placeDTO(PlaceMapper.placeToPlaceDto(comment.getPlace()))
-                .userDTO(UserMapper.userToUserDto(comment.getUser()))
+                .placeDTO(PlaceMapper.entityToDto(comment.getPlace()))
+                .userDTO(UserMapper.entityToDto(comment.getUser()))
                 .body(comment.getBody())
                 .build();
     }

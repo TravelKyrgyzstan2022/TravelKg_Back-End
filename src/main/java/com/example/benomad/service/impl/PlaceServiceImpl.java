@@ -21,19 +21,19 @@ public class PlaceServiceImpl implements PlaceService {
         List<Place> places = placeRepository.findAll();
         List<PlaceDTO> placeDTOS = new ArrayList<>();
         for (Place place : places) {
-            placeDTOS.add(PlaceMapper.placeToPlaceDto(place));
+            placeDTOS.add(PlaceMapper.entityToDto(place));
         }
         return placeDTOS;
     }
 
     @Override
     public PlaceDTO getPlaceById(Long id) throws NotFoundException {
-        return PlaceMapper.placeToPlaceDto(placeRepository.findById(id).orElseThrow(NotFoundException::new));
+        return PlaceMapper.entityToDto(placeRepository.findById(id).orElseThrow(NotFoundException::new));
     }
 
     @Override
     public PlaceDTO insertPlace(PlaceDTO placeDTO) {
-        placeRepository.save(PlaceMapper.placeDtoToPlace(placeDTO));
+        placeRepository.save(PlaceMapper.dtoToEntity(placeDTO));
         return placeDTO;
     }
 
@@ -41,13 +41,13 @@ public class PlaceServiceImpl implements PlaceService {
     public PlaceDTO deletePlaceById(Long id) throws NotFoundException {
         Place place = placeRepository.findById(id).orElseThrow(NotFoundException::new);
         placeRepository.delete(place);
-        return PlaceMapper.placeToPlaceDto(place);
+        return PlaceMapper.entityToDto(place);
     }
 
     @Override
     public PlaceDTO updatePlaceById(Long id, PlaceDTO placeDTO) throws NotFoundException {
         placeRepository.findById(id).orElseThrow(NotFoundException::new);
-        placeRepository.save(PlaceMapper.placeDtoToPlace(placeDTO));
+        placeRepository.save(PlaceMapper.dtoToEntity(placeDTO));
         return placeDTO;
     }
 }
