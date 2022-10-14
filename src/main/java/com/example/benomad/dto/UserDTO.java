@@ -1,3 +1,4 @@
+
 package com.example.benomad.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

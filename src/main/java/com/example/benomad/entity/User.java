@@ -1,3 +1,4 @@
+
 package com.example.benomad.entity;
 
 import lombok.AllArgsConstructor;

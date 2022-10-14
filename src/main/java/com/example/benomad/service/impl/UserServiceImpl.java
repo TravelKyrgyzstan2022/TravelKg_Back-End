@@ -58,5 +58,4 @@ public class UserServiceImpl implements UserService {
         return UserMapper.entityToDto(user);
     }
 
-
 }
