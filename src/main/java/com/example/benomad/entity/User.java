@@ -1,17 +1,20 @@
 package com.example.benomad.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Collection;
+
+import java.util.List;
 
 @Entity
-@Table(name = "user")
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,5 +39,7 @@ public class User {
     )
 
     private Collection<Role> roles;
+    @ManyToMany
+    private List<Place> places;
 
 }
