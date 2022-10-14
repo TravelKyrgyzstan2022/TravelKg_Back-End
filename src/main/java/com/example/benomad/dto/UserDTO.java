@@ -17,5 +17,9 @@ public class UserDTO {
     private Long id;
     private String login;
     private String password;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private String email;
     private List<PlaceDTO> placeDTOS;
 }
