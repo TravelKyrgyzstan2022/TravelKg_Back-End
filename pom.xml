@@ -14,7 +14,7 @@
 	<name>benomad</name>
 	<description>travel</description>
 	<properties>
-		<java.version>17.0.3</java.version>
+		<java.version>17.0.4.1</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
