@@ -4,9 +4,7 @@ package com.example.benomad.controller;
 import com.example.benomad.dto.ArticleDTO;
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.exception.ContentNotFoundException;
-import com.example.benomad.mapper.UserMapper;
 import com.example.benomad.service.impl.ArticleServiceImpl;
-import com.example.benomad.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +30,7 @@ public class ArticleController {
         }
     }
 
+    @Operation(description = "Finds article by ID")
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> getArticleById(@PathVariable Long id){
         try{
@@ -43,6 +42,7 @@ public class ArticleController {
         }
     }
 
+    @Operation(description = "Inserts article to the database")
     @PostMapping(value = "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> insertArticle(@RequestBody ArticleDTO articleDTO){
         try{
@@ -55,6 +55,7 @@ public class ArticleController {
         }
     }
 
+    @Operation(description = "Deletes article by ID")
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> deleteArticleById(@PathVariable Long id){
         try{
@@ -66,6 +67,7 @@ public class ArticleController {
         }
     }
 
+    @Operation(description = "Updates article by ID")
     @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> updateArticleById(@PathVariable Long id, @RequestBody ArticleDTO articleDTO){
         try{

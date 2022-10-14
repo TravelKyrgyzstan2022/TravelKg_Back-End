@@ -40,17 +40,6 @@ public class UserController {
         }
     }
 
-    @Operation(description = "Adds new user")
-    @PostMapping("/")
-    public ResponseEntity<?> insertUser(@RequestBody UserDTO userDTO){
-        try{
-            userDTO.setId(null);
-            return ResponseEntity.status(HttpStatus.CREATED).body(userService.insertUser(userDTO));
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
     @Operation(description = "Updates the user by ID")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUserById(@RequestBody UserDTO userDTO, @PathVariable Long id){
