@@ -16,7 +16,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public UserDTO getUserById(Long id) throws ContentNotFoundException {
-        return UserMapper.userToUserDto(userRepository.findById(id).orElseThrow(
+        return UserMapper.entityToDto(userRepository.findById(id).orElseThrow(
                 ContentNotFoundException::new
         ));
     }

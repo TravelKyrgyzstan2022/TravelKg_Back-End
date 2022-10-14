@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -19,4 +20,7 @@ public class User {
     private Long id;
     private String login;
     private String password;
+
+    @ManyToMany
+    private List<Place> places;
 }

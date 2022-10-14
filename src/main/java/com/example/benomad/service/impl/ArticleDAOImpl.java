@@ -26,14 +26,14 @@ public class ArticleDAOImpl implements ArticleDAO {
         List<Article> articles = articleRepository.findAll();
         List<ArticleDTO> articleDTOS = new ArrayList<>();
         for (Article a : articles){
-            articleDTOS.add(ArticleMapper.articleToArticleDto(a));
+            articleDTOS.add(ArticleMapper.entityToDto(a));
         }
         return articleDTOS;
     }
 
     @Override
     public ArticleDTO getArticleById(Long id) throws ContentNotFoundException {
-        return ArticleMapper.articleToArticleDto(articleRepository.findById(id).orElseThrow(
+        return ArticleMapper.entityToDto(articleRepository.findById(id).orElseThrow(
                 ContentNotFoundException::new));
     }
 
@@ -42,13 +42,13 @@ public class ArticleDAOImpl implements ArticleDAO {
         articleRepository.findById(id).orElseThrow(
                 ContentNotFoundException::new
         );
-        articleRepository.save(ArticleMapper.articleDtoToArticle(articleDTO));
+        articleRepository.save(ArticleMapper.dtoToEntity(articleDTO));
         return articleDTO;
     }
 
     @Override
     public ArticleDTO insertArticle(ArticleDTO articleDTO) {
-        articleRepository.save(ArticleMapper.articleDtoToArticle(articleDTO));
+        articleRepository.save(ArticleMapper.dtoToEntity(articleDTO));
         return articleDTO;
     }
 
@@ -58,6 +58,6 @@ public class ArticleDAOImpl implements ArticleDAO {
                 ContentNotFoundException::new
         );
         articleRepository.delete(article);
-        return ArticleMapper.articleToArticleDto(article);
+        return ArticleMapper.entityToDto(article);
     }
 }

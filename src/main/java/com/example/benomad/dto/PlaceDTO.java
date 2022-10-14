@@ -8,13 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonIgnoreProperties(value = {
-        "userDTO"
-})
-public class ArticleDTO {
+@JsonIgnoreProperties(value = {})
+public class PlaceDTO {
     private Long id;
-    private UserDTO userDTO;
-    private String body;
-    private String title;
-    private String imageUrl;
 }
