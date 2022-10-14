@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -39,6 +40,7 @@ public class User {
     )
 
     private Collection<Role> roles;
+
     @ManyToMany
     private List<Place> places;
 
