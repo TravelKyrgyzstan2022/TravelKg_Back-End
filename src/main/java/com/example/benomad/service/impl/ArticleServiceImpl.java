@@ -38,6 +38,7 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDTO updateArticleById(Long id, ArticleDTO articleDTO) throws ContentNotFoundException {
         articleRepository.findById(id).orElseThrow(
                 ContentNotFoundException::new);
+        articleDTO.setId(id);
         articleRepository.save(ArticleMapper.dtoToEntity(articleDTO));
         return articleDTO;
     }

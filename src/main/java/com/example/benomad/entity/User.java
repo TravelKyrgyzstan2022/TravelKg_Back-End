@@ -46,4 +46,3 @@ public class User {
     private List<Place> places;
 
 }
-

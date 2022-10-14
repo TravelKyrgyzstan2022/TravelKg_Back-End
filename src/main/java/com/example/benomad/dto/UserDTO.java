@@ -2,6 +2,7 @@
 package com.example.benomad.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 @JsonIgnoreProperties(value = {
         "password"
 })
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
     private Long id;
     private String login;
@@ -24,4 +26,3 @@ public class UserDTO {
     private String email;
     private List<PlaceDTO> placeDTOS;
 }
-
