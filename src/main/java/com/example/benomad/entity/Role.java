@@ -1,21 +1,27 @@
 package com.example.benomad.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.persistence.*;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Entity
-@Table(name="role")
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public enum Role {
+    USER(Set.of(Permission.ARTICLE_READ)),
+    ADMIN(Set.of(Permission.ARTICLE_READ, Permission.ARTICLE_WRITE));
 
-    private String role;
+    private final Set<Permission> permissions;
 
+    Role(Set<Permission> permissions) {
+        this.permissions = permissions;
+    }
+
+    public Set<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public Set<SimpleGrantedAuthority> getAuthorities() {
+        return getPermissions().stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+                .collect(Collectors.toSet());
+    }
 }
