@@ -18,23 +18,58 @@ public class UserController {
 
     private final UserServiceImpl userService;
 
-    @Operation(summary = "Gets all the users")
+//    @Operation(summary = "Gets all the users")
+//    @GetMapping("/")
+//    public ResponseEntity<?> getAllUsers(){
+//        try{
+//            return ResponseEntity.ok(userService.getAllUsers());
+//        } catch (Exception e){
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+//    }
+
+    @Operation(summary = "Finds user by given attributes")
     @GetMapping("/")
-    public ResponseEntity<?> getAllUsers(){
+    public ResponseEntity<?> findUserByAttributes(@RequestParam(name = "id", required = false) Long id,
+                                          @RequestParam(name = "login", required = false) String login,
+                                          @RequestParam(name = "first_name", required = false) String firstName,
+                                          @RequestParam(name = "last_name", required = false) String lastName,
+                                          @RequestParam(name = "email", required = false) String email,
+                                          @RequestParam(name = "phone_number", required = false) String phoneNumber){
         try{
+            if(id != null){
+                return ResponseEntity.ok(userService.getUserById(id));
+            }
+            if(login != null){
+                return ResponseEntity.ok(userService.getUserByLogin(login));
+            }
+            if(email != null){
+                return ResponseEntity.ok(userService.getUserByEmail(email));
+            }
+            if(phoneNumber != null){
+                return ResponseEntity.ok(userService.getUserByPhoneNumber(phoneNumber));
+            }
+            if(firstName != null && lastName != null){
+                return ResponseEntity.ok(userService.getUsersByFirstNameAndLastName(firstName, lastName));
+            }
+            if(firstName != null){
+                return ResponseEntity.ok(userService.getUsersByFirstName(firstName));
+            }
+            if(lastName != null){
+                return ResponseEntity.ok(userService.getUsersByLastName(lastName));
+            }
             return ResponseEntity.ok(userService.getAllUsers());
-        } catch (Exception e){
+        }catch (ContentNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
-    @Operation(summary = "Finds user by ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<?> findUserById(@PathVariable Long id){
+    @PostMapping("/")
+    public ResponseEntity<?> insertUser(@RequestBody UserDTO userDTO){
         try{
-            return ResponseEntity.ok(userService.getUserById(id));
-        }catch (ContentNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(userDTO));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
