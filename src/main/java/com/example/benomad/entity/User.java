@@ -46,6 +46,12 @@ public class User {
     private Collection<Role> roles;
 
     @ManyToMany
+    @JoinTable(name = "users_places",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "place_id"))
     private List<Place> places;
+
+    @ManyToMany(mappedBy = "likedUsers")
+    private List<Blog> blogs;
 
 }

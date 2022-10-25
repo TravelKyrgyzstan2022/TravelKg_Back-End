@@ -6,5 +6,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class ContentNotFoundException extends Exception{
-    private final String message = "Content not found.";
+    private final String message = "Content not found";
 }
