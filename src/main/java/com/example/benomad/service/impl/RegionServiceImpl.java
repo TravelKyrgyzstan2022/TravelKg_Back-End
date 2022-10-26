@@ -21,19 +21,19 @@ public class RegionServiceImpl implements RegionService {
         List<Region> regions = regionRepository.findAll();
         List<RegionDTO> regionDTOS = new ArrayList<>();
         for (Region region : regions) {
-            regionDTOS.add(RegionMapper.entityToDto(region));
+            regionDTOS.add(RegionMapper.regionToRegionDto(region));
         }
         return regionDTOS;
     }
 
     @Override
     public RegionDTO getRegionById(Long id) throws NotFoundException {
-        return RegionMapper.entityToDto(regionRepository.findById(id).orElseThrow(NotFoundException::new));
+        return RegionMapper.regionToRegionDto(regionRepository.findById(id).orElseThrow(NotFoundException::new));
     }
 
     @Override
     public RegionDTO insertRegion(RegionDTO regionDTO) {
-        regionRepository.save(RegionMapper.dtoToEntity(regionDTO));
+        regionRepository.save(RegionMapper.regionDtoToRegion(regionDTO));
         return regionDTO;
     }
 
@@ -41,13 +41,13 @@ public class RegionServiceImpl implements RegionService {
     public RegionDTO deleteRegionById(Long id) throws NotFoundException {
         Region region = regionRepository.findById(id).orElseThrow(NotFoundException::new);
         regionRepository.delete(region);
-        return RegionMapper.entityToDto(region);
+        return RegionMapper.regionToRegionDto(region);
     }
 
     @Override
     public RegionDTO updateRegionById(Long id, RegionDTO regionDTO) throws NotFoundException {
         regionRepository.findById(id).orElseThrow(NotFoundException::new);
-        regionRepository.save(RegionMapper.dtoToEntity(regionDTO));
+        regionRepository.save(RegionMapper.regionDtoToRegion(regionDTO));
         return regionDTO;
     }
 }

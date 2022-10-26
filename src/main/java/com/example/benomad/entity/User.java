@@ -1,15 +1,13 @@
-
 package com.example.benomad.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import com.example.benomad.enums.UserRole;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Data
@@ -17,32 +15,41 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String first_name;
-
-    private String last_name;
-
-    private String login;
-
+    private String name;
+    private String username;
     private String password;
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
 
-    private String phone_number;
 
-    private String email;
 
-    @ManyToMany
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return userRole.getAuthorities();
+    }
 
-    private Collection<Role> roles;
 
-    @ManyToMany
-    private List<Place> places;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

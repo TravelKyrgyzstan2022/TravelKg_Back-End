@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Data
-@RequestMapping("/api/v1/regions/")
+@RequestMapping("/api/v1/regions")
 @Tag(name = "Region resource", description = "The Region API ")
 public class RegionController {
     private final RegionServiceImpl regionServiceImpl;
 
-    @Operation(summary = "Gets all regions")
+    @Operation(summary = "Get all regions")
     @GetMapping( produces = "application/json")
     public ResponseEntity<?> getAllRegions(){
         try{
@@ -28,7 +28,7 @@ public class RegionController {
         }
     }
 
-    @Operation(summary = "Finds region by ID")
+    @Operation(summary = "Get region by id")
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> getRegionById(@PathVariable Long id){
         try{
@@ -40,8 +40,8 @@ public class RegionController {
         }
     }
 
-    @Operation(summary = "Inserts region into the database")
-    @PostMapping(value = "/", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "Save region")
+    @PostMapping(value = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> insertRegion(@RequestBody RegionDTO regionDTO){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(regionServiceImpl.insertRegion(regionDTO));
@@ -50,7 +50,7 @@ public class RegionController {
         }
     }
 
-    @Operation(summary = "Deletes region by ID")
+    @Operation(summary = "Delete region")
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> deleteRegionById(@PathVariable Long id){
         try{
@@ -62,7 +62,7 @@ public class RegionController {
         }
     }
 
-    @Operation(summary = "Updates region by ID")
+    @Operation(summary = "Update region")
     @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> updatePlaceById(@PathVariable Long id, @RequestBody RegionDTO regionDTO){
         try{

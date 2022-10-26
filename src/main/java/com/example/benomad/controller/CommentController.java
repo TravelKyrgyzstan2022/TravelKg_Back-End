@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Data
-@RequestMapping("/api/v1/comments/")
+@RequestMapping("/api/v1/comments")
 @Tag(name = "Comment resource", description = "The Comment API ")
 public class CommentController {
     private final CommentServiceImpl commentServiceImpl;
 
-    @Operation(summary = "Gets all comments")
+    @Operation(summary = "Get all comments")
     @GetMapping( produces = "application/json")
     public ResponseEntity<?> getAllComments(){
         try{
@@ -28,7 +28,7 @@ public class CommentController {
         }
     }
 
-    @Operation(summary = "Finds comment by id")
+    @Operation(summary = "Get comment by id")
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> getCommentById(@PathVariable Long id){
         try{
@@ -40,8 +40,8 @@ public class CommentController {
         }
     }
 
-    @Operation(summary = "Inserts comment into database")
-    @PostMapping(value = "/", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "Save comment")
+    @PostMapping(value = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> insertComment(@RequestBody CommentDTO commentDTO){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(commentServiceImpl.insertComment(commentDTO));
@@ -50,7 +50,7 @@ public class CommentController {
         }
     }
 
-    @Operation(summary = "Deletes comment by ID")
+    @Operation(summary = "Delete comment")
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> deleteCommentById(@PathVariable Long id){
         try{
@@ -62,7 +62,7 @@ public class CommentController {
         }
     }
 
-    @Operation(summary = "Updates comment by ID")
+    @Operation(summary = "Update comment")
     @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> updatePlaceById(@PathVariable Long id, @RequestBody CommentDTO commentDTO){
         try{

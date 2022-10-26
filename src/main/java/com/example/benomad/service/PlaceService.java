@@ -1,4 +1,3 @@
-
 package com.example.benomad.service;
 
 import com.example.benomad.exception.NotFoundException;
@@ -13,4 +12,3 @@ public interface PlaceService {
     PlaceDTO deletePlaceById(Long id) throws NotFoundException;
     PlaceDTO updatePlaceById(Long id,PlaceDTO placeDTO) throws NotFoundException;
 }
-

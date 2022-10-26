@@ -5,12 +5,12 @@ import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.entity.Place;
 
 public class PlaceMapper {
-    public static Place dtoToEntity(PlaceDTO placeDTO) {
+    public static Place placeDtoToPlace(PlaceDTO placeDTO) {
         return Place.builder()
                 .id(placeDTO.getId())
                 .name(placeDTO.getName())
-                .region(RegionMapper.dtoToEntity(placeDTO.getRegionDTO()))
-                .placeType(PlaceTypeMapper.dtoToEntity(placeDTO.getPlaceTypeDTO()))
+                .region(RegionMapper.regionDtoToRegion(placeDTO.getRegionDTO()))
+                .placeType(PlaceTypeMapper.placeTypeDtoToPlaceType(placeDTO.getPlaceTypeDTO()))
                 .description(placeDTO.getDescription())
                 .imageUrl(placeDTO.getImageUrl())
                 .linkUrl(placeDTO.getLinkUrl())
@@ -18,12 +18,12 @@ public class PlaceMapper {
                 .build();
     }
 
-    public static PlaceDTO entityToDto(Place place) {
+    public static PlaceDTO placeToPlaceDto(Place place) {
         return PlaceDTO.builder()
                 .id(place.getId())
                 .name(place.getName())
-                .regionDTO(RegionMapper.entityToDto(place.getRegion()))
-                .placeTypeDTO(PlaceTypeMapper.entityToDto(place.getPlaceType()))
+                .regionDTO(RegionMapper.regionToRegionDto(place.getRegion()))
+                .placeTypeDTO(PlaceTypeMapper.placeTypeToPlaceTypeDto(place.getPlaceType()))
                 .description(place.getDescription())
                 .imageUrl(place.getImageUrl())
                 .linkUrl(place.getLinkUrl())

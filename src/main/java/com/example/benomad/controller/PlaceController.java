@@ -1,4 +1,3 @@
-
 package com.example.benomad.controller;
 
 
@@ -14,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Data
-@RequestMapping("/api/v1/places/")
+@RequestMapping("/api/v1/places")
 @Tag(name = "Place resource", description = "The Place API ")
 public class PlaceController {
     private final PlaceServiceImpl placeServiceImpl;
 
-    @Operation(summary = "Gets all places")
+    @Operation(summary = "Get all places")
     @GetMapping( produces = "application/json")
     public ResponseEntity<?> getAllPlaces(){
         try{
@@ -29,7 +28,7 @@ public class PlaceController {
         }
     }
 
-    @Operation(summary = "Finds place by ID")
+    @Operation(summary = "Get place by id")
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> getPlaceById(@PathVariable Long id){
         try{
@@ -41,8 +40,8 @@ public class PlaceController {
         }
     }
 
-    @Operation(summary = "Inserts place into the database")
-    @PostMapping(value = "/", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "Save place")
+    @PostMapping(value = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> insertPlace(@RequestBody PlaceDTO placeDTO){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(placeServiceImpl.insertPlace(placeDTO));
@@ -51,7 +50,7 @@ public class PlaceController {
         }
     }
 
-    @Operation(summary = "Deletes place by ID")
+    @Operation(summary = "Delete place")
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> deletePlaceById(@PathVariable Long id){
         try{
@@ -63,7 +62,7 @@ public class PlaceController {
         }
     }
 
-    @Operation(summary = "Updates place by ID")
+    @Operation(summary = "Update place")
     @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> updatePlaceById(@PathVariable Long id, @RequestBody PlaceDTO placeDTO){
         try{
@@ -75,4 +74,3 @@ public class PlaceController {
         }
     }
 }
-

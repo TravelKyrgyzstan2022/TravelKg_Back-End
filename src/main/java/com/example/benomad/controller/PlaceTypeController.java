@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Data
-@RequestMapping("/api/v1/placetypes/")
+@RequestMapping("/api/v1/placetypes")
 @Tag(name = "Place Types resource", description = "The Place Types API ")
 public class PlaceTypeController {
     private final PlaceTypeServiceImpl placeTypeService;
 
-    @Operation(summary = "Gets all place types")
+    @Operation(summary = "Get all place types")
     @GetMapping( produces = "application/json")
     public ResponseEntity<?> getAllPlaceTypes(){
         try{
@@ -27,7 +27,7 @@ public class PlaceTypeController {
         }
     }
 
-    @Operation(summary = "Gets place type by ID")
+    @Operation(summary = "Get place Type by id")
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> getPlaceTypeById(@PathVariable Long id){
         try{
@@ -39,8 +39,8 @@ public class PlaceTypeController {
         }
     }
 
-    @Operation(summary = "Inserts place type into the database")
-    @PostMapping(value = "/", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "Save place type")
+    @PostMapping(value = "", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> insertPlaceType(@RequestBody PlaceTypeDTO placeTypeDTO){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(placeTypeService.insertPlaceType(placeTypeDTO));
@@ -49,7 +49,7 @@ public class PlaceTypeController {
         }
     }
 
-    @Operation(summary = "Deletes place type by ID")
+    @Operation(summary = "Delete place type")
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> deletePlaceTypeById(@PathVariable Long id){
         try{
@@ -61,7 +61,7 @@ public class PlaceTypeController {
         }
     }
 
-    @Operation(summary = "Updates place type by ID")
+    @Operation(summary = "Update place type")
     @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> updatePlaceTypeById(@PathVariable Long id, @RequestBody PlaceTypeDTO placeTypeDTO){
         try{
