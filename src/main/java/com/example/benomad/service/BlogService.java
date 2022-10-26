@@ -9,7 +9,7 @@ import java.util.List;
 public interface BlogService {
     BlogDTO getBlogById(Long blogId, Long userId) throws ContentNotFoundException;
     List<BlogDTO> getBlogs(Long userId);
-    List<BlogDTO> getBlogsByAuthorId(Long blogId, Long userId);
+    List<BlogDTO> getBlogsByAuthorId(Long blogId, Long userId) throws ContentNotFoundException;
     List<BlogDTO> getBlogsByTitle(String title, Long userId);
     List<BlogDTO> getBlogsByStatus(Status status, Long userId);
     boolean checkBlogForLikeById(Long blogId, Long userId) throws ContentNotFoundException;

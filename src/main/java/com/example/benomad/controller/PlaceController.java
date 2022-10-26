@@ -12,12 +12,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @RestController
 @Data
-@RequestMapping("/api/v1/places/")
+@RequestMapping("/api/v1/places")
 @Tag(name = "Place resource", description = "The Place API ")
 public class PlaceController {
     private final PlaceServiceImpl placeServiceImpl;
+
+    @GetMapping("")
+    void redirect(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/api/v1/places/");
+    }
 
     @Operation(summary = "Gets all places")
     @GetMapping( produces = "application/json")

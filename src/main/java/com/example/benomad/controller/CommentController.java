@@ -11,12 +11,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @RestController
 @Data
-@RequestMapping("/api/v1/comments/")
+@RequestMapping("/api/v1/comments")
 @Tag(name = "Comment resource", description = "The Comment API ")
 public class CommentController {
     private final CommentServiceImpl commentServiceImpl;
+
+    @GetMapping("")
+    void redirect(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/api/v1/comments/");
+    }
 
     @Operation(summary = "Gets all comments")
     @GetMapping( produces = "application/json")

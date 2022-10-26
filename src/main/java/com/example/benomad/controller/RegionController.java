@@ -11,12 +11,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @RestController
 @Data
-@RequestMapping("/api/v1/regions/")
+@RequestMapping("/api/v1/regions")
 @Tag(name = "Region resource", description = "The Region API ")
 public class RegionController {
     private final RegionServiceImpl regionServiceImpl;
+
+    @GetMapping("")
+    void redirect(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/api/v1/regions/");
+    }
 
     @Operation(summary = "Gets all regions")
     @GetMapping( produces = "application/json")

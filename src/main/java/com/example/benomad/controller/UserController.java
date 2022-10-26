@@ -10,13 +10,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @RestController
-@RequestMapping("/api/v1/users/")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Tag(name = "User Resource", description = "The User API ")
 public class UserController {
 
     private final UserServiceImpl userService;
+
+    @GetMapping("")
+    void redirect(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/api/v1/users/");
+    }
+
 
 //    @Operation(summary = "Gets all the users")
 //    @GetMapping("/")

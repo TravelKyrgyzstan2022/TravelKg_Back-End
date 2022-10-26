@@ -14,5 +14,4 @@ public class CommentDTO {
     private PlaceDTO placeDTO;
     private UserDTO userDTO;
     private String body;
-
 }

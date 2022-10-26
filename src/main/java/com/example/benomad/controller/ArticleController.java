@@ -14,13 +14,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @RestController
-@RequestMapping("/api/v1/articles/")
+@RequestMapping("/api/v1/articles")
 @RequiredArgsConstructor
 @Tag(name = "Article Resource", description = "The Article API ")
 public class ArticleController {
 
     private final ArticleServiceImpl articleServiceImpl;
+
+    @GetMapping("")
+    void redirect(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/api/v1/articles/");
+    }
 
     @Operation(summary = "Gets all the articles")
     @GetMapping(value = "/", produces = "application/json")

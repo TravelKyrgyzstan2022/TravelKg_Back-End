@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/blogs")
@@ -18,11 +21,11 @@ public class BlogController {
     private final BlogServiceImpl blogService;
 
     @GetMapping("")
-    public String redirect(){
-        return "redirect:/api/v1/blogs/";
+    void redirect(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/api/v1/blogs/");
     }
 
-    @GetMapping("/")
+    @GetMapping(value = "/", produces = "application/json")
     public ResponseEntity<?> findBlogs(@RequestParam(name = "author_id", required = false) Long authorId,
                                        @RequestParam(name = "status", defaultValue = "APPROVED") Status status,
                                        @RequestParam(name = "current_user_id") Long userId,
@@ -39,7 +42,7 @@ public class BlogController {
         return null;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> findBlogById(@PathVariable Long id,
                                           @RequestParam("current_user_id") Long userId){
         try{
@@ -49,7 +52,7 @@ public class BlogController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping(value = "/", produces = "application/json")
     public ResponseEntity<?> insertBlog(@RequestBody Blog blog){
         return null;
     }
