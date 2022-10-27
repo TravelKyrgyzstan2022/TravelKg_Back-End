@@ -27,24 +27,22 @@ public class BlogController {
 
     @GetMapping(value = "/", produces = "application/json")
     public ResponseEntity<?> findBlogs(@RequestParam(name = "author_id", required = false) Long authorId,
-                                       @RequestParam(name = "status", defaultValue = "APPROVED") Status status,
-                                       @RequestParam(name = "current_user_id") Long userId,
-                                       @RequestParam(name = "only_liked", defaultValue = "false") boolean onlyLiked)
+                                       @RequestParam(name = "title", required = false) String title,
+                                       @RequestParam(name = "status", required = false) Status status,
+                                       @RequestParam(name = "current_user_id", defaultValue = "1") Long userId,
+                                       @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL)
             throws ContentNotFoundException {
         try{
-            if(authorId != null){
-                return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogsByAuthorId(authorId, userId));
-            }
-
+            return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogsByAttributes(
+                    authorId, userId, title, status, MATCH_ALL));
         }catch (Exception e){
             return null;
         }
-        return null;
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> findBlogById(@PathVariable Long id,
-                                          @RequestParam("current_user_id") Long userId){
+                                          @RequestParam(value = "current_user_id", defaultValue = "1L") Long userId){
         try{
             return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogById(id, userId));
         }catch (Exception e){
@@ -53,15 +51,20 @@ public class BlogController {
     }
 
     @PostMapping(value = "/", produces = "application/json")
-    public ResponseEntity<?> insertBlog(@RequestBody Blog blog){
-        return null;
+    public ResponseEntity<?> insertBlog(@RequestBody BlogDTO dto){
+        return ResponseEntity.ok(blogService.insertBlog(dto));
     }
 
     @PutMapping("/like")
     public ResponseEntity<?> likeDislikeBlog(@RequestParam(name = "blog_id") Long blogId,
                                       @RequestParam(name = "user_id") Long userId,
                                       @RequestParam(name = "is_dislike") boolean isDislike){
-        return null;
+        try{
+            blogService.likeDislikeBlogById(blogId, userId, isDislike);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("REQUEST ACCEPTED!");
     }
 
     @PutMapping("/")

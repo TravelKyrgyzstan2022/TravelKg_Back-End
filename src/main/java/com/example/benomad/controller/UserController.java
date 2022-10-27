@@ -38,6 +38,8 @@ public class UserController {
 //    }
 
     @Operation(summary = "Finds all users or users by given attributes")
+    // dunno why tf did I do the searching part tbh
+    // cuz we dont even need that
     @GetMapping("/")
     public ResponseEntity<?> findUserByAttributes(@RequestParam(name = "id", required = false) Long id,
                                           @RequestParam(name = "login", required = false) String login,

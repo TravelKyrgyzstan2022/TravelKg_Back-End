@@ -12,9 +12,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonIgnoreProperties(value = {
-        "userDTO"
-})
+//@JsonIgnoreProperties(value = {
+//        "userDTO"
+//})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BlogDTO {
     private Long id;

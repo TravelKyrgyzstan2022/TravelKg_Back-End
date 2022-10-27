@@ -4,6 +4,7 @@ package com.example.benomad.mapper;
 import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.entity.Place;
 
+
 public class PlaceMapper {
     public static Place dtoToEntity(PlaceDTO placeDTO) {
         return Place.builder()

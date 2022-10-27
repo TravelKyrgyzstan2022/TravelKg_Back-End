@@ -3,6 +3,7 @@ package com.example.benomad.mapper;
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.entity.Comment;
 
+
 public class CommentMapper {
     public static Comment commentDtoToComment(CommentDTO commentDTO) {
         return Comment.builder()

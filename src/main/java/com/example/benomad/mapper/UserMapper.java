@@ -2,6 +2,10 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;

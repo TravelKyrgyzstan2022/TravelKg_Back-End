@@ -9,6 +9,8 @@ import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.BlogService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,49 +23,41 @@ public class BlogServiceImpl implements BlogService {
     private final UserRepository userRepository;
 
     @Override
-    public BlogDTO getBlogById(Long blogId, Long userId) throws ContentNotFoundException {
+    public BlogDTO insertBlog(BlogDTO blogDTO) {
+        return BlogMapper.entityToDto(
+                blogRepository.save(BlogMapper.dtoToEntity(blogDTO)), null, blogRepository);
+    }
+
+    @Override
+    public BlogDTO getBlogById(Long blogId, Long currentUserId) throws ContentNotFoundException {
         return BlogMapper.entityToDto(blogRepository.findById(blogId)
-                .orElseThrow(ContentNotFoundException::new), blogRepository.isBlogLikedByUser(blogId, userId),
-                blogRepository.getLikesNumberById(blogId));
+                .orElseThrow(ContentNotFoundException::new), currentUserId, blogRepository);
     }
 
     @Override
-    public List<BlogDTO> getBlogs(Long userId){
-        List<BlogDTO> dtos = BlogMapper.entityListToDtoList(blogRepository.findAll());
-        addIsLikedAndLikesCountToList(dtos, userId);
+    public List<BlogDTO> getBlogsByAttributes(Long authorId, Long currentUserId,
+                                              String title, Status status, boolean MATCH_ALL)
+            throws ContentNotFoundException {
+        Blog blog = Blog.builder()
+                .title(title)
+                .author(userRepository.findById(authorId).orElseThrow(ContentNotFoundException::new))
+                .status(status)
+                .build();
+
+        Example<Blog> example = Example.of(blog, getExample(MATCH_ALL));
+
+        List<Blog> blogs = blogRepository.findAll(example);
+
+        return BlogMapper.entityListToDtoList(blogs, currentUserId, blogRepository);
+    }
+
+    @Override
+    public List<BlogDTO> getBlogs(Long currentUserId){
+        List<BlogDTO> dtos = BlogMapper.entityListToDtoList(blogRepository.findAll(), currentUserId, blogRepository);
+        addIsLikedAndLikesCountToList(dtos, currentUserId);
         return dtos;
     }
 
-    @Override
-    public List<BlogDTO> getBlogsByAuthorId(Long authorId, Long userId) throws ContentNotFoundException {
-        List<Blog> entities = blogRepository.findAllByAuthor(
-                userRepository.findById(authorId).orElseThrow(ContentNotFoundException::new));
-        List<BlogDTO> dtos = BlogMapper.entityListToDtoList(entities);
-        addIsLikedAndLikesCountToList(dtos, userId);
-        return dtos;
-    }
-
-    @Override
-    public List<BlogDTO> getBlogsByTitle(String title, Long userId) {
-        List<Blog> entities = blogRepository.findAllByTitle(title);
-        List<BlogDTO> dtos = BlogMapper.entityListToDtoList(entities);
-        addIsLikedAndLikesCountToList(dtos, userId);
-        return dtos;
-    }
-
-    @Override
-    public List<BlogDTO> getBlogsByStatus(Status status, Long userId) {
-        List<Blog> entities = blogRepository.findAllByStatus(status);
-        List<BlogDTO> dtos = BlogMapper.entityListToDtoList(entities);
-        addIsLikedAndLikesCountToList(dtos, userId);
-        return dtos;
-    }
-
-    @Override
-    public boolean checkBlogForLikeById(Long blogId, Long userId) throws ContentNotFoundException {
-        Blog blog = blogRepository.findById(blogId).orElseThrow(ContentNotFoundException::new);
-        return blogRepository.isBlogLikedByUser(blogId, userId);
-    }
 
     @Override
     public void likeDislikeBlogById(Long blogId, Long userId, boolean isDislike) throws ContentNotFoundException {
@@ -102,5 +96,19 @@ public class BlogServiceImpl implements BlogService {
     private void addIsLikedAndLikesCount(BlogDTO dto, Long userId){
         dto.setIsLikedByCurrentUser(checkBlogForLikeByIdWithoutException(dto.getId(), userId));
         dto.setLikes(blogRepository.getLikesNumberById(dto.getId()));
+    }
+
+    private ExampleMatcher getExample(boolean MATCH_ALL){
+        ExampleMatcher MATCHER_ANY = ExampleMatcher.matchingAny()
+                .withMatcher("author", ExampleMatcher.GenericPropertyMatchers.exact())
+                .withMatcher("title", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("status", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withIgnorePaths("id", "likedUsers");
+        ExampleMatcher MATCHER_ALL = ExampleMatcher.matchingAll()
+                .withMatcher("author", ExampleMatcher.GenericPropertyMatchers.exact())
+                .withMatcher("title", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("status", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withIgnorePaths("id", "likedUsers");
+        return MATCH_ALL ? MATCHER_ALL:MATCHER_ANY;
     }
 }

@@ -21,7 +21,7 @@ public class Blog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(columnDefinition = "author_id",
                 referencedColumnName = "id")
     private User author;

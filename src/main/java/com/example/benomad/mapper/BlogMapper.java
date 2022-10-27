@@ -3,22 +3,24 @@ package com.example.benomad.mapper;
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
 import com.example.benomad.enums.Status;
-import org.hibernate.exception.spi.TemplatedViolatedConstraintNameExtracter;
+import com.example.benomad.repository.BlogRepository;
+import com.example.benomad.service.impl.BlogServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BlogMapper {
 
-    public static BlogDTO entityToDto(Blog blog, boolean isLikedByUser, Long likeCount){
+    public static BlogDTO entityToDto(Blog blog, Long currentUserId, BlogRepository blogRepository){
         return BlogDTO.builder()
                 .id(blog.getId())
                 .status(blog.getStatus())
                 .title(blog.getTitle())
                 .body(blog.getBody())
                 .authorDTO((UserMapper.entityToDto(blog.getAuthor())))
-                .likes(likeCount)
-                .isLikedByCurrentUser(isLikedByUser)
+                .likes(blogRepository.getLikesNumberById(blog.getId()))
+                .isLikedByCurrentUser(blogRepository.isBlogLikedByUser(blog.getId(), currentUserId))
                 .build();
     }
 
@@ -35,10 +37,10 @@ public class BlogMapper {
                 .build();
     }
 
-    public static List<BlogDTO> entityListToDtoList(List<Blog> entities){
+    public static List<BlogDTO> entityListToDtoList(List<Blog> entities, Long currentUserId, BlogRepository blogRepository){
         List<BlogDTO> dtos = new ArrayList<>();
         for(Blog e : entities){
-            dtos.add(BlogMapper.entityToDto(e, false, null));
+            dtos.add(BlogMapper.entityToDto(e, currentUserId, blogRepository));
         }
         return dtos;
     }
