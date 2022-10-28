@@ -35,5 +35,6 @@ public class UserDTO {
 
     private String email;
 
+    @JsonProperty("favorite_places")
     private List<PlaceDTO> placeDTOS;
 }

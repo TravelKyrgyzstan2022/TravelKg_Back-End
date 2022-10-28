@@ -3,7 +3,7 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
 import com.example.benomad.enums.Status;
-import com.example.benomad.exception.ContentNotFoundException;
+import com.example.benomad.exception.BlogNotFoundException;
 import com.example.benomad.mapper.BlogMapper;
 import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.repository.UserRepository;
@@ -29,18 +29,18 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogDTO getBlogById(Long blogId, Long currentUserId) throws ContentNotFoundException {
+    public BlogDTO getBlogById(Long blogId, Long currentUserId) throws BlogNotFoundException {
         return BlogMapper.entityToDto(blogRepository.findById(blogId)
-                .orElseThrow(ContentNotFoundException::new), currentUserId, blogRepository);
+                .orElseThrow(BlogNotFoundException::new), currentUserId, blogRepository);
     }
 
     @Override
     public List<BlogDTO> getBlogsByAttributes(Long authorId, Long currentUserId,
                                               String title, Status status, boolean MATCH_ALL)
-            throws ContentNotFoundException {
+            throws BlogNotFoundException {
         Blog blog = Blog.builder()
                 .title(title)
-                .author(userRepository.findById(authorId).orElseThrow(ContentNotFoundException::new))
+                .author(userRepository.findById(authorId).orElseThrow(BlogNotFoundException::new))
                 .status(status)
                 .build();
 
@@ -60,8 +60,8 @@ public class BlogServiceImpl implements BlogService {
 
 
     @Override
-    public void likeDislikeBlogById(Long blogId, Long userId, boolean isDislike) throws ContentNotFoundException {
-        Blog blog = blogRepository.findById(blogId).orElseThrow(ContentNotFoundException::new);
+    public void likeDislikeBlogById(Long blogId, Long userId, boolean isDislike) throws BlogNotFoundException {
+        Blog blog = blogRepository.findById(blogId).orElseThrow(BlogNotFoundException::new);
         if(isDislike){
             blogRepository.dislikeBlogById(blogId, userId);
         }else{
@@ -70,16 +70,16 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogDTO updateBlogById(BlogDTO blogDTO) throws ContentNotFoundException {
-        Blog check = blogRepository.findById(blogDTO.getId()).orElseThrow(ContentNotFoundException::new);
+    public BlogDTO updateBlogById(BlogDTO blogDTO) throws BlogNotFoundException {
+        Blog check = blogRepository.findById(blogDTO.getId()).orElseThrow(BlogNotFoundException::new);
         blogRepository.save(BlogMapper.dtoToEntity(blogDTO));
         addIsLikedAndLikesCount(blogDTO, null);
         return blogDTO;
     }
 
     @Override
-    public void deleteBlogById(Long id) throws ContentNotFoundException {
-        Blog blog = blogRepository.findById(id).orElseThrow(ContentNotFoundException::new);
+    public void deleteBlogById(Long id) throws BlogNotFoundException {
+        Blog blog = blogRepository.findById(id).orElseThrow(BlogNotFoundException::new);
         blogRepository.delete(blog);
     }
 

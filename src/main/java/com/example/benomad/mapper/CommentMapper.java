@@ -5,7 +5,7 @@ import com.example.benomad.entity.Comment;
 
 
 public class CommentMapper {
-    public static Comment commentDtoToComment(CommentDTO commentDTO) {
+    public static Comment dtoToEntity(CommentDTO commentDTO) {
         return Comment.builder()
                 .id(commentDTO.getId())
                 .place(PlaceMapper.dtoToEntity(commentDTO.getPlaceDTO()))
@@ -14,7 +14,7 @@ public class CommentMapper {
                 .build();
     }
 
-    public static CommentDTO commentToCommentDto(Comment comment) {
+    public static CommentDTO entityToDto(Comment comment) {
         return CommentDTO.builder()
                 .id(comment.getId())
                 .placeDTO(PlaceMapper.entityToDto(comment.getPlace()))

@@ -1,6 +1,6 @@
 package com.example.benomad.service.impl;
 
-import com.example.benomad.exception.NotFoundException;
+import com.example.benomad.exception.RegionNotFoundException;
 import com.example.benomad.dto.RegionDTO;
 import com.example.benomad.entity.Region;
 import com.example.benomad.mapper.RegionMapper;
@@ -27,8 +27,8 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public RegionDTO getRegionById(Long id) throws NotFoundException {
-        return RegionMapper.entityToDto(regionRepository.findById(id).orElseThrow(NotFoundException::new));
+    public RegionDTO getRegionById(Long id) throws RegionNotFoundException {
+        return RegionMapper.entityToDto(regionRepository.findById(id).orElseThrow(RegionNotFoundException::new));
     }
 
     @Override
@@ -38,15 +38,15 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public RegionDTO deleteRegionById(Long id) throws NotFoundException {
-        Region region = regionRepository.findById(id).orElseThrow(NotFoundException::new);
+    public RegionDTO deleteRegionById(Long id) throws RegionNotFoundException {
+        Region region = regionRepository.findById(id).orElseThrow(RegionNotFoundException::new);
         regionRepository.delete(region);
         return RegionMapper.entityToDto(region);
     }
 
     @Override
-    public RegionDTO updateRegionById(Long id, RegionDTO regionDTO) throws NotFoundException {
-        regionRepository.findById(id).orElseThrow(NotFoundException::new);
+    public RegionDTO updateRegionById(Long id, RegionDTO regionDTO) throws RegionNotFoundException {
+        regionRepository.findById(id).orElseThrow(RegionNotFoundException::new);
         regionRepository.save(RegionMapper.dtoToEntity(regionDTO));
         return regionDTO;
     }
