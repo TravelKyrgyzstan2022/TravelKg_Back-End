@@ -22,15 +22,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String first_name;
+    @Column(name = "first_name")
+    private String firstName;
 
-    private String last_name;
+    @Column(name = "last_name")
+    private String lastName;
 
     private String login;
 
     private String password;
 
-    private String phone_number;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     private String email;
 
@@ -43,6 +46,12 @@ public class User {
     private Collection<Role> roles;
 
     @ManyToMany
+    @JoinTable(name = "users_places",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "place_id"))
     private List<Place> places;
+
+    @ManyToMany(mappedBy = "likedUsers")
+    private List<Blog> blogs;
 
 }

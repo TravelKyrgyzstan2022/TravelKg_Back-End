@@ -2,7 +2,7 @@ package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.ArticleDTO;
 import com.example.benomad.entity.Article;
-import com.example.benomad.exception.ContentNotFoundException;
+import com.example.benomad.exception.ArticleNotFoundException;
 import com.example.benomad.mapper.ArticleMapper;
 import com.example.benomad.repository.ArticleRepository;
 import com.example.benomad.service.ArticleService;
@@ -29,15 +29,15 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ArticleDTO getArticleById(Long id) throws ContentNotFoundException {
+    public ArticleDTO getArticleById(Long id) throws ArticleNotFoundException {
         return ArticleMapper.entityToDto(articleRepository.findById(id).orElseThrow(
-                ContentNotFoundException::new));
+                ArticleNotFoundException::new));
     }
 
     @Override
-    public ArticleDTO updateArticleById(Long id, ArticleDTO articleDTO) throws ContentNotFoundException {
+    public ArticleDTO updateArticleById(Long id, ArticleDTO articleDTO) throws ArticleNotFoundException {
         articleRepository.findById(id).orElseThrow(
-                ContentNotFoundException::new);
+                ArticleNotFoundException::new);
         articleDTO.setId(id);
         articleRepository.save(ArticleMapper.dtoToEntity(articleDTO));
         return articleDTO;
@@ -51,9 +51,9 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ArticleDTO deleteArticleById(Long id) throws ContentNotFoundException {
+    public ArticleDTO deleteArticleById(Long id) throws ArticleNotFoundException {
         Article article = articleRepository.findById(id).orElseThrow(
-                ContentNotFoundException::new);
+                ArticleNotFoundException::new);
         articleRepository.delete(article);
         return ArticleMapper.entityToDto(article);
     }
