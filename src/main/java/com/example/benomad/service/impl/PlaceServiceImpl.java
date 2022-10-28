@@ -5,6 +5,7 @@ import com.example.benomad.entity.Place;
 import com.example.benomad.entity.Rating;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
+import com.example.benomad.exception.InvalidRatingException;
 import com.example.benomad.exception.PlaceNotFoundException;
 import com.example.benomad.mapper.PlaceMapper;
 import com.example.benomad.repository.PlaceRepository;
@@ -65,7 +66,11 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public void ratePlaceById(Long placeId, Long userId, Integer rating) throws PlaceNotFoundException {
+    public void ratePlaceById(Long placeId, Long userId, Integer rating)
+            throws PlaceNotFoundException, InvalidRatingException {
+        if(rating < 1 || rating > 5){
+            throw new InvalidRatingException();
+        }
         try{
             //Checking if user have already rated the place or not
             //if yes then we will just update the rating instead of adding a new one

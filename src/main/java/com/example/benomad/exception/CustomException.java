@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Data
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class CustomException extends RuntimeException{
-    private final String message = "Rating value is out of bounds (1 - 5)";
-    private final Integer statusCode = 404;
+    private final String message = "Something went wrong";
+    private final Integer statusCode = 400;
 }

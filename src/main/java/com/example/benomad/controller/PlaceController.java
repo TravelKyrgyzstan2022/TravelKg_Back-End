@@ -3,7 +3,6 @@ package com.example.benomad.controller;
 import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
-import com.example.benomad.exception.InvalidRatingException;
 import com.example.benomad.service.impl.PlaceServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -76,9 +75,6 @@ public class PlaceController {
                                        @RequestParam(name = "user_id") Long userId,
                                        @RequestParam(name = "rating", defaultValue = "1") Integer rating,
                                        @RequestParam(name = "remove", defaultValue = "0") Boolean isRemoval){
-        if(rating < 1 || rating > 5){
-            throw new InvalidRatingException();
-        }
         if(isRemoval){
             placeService.removeRating(placeId, userId);
         }else{
