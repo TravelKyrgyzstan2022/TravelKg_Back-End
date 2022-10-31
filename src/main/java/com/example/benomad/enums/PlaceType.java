@@ -10,5 +10,17 @@ public enum PlaceType {
     PARK,
     CINEMA,
     EVENT,
-    CAFFE;
+    CAFE,
+    ENTERTAINMENT,
+    BAZAAR,
+    GORGE,
+    VALLEY,
+    HISTORICAL_BUILDING,
+    THEATRE,
+    PHILHARMONIC,
+    FOREST,
+    MALL,
+    TEAHOUSE,
+    SQUARE,
+    SKY_RESORT
 }
