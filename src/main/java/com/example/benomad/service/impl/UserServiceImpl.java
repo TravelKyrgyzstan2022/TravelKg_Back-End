@@ -100,6 +100,9 @@ public class UserServiceImpl implements UserService {
     public UserDTO deleteUserById(Long id) throws UserNotFoundException {
         User user = userRepository.findById(id).orElseThrow(
                 UserNotFoundException::new);
+        if(id != 1L){
+            userRepository.delete(user);
+        }
         return UserMapper.entityToDto(user);
     }
 
