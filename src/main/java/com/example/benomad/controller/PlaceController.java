@@ -44,7 +44,7 @@ public class PlaceController {
             @RequestParam(name = "address", required = false) String address,
             @RequestParam(name = "match_all", required = false,defaultValue = "false") Boolean match) {
 
-        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1), Sort.by(sortBy.orElse("id")));
+        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(20), Sort.by(sortBy.orElse("id")));
         return ResponseEntity.ok(placeService.getPlacesByAttributes(name, region, placeType,
                 address, match, pageRequest));
     }

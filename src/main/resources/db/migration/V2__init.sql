@@ -1,0 +1,23 @@
+CREATE TABLE articles (id  bigserial NOT NULL, body varchar(10000) NOT NULL, image_url varchar(255) NOT NULL, title varchar(500) NOT NULL, user_id int8, PRIMARY KEY (id));
+CREATE TABLE blog_likes (blog_id int8 NOT NULL, user_id int8 NOT NULL, PRIMARY KEY (blog_id, user_id));
+CREATE TABLE blogs (id  bigserial NOT NULL, body varchar(10000) NOT NULL, status varchar(255), title varchar(500) NOT NULL, author_id int8, PRIMARY KEY (id));
+CREATE TABLE comments (id  bigserial NOT NULL, body varchar(2000) NOT NULL, place_id int8 NOT NULL, user_id int8 NOT NULL, PRIMARY KEY (id));
+CREATE TABLE favorite_places (user_id int8 NOT NULL, place_id int8 NOT NULL);
+CREATE TABLE place_ratings (id  bigserial NOT NULL, rating int4 NOT NULL, place_id int8, user_id int8, PRIMARY KEY (id));
+CREATE TABLE places (id  bigserial NOT NULL, address varchar(255), description varchar(2000) NOT NULL, image_url varchar(255) NOT NULL, link_url varchar(255) NOT NULL, name varchar(255) NOT NULL, place_type varchar(255), region varchar(255), PRIMARY KEY (id));
+CREATE TABLE role (id  bigserial NOT NULL, role varchar(255) NOT NULL, PRIMARY KEY (id));
+CREATE TABLE user_role (user_id int8 NOT NULL, role_id int8 NOT NULL);
+CREATE TABLE users (id  bigserial NOT NULL, email varchar(255) NOT NULL, first_name varchar(255), last_name varchar(255), login varchar(255) NOT NULL, password varchar(255) NOT NULL, phone_number varchar(255) NOT NULL, PRIMARY KEY (id));
+ALTER TABLE articles ADD CONSTRAINT FKlc3sm3utetrj1sx4v9ahwopnr FOREIGN KEY (user_id) REFERENCES users;
+ALTER TABLE blog_likes ADD CONSTRAINT FKfqaey79qg6v969ymdp40ft3b FOREIGN KEY (user_id) REFERENCES users;
+ALTER TABLE blog_likes ADD CONSTRAINT FKojo8uaqhkmbtqa8duxtbq56w3 FOREIGN KEY (blog_id) REFERENCES blogs;
+ALTER TABLE blogs ADD CONSTRAINT FKt8g0udj2fq40771g38t2t011n FOREIGN KEY (author_id) REFERENCES users;
+ALTER TABLE comments ADD CONSTRAINT FK280rfusf9huvcy3gb9jxejdib FOREIGN KEY (place_id) REFERENCES places;
+ALTER TABLE comments ADD CONSTRAINT FK8omq0tc18jd43bu5tjh6jvraq FOREIGN KEY (user_id) REFERENCES users;
+ALTER TABLE favorite_places ADD CONSTRAINT FK4pf98npou01hnsgywly8isn0u FOREIGN KEY (place_id) REFERENCES places;
+ALTER TABLE favorite_places ADD CONSTRAINT FK5tmdgtn9286q309p0x4hv0cwc FOREIGN KEY (user_id) REFERENCES users;
+ALTER TABLE place_ratings ADD CONSTRAINT FKkfg5s7jd8h47f6s14g3xysurp FOREIGN KEY (place_id) REFERENCES places;
+ALTER TABLE place_ratings ADD CONSTRAINT FKhu9y3jlohhtigrluc8c4gwgwd FOREIGN KEY (user_id) REFERENCES users;
+ALTER TABLE user_role ADD CONSTRAINT FKa68196081fvovjhkek5m97n3y FOREIGN KEY (role_id) REFERENCES role;
+ALTER TABLE user_role ADD CONSTRAINT FKj345gk1bovqvfame88rcx7yyx FOREIGN KEY (user_id) REFERENCES users;
+

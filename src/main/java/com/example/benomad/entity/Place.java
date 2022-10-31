@@ -28,7 +28,7 @@ public class Place {
     @Enumerated(EnumType.STRING)
     private PlaceType placeType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2000)
     private String description;
 
     @Column(nullable = false, name = "image_url")

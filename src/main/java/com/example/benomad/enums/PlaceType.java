@@ -10,5 +10,6 @@ public enum PlaceType {
     PARK,
     CINEMA,
     EVENT,
-    CAFFE;
+    CAFFE,
+    ENTERTAINMENT
 }
