@@ -30,7 +30,7 @@ public class PlaceServiceImpl implements PlaceService {
     private final UserRepository userRepository;
 
     @Override
-    public List<PlaceDTO> getAllPlacesByAttributes(String name, Region region, PlaceType placeType,
+    public List<PlaceDTO> getPlacesByAttributes(String name, Region region, PlaceType placeType,
                                                    String address,Boolean match,PageRequest pageRequest) {
         Place builtPlace = Place.builder().name(name).address(address).region(region).placeType(placeType).build();
         Example<Place> exampleOfPlace = Example.of(builtPlace,getExampleMatcher(match));

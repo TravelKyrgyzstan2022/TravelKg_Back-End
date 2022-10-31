@@ -2,13 +2,10 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
-import com.example.benomad.entity.User;
 import com.example.benomad.enums.Status;
 import com.example.benomad.exception.UserNotFoundException;
 import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.repository.UserRepository;
-import com.example.benomad.service.impl.BlogServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;

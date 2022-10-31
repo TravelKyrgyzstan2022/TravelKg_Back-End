@@ -38,19 +38,6 @@ public class PlaceMapper {
                 .build();
     }
 
-    public static PlaceDTO entityToDto(Place place) {
-        return PlaceDTO.builder()
-                .id(place.getId())
-                .name(place.getName())
-                .region(place.getRegion())
-                .placeType(place.getPlaceType())
-                .description(place.getDescription())
-                .imageUrl(place.getImageUrl())
-                .linkUrl(place.getLinkUrl())
-                .address(place.getAddress())
-                .build();
-    }
-
     public static List<PlaceDTO> entityListToDtoList(List<Place> places, RatingRepository ratingRepository) {
         List<PlaceDTO> placeDTOS = new ArrayList<>();
         for (Place place : places) {

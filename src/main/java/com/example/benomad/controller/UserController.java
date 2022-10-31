@@ -4,6 +4,7 @@ import com.example.benomad.dto.UserDTO;
 import com.example.benomad.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,34 +30,20 @@ public class UserController {
 
     @Operation(summary = "Gets all users / Finds users by attributes  (will be finished in the next update)")
     @GetMapping("/")
-    public ResponseEntity<?> findUserByAttributes(@RequestParam(name = "id", required = false) Long id,
-                                          @RequestParam(name = "login", required = false) String login,
+    public ResponseEntity<?> findUserByAttributes(@RequestParam(name = "login", required = false) String login,
                                           @RequestParam(name = "first_name", required = false) String firstName,
                                           @RequestParam(name = "last_name", required = false) String lastName,
                                           @RequestParam(name = "email", required = false) String email,
-                                          @RequestParam(name = "phone_number", required = false) String phoneNumber){
-        if(id != null){
-            return ResponseEntity.ok(userService.getUserById(id));
-        }
-        if(login != null){
-            return ResponseEntity.ok(userService.getUserByLogin(login));
-        }
-        if(email != null){
-            return ResponseEntity.ok(userService.getUserByEmail(email));
-        }
-        if(phoneNumber != null){
-            return ResponseEntity.ok(userService.getUserByPhoneNumber(phoneNumber));
-        }
-        if(firstName != null && lastName != null){
-            return ResponseEntity.ok(userService.getUsersByFirstNameAndLastName(firstName, lastName));
-        }
-        if(firstName != null){
-            return ResponseEntity.ok(userService.getUsersByFirstName(firstName));
-        }
-        if(lastName != null){
-            return ResponseEntity.ok(userService.getUsersByLastName(lastName));
-        }
-        return ResponseEntity.ok(userService.getAllUsers());
+                                          @RequestParam(name = "phone_number", required = false) String phoneNumber,
+                                          @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
+        return ResponseEntity.ok(userService.getUsersByAttributes(login, firstName, lastName, email, phoneNumber,
+                MATCH_ALL));
+    }
+
+    @Operation(summary = "Finds user by ID")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id){
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @Operation(summary = "Inserts a user to the database")

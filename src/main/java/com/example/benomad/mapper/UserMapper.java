@@ -2,10 +2,6 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +30,10 @@ public class UserMapper {
                 .build();
     }
 
-    public static UserDTO entityToDtoShort(User user){ // need to change the func name tbh
-        return UserDTO.builder()
-                .id(user.getId())
-                .login(user.getLogin())
-                .build();
-    }
-
     public static List<UserDTO> entityListToDtoList(List<User> entities){
         List<UserDTO> dtos = new ArrayList<>();
         for(User u : entities){
+            u.setPlaces(null);
             dtos.add(UserMapper.entityToDto(u));
         }
         return dtos;

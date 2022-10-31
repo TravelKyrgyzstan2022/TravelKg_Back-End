@@ -9,7 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import java.util.List;
 
 public interface PlaceService {
-    List<PlaceDTO> getAllPlacesByAttributes( String name, Region region, PlaceType placeType, String address,Boolean match,PageRequest pageRequest) throws PlaceNotFoundException;
+    List<PlaceDTO> getPlacesByAttributes( String name, Region region, PlaceType placeType, String address,Boolean match,PageRequest pageRequest) throws PlaceNotFoundException;
     PlaceDTO getPlaceById(Long id) throws PlaceNotFoundException;
     PlaceDTO insertPlace(PlaceDTO placeDTO);
     PlaceDTO deletePlaceById(Long id) throws PlaceNotFoundException;

@@ -54,13 +54,6 @@ public class BlogServiceImpl implements BlogService {
         return BlogMapper.entityListToDtoList(blogs, currentUserId, blogRepository);
     }
 
-    @Override
-    public List<BlogDTO> getBlogs(Long currentUserId){
-        List<BlogDTO> dtos = BlogMapper.entityListToDtoList(blogRepository.findAll(), currentUserId, blogRepository);
-        addIsLikedAndLikesCountToList(dtos, currentUserId);
-        return dtos;
-    }
-
 
     @Override
     public void likeDislikeBlogById(Long blogId, Long userId, boolean isDislike) throws BlogNotFoundException {

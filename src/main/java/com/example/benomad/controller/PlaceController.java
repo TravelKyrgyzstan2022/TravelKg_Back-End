@@ -6,6 +6,7 @@ import com.example.benomad.enums.Region;
 import com.example.benomad.service.impl.PlaceServiceImpl;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import org.springframework.data.domain.PageRequest;
@@ -41,10 +42,10 @@ public class PlaceController {
             @RequestParam(name = "region", required = false) Region region,
             @RequestParam(name = "place_type", required = false) PlaceType placeType,
             @RequestParam(name = "address", required = false) String address,
-            @RequestParam(name = "match", required = false,defaultValue = "false") Boolean match) {
+            @RequestParam(name = "match_all", required = false,defaultValue = "false") Boolean match) {
 
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1), Sort.by(sortBy.orElse("id")));
-        return ResponseEntity.ok(placeService.getAllPlacesByAttributes(name, region, placeType,
+        return ResponseEntity.ok(placeService.getPlacesByAttributes(name, region, placeType,
                 address, match, pageRequest));
     }
 
