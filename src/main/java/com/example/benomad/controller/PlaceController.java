@@ -4,6 +4,7 @@ import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
 import com.example.benomad.service.impl.PlaceServiceImpl;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
@@ -24,13 +25,14 @@ import java.util.Optional;
 public class PlaceController {
     private final PlaceServiceImpl placeService;
 
+    @Hidden
     @GetMapping("")
     void redirect(HttpServletResponse response) throws IOException {
         response.sendRedirect("/api/v1/places/");
     }
 
-    @Operation(summary = "Get all places")
-    @GetMapping(produces = "application/json")
+    @Operation(summary = "Gets all places / Finds places by attributes")
+    @GetMapping(produces = "application/json", value = "/")
     public ResponseEntity<?> getAllPlacesByAttributes(
             @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
             @RequestParam(name = "page", required = false) Optional<Integer> page,
@@ -46,40 +48,39 @@ public class PlaceController {
                 address, match, pageRequest));
     }
 
-    @Operation(summary = "Get place by Id")
+    @Operation(summary = "Gets place by ID")
     @GetMapping(path = "/{id}",produces = "application/json")
     public ResponseEntity<?> getPlaceById(@PathVariable("id") Long id) {
         return ResponseEntity.ok().body(placeService.getPlaceById(id));
     }
 
-    @Operation(summary = "Delete place by Id")
+    @Operation(summary = "Inserts a place to the database")
     @PostMapping(value = "/" ,produces = "application/json")
     public ResponseEntity<?> savePlace(@RequestBody PlaceDTO placeDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(placeService.insertPlace(placeDTO));
     }
 
-    @Operation(summary = "Place by Id")
+    @Operation(summary = "Deletes place by ID")
     @DeleteMapping(value = "/{id}",produces = "application/json")
     public ResponseEntity<?> deletePlaceById(@PathVariable("id") Long id) {
         return ResponseEntity.ok().body(placeService.deletePlaceById(id));
     }
 
-    @Operation(summary = "Update place")
+    @Operation(summary = "Updates place by ID")
     @PutMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> updatePlaceById(@PathVariable Long id, @RequestBody PlaceDTO placeDTO){
         return ResponseEntity.ok(placeService.updatePlaceById(id,placeDTO));
     }
 
+    @Operation(summary = "Rates place by ID",
+    description = "Adds new rating record to a place by its ID and users ID.")
     @PutMapping(value = "/rate")
     public ResponseEntity<?> ratePlace(@RequestParam(name = "place_id") Long placeId,
                                        @RequestParam(name = "user_id") Long userId,
                                        @RequestParam(name = "rating", defaultValue = "1") Integer rating,
                                        @RequestParam(name = "remove", defaultValue = "0") Boolean isRemoval){
-        if(isRemoval){
-            placeService.removeRating(placeId, userId);
-        }else{
-            placeService.ratePlaceById(placeId, userId, rating);
-        }
+
+        placeService.ratePlaceById(placeId, userId, rating, isRemoval);
         return ResponseEntity.ok(placeService.getPlaceById(placeId));
     }
 

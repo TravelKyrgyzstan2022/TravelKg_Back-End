@@ -2,14 +2,19 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.entity.Comment;
+import com.example.benomad.exception.PlaceNotFoundException;
+import com.example.benomad.exception.UserNotFoundException;
+import com.example.benomad.repository.PlaceRepository;
+import com.example.benomad.repository.UserRepository;
 
 
 public class CommentMapper {
-    public static Comment dtoToEntity(CommentDTO commentDTO) {
+    public static Comment dtoToEntity(CommentDTO commentDTO, PlaceRepository placeRepository,
+                                      UserRepository userRepository) {
         return Comment.builder()
                 .id(commentDTO.getId())
-                .place(PlaceMapper.dtoToEntity(commentDTO.getPlaceDTO()))
-                .user(UserMapper.dtoToEntity(commentDTO.getUserDTO()))
+                .place(placeRepository.findById(commentDTO.getPlaceId()).orElseThrow(PlaceNotFoundException::new))
+                .user(userRepository.findById(commentDTO.getUserId()).orElseThrow(UserNotFoundException::new))
                 .body(commentDTO.getBody())
                 .build();
     }
@@ -17,8 +22,8 @@ public class CommentMapper {
     public static CommentDTO entityToDto(Comment comment) {
         return CommentDTO.builder()
                 .id(comment.getId())
-                .placeDTO(PlaceMapper.entityToDto(comment.getPlace()))
-                .userDTO(UserMapper.entityToDto(comment.getUser()))
+                .placeId(comment.getPlace().getId())
+                .userId(comment.getUser().getId())
                 .body(comment.getBody())
                 .build();
     }

@@ -2,6 +2,7 @@ package com.example.benomad.dto;
 
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Builder
@@ -10,8 +11,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDTO {
-    private Long id;
-    private PlaceDTO placeDTO;
-    private UserDTO userDTO;
+    Long id;
+
+    @JsonProperty("place_id")
+    private Long placeId;
+
+    @JsonProperty("user_id")
+    private Long userId;
+
     private String body;
 }

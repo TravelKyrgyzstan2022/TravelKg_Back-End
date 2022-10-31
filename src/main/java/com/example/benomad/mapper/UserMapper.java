@@ -22,6 +22,7 @@ public class UserMapper {
                 .phoneNumber(userDTO.getPhoneNumber())
                 .build();
     }
+
     public static UserDTO entityToDto(User user){
         return UserDTO.builder()
                 .id(user.getId())
@@ -30,6 +31,13 @@ public class UserMapper {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .phoneNumber(user.getPhoneNumber())
+                .build();
+    }
+
+    public static UserDTO entityToDtoShort(User user){ // need to change the func name tbh
+        return UserDTO.builder()
+                .id(user.getId())
+                .login(user.getLogin())
                 .build();
     }
 

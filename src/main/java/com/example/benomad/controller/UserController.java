@@ -2,6 +2,7 @@ package com.example.benomad.controller;
 
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.service.impl.UserServiceImpl;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +21,13 @@ public class UserController {
 
     private final UserServiceImpl userService;
 
+    @Hidden
     @GetMapping("")
     void redirect(HttpServletResponse response) throws IOException {
         response.sendRedirect("/api/v1/users/");
     }
 
-    @Operation(summary = "Finds all users or users by given attributes")
+    @Operation(summary = "Gets all users / Finds users by attributes  (will be finished in the next update)")
     @GetMapping("/")
     public ResponseEntity<?> findUserByAttributes(@RequestParam(name = "id", required = false) Long id,
                                           @RequestParam(name = "login", required = false) String login,
@@ -57,9 +59,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    @Operation(summary = "Inserts a user to the database")
     @PostMapping("/")
     public ResponseEntity<?> insertUser(@RequestBody UserDTO userDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(userDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.insertUser(userDTO));
     }
 
     @Operation(summary = "Updates user by ID")

@@ -14,6 +14,6 @@ public interface PlaceService {
     PlaceDTO insertPlace(PlaceDTO placeDTO);
     PlaceDTO deletePlaceById(Long id) throws PlaceNotFoundException;
     PlaceDTO updatePlaceById(Long id, PlaceDTO placeDTO) throws PlaceNotFoundException;
-    void ratePlaceById(Long placeId, Long userId, Integer rating) throws PlaceNotFoundException;
+    void ratePlaceById(Long placeId, Long userId, Integer rating, boolean isRemoval) throws PlaceNotFoundException;
     void removeRating(Long placeId, Long userId) throws PlaceNotFoundException;
 }

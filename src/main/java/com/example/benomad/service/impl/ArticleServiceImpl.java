@@ -45,6 +45,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ArticleDTO insertArticle(ArticleDTO articleDTO) {
+        articleDTO.setId(null);
         articleRepository.save(ArticleMapper.dtoToEntity(articleDTO));
         articleDTO.setId(articleRepository.getLastValueOfArticleSequence());
         return articleDTO;

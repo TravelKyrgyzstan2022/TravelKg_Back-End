@@ -2,8 +2,10 @@ package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
+import com.example.benomad.entity.User;
 import com.example.benomad.enums.Status;
 import com.example.benomad.exception.BlogNotFoundException;
+import com.example.benomad.exception.UserNotFoundException;
 import com.example.benomad.mapper.BlogMapper;
 import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.repository.UserRepository;
@@ -23,9 +25,10 @@ public class BlogServiceImpl implements BlogService {
     private final UserRepository userRepository;
 
     @Override
-    public BlogDTO insertBlog(BlogDTO blogDTO) {
-        return BlogMapper.entityToDto(
-                blogRepository.save(BlogMapper.dtoToEntity(blogDTO)), null, blogRepository);
+    public BlogDTO insertBlog(BlogDTO blogDTO) throws UserNotFoundException{
+        blogDTO.setId(null);
+        return BlogMapper.entityToDto(blogRepository.save(
+                        BlogMapper.dtoToEntity(blogDTO, userRepository)), null, blogRepository);
     }
 
     @Override
@@ -62,6 +65,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void likeDislikeBlogById(Long blogId, Long userId, boolean isDislike) throws BlogNotFoundException {
         Blog blog = blogRepository.findById(blogId).orElseThrow(BlogNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         if(isDislike){
             blogRepository.dislikeBlogById(blogId, userId);
         }else{
@@ -70,17 +74,18 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogDTO updateBlogById(BlogDTO blogDTO) throws BlogNotFoundException {
+    public BlogDTO updateBlogById(BlogDTO blogDTO) throws BlogNotFoundException, UserNotFoundException {
         Blog check = blogRepository.findById(blogDTO.getId()).orElseThrow(BlogNotFoundException::new);
-        blogRepository.save(BlogMapper.dtoToEntity(blogDTO));
+        blogRepository.save(BlogMapper.dtoToEntity(blogDTO, userRepository));
         addIsLikedAndLikesCount(blogDTO, null);
         return blogDTO;
     }
 
     @Override
-    public void deleteBlogById(Long id) throws BlogNotFoundException {
+    public BlogDTO deleteBlogById(Long id) throws BlogNotFoundException {
         Blog blog = blogRepository.findById(id).orElseThrow(BlogNotFoundException::new);
         blogRepository.delete(blog);
+        return BlogMapper.entityToDto(blog, null, blogRepository);
     }
 
     public boolean checkBlogForLikeByIdWithoutException(Long blogId, Long userId){

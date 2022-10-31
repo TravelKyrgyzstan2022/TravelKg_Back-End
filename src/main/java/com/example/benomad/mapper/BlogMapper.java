@@ -2,8 +2,11 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
+import com.example.benomad.entity.User;
 import com.example.benomad.enums.Status;
+import com.example.benomad.exception.UserNotFoundException;
 import com.example.benomad.repository.BlogRepository;
+import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.impl.BlogServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,19 +21,19 @@ public class BlogMapper {
                 .status(blog.getStatus())
                 .title(blog.getTitle())
                 .body(blog.getBody())
-                .authorDTO((UserMapper.entityToDto(blog.getAuthor())))
+                .authorId((UserMapper.entityToDto(blog.getAuthor()).getId()))
                 .likes(blogRepository.getLikesNumberById(blog.getId()))
                 .isLikedByCurrentUser(blogRepository.isBlogLikedByUser(blog.getId(), currentUserId))
                 .build();
     }
 
-    public static Blog dtoToEntity(BlogDTO blogDTO){
+    public static Blog dtoToEntity(BlogDTO blogDTO, UserRepository userRepository){
         if(blogDTO.getStatus() == null){
             blogDTO.setStatus(Status.BEING_REVIEWED);
         }
         return Blog.builder()
                 .id(blogDTO.getId())
-                .author(UserMapper.dtoToEntity(blogDTO.getAuthorDTO()))
+                .author(userRepository.findById(blogDTO.getAuthorId()).orElseThrow(UserNotFoundException::new))
                 .title(blogDTO.getTitle())
                 .body(blogDTO.getBody())
                 .status(blogDTO.getStatus())
@@ -45,10 +48,10 @@ public class BlogMapper {
         return dtos;
     }
 
-    public static List<Blog> dtoListToEntityList(List<BlogDTO> dtos){
+    public static List<Blog> dtoListToEntityList(List<BlogDTO> dtos, UserRepository userRepository){
         List<Blog> entities = new ArrayList<>();
         for(BlogDTO d: dtos){
-            entities.add(BlogMapper.dtoToEntity(d));
+            entities.add(BlogMapper.dtoToEntity(d, userRepository));
         }
         return entities;
     }

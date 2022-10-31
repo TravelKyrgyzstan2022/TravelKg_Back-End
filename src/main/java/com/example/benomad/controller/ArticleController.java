@@ -6,6 +6,7 @@ import com.example.benomad.dto.UserDTO;
 
 import com.example.benomad.service.impl.ArticleServiceImpl;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class ArticleController {
 
     private final ArticleServiceImpl articleServiceImpl;
 
+    @Hidden
     @GetMapping("")
     void redirect(HttpServletResponse response) throws IOException {
         response.sendRedirect("/api/v1/articles/");
@@ -41,7 +43,7 @@ public class ArticleController {
         return ResponseEntity.ok(articleServiceImpl.getArticleById(id));
     }
 
-    @Operation(summary = "Inserts article to the database")
+    @Operation(summary = "Inserts an article to the database")
     @PostMapping(value = "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> insertArticle(@RequestBody ArticleDTO articleDTO){
         articleDTO.setUserDTO(UserDTO.builder()

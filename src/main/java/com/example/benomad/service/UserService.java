@@ -6,7 +6,7 @@ import com.example.benomad.exception.UserNotFoundException;
 import java.util.List;
 
 public interface UserService {
-    UserDTO addUser(UserDTO userDTO);
+    UserDTO insertUser(UserDTO userDTO);
     List<UserDTO> getAllUsers();
     UserDTO getUserById(Long id) throws UserNotFoundException;
     UserDTO getUserByLogin(String login) throws UserNotFoundException;

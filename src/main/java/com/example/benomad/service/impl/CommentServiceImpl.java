@@ -7,6 +7,8 @@ import com.example.benomad.entity.Comment;
 import com.example.benomad.entity.Place;
 import com.example.benomad.mapper.CommentMapper;
 import com.example.benomad.repository.CommentRepository;
+import com.example.benomad.repository.PlaceRepository;
+import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
+    private final PlaceRepository placeRepository;
+
     @Override
     public List<CommentDTO> getAllComments() {
         List<Comment> comments = commentRepository.findAll();
@@ -36,7 +41,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO insertComment(CommentDTO commentDTO) {
-        commentRepository.save(CommentMapper.dtoToEntity(commentDTO));
+        commentDTO.setId(null);
+        commentRepository.save(CommentMapper.dtoToEntity(commentDTO, placeRepository, userRepository));
         return commentDTO;
     }
 
@@ -50,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDTO updateCommentById(Long id, CommentDTO commentDTO) throws CommentNotFoundException {
         commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
-        commentRepository.save(CommentMapper.dtoToEntity(commentDTO));
+        commentRepository.save(CommentMapper.dtoToEntity(commentDTO, placeRepository, userRepository));
         return commentDTO;
     }
 }

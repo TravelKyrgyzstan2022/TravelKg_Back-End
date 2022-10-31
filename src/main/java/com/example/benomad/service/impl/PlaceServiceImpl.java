@@ -47,6 +47,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public PlaceDTO insertPlace(PlaceDTO placeDTO) {
+        placeDTO.setId(null);
         placeRepository.save(PlaceMapper.dtoToEntity(placeDTO));
         return placeDTO;
     }
@@ -66,8 +67,12 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public void ratePlaceById(Long placeId, Long userId, Integer rating)
+    public void ratePlaceById(Long placeId, Long userId, Integer rating, boolean isRemoval)
             throws PlaceNotFoundException, InvalidRatingException {
+        if(isRemoval){
+            removeRating(placeId, userId);
+            return;
+        }
         if(rating < 1 || rating > 5){
             throw new InvalidRatingException();
         }
