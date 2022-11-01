@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
         license = @License(
                 name = "SIGMA Licence",
                 url = "https://github.com/thombergs/code-examples/blob/master/LICENSE")),
-        servers = @Server(url = "http://localhost:8080")
+        servers = {@Server(url = "http://localhost:8080"), @Server(url = "https://benomad-backend.herokuapp.com")}
 )
 public class OpenApiConfiguration {
 }
