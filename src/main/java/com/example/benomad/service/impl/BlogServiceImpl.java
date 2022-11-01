@@ -23,18 +23,19 @@ public class BlogServiceImpl implements BlogService {
 
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
+    private final BlogMapper blogMapper;
 
     @Override
     public BlogDTO insertBlog(BlogDTO blogDTO) throws UserNotFoundException{
         blogDTO.setId(null);
-        return BlogMapper.entityToDto(blogRepository.save(
-                        BlogMapper.dtoToEntity(blogDTO, userRepository)), null, blogRepository);
+        return blogMapper.entityToDto(blogRepository.save(
+                        blogMapper.dtoToEntity(blogDTO)), null);
     }
 
     @Override
     public BlogDTO getBlogById(Long blogId, Long currentUserId) throws BlogNotFoundException {
-        return BlogMapper.entityToDto(blogRepository.findById(blogId)
-                .orElseThrow(BlogNotFoundException::new), currentUserId, blogRepository);
+        return blogMapper.entityToDto(blogRepository.findById(blogId)
+                .orElseThrow(BlogNotFoundException::new), currentUserId);
     }
 
     @Override
@@ -51,7 +52,7 @@ public class BlogServiceImpl implements BlogService {
 
         List<Blog> blogs = blogRepository.findAll(example);
 
-        return BlogMapper.entityListToDtoList(blogs, currentUserId, blogRepository);
+        return blogMapper.entityListToDtoList(blogs, currentUserId);
     }
 
 
@@ -69,7 +70,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogDTO updateBlogById(BlogDTO blogDTO) throws BlogNotFoundException, UserNotFoundException {
         Blog check = blogRepository.findById(blogDTO.getId()).orElseThrow(BlogNotFoundException::new);
-        blogRepository.save(BlogMapper.dtoToEntity(blogDTO, userRepository));
+        blogRepository.save(blogMapper.dtoToEntity(blogDTO));
         addIsLikedAndLikesCount(blogDTO, null);
         return blogDTO;
     }
@@ -78,17 +79,11 @@ public class BlogServiceImpl implements BlogService {
     public BlogDTO deleteBlogById(Long id) throws BlogNotFoundException {
         Blog blog = blogRepository.findById(id).orElseThrow(BlogNotFoundException::new);
         blogRepository.delete(blog);
-        return BlogMapper.entityToDto(blog, null, blogRepository);
+        return blogMapper.entityToDto(blog, null);
     }
 
     public boolean checkBlogForLikeByIdWithoutException(Long blogId, Long userId){
         return blogRepository.isBlogLikedByUser(blogId, userId);
-    }
-
-    private void addIsLikedAndLikesCountToList(List<BlogDTO> dtos, Long userId){
-        for(BlogDTO d : dtos){
-            addIsLikedAndLikesCount(d, userId);
-        }
     }
 
     private void addIsLikedAndLikesCount(BlogDTO dto, Long userId){

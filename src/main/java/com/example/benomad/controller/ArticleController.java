@@ -2,10 +2,8 @@ package com.example.benomad.controller;
 
 
 import com.example.benomad.dto.ArticleDTO;
-
 import com.example.benomad.service.impl.ArticleServiceImpl;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,25 +11,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1/articles")
+@CrossOrigin
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/articles")
 @Tag(name = "Article Resource", description = "The Article API ")
 public class ArticleController {
 
     private final ArticleServiceImpl articleServiceImpl;
 
-    @Hidden
-    @GetMapping("")
-    void redirect(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/api/v1/articles/");
-    }
-
     @Operation(summary = "Gets all the articles")
-    @GetMapping(value = "/", produces = "application/json")
+    @GetMapping(value = {"/", ""}, produces = "application/json")
     public ResponseEntity<?> getAllArticles(){
         return ResponseEntity.ok(articleServiceImpl.getAllArticles());
     }
@@ -43,7 +34,7 @@ public class ArticleController {
     }
 
     @Operation(summary = "Inserts an article to the database")
-    @PostMapping(value = "/", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = {"/", ""}, consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> insertArticle(@RequestBody ArticleDTO articleDTO){
         articleDTO.setUserId(1L); //для тестов, а так, в будущем будем работать с токенами
         return ResponseEntity.status(HttpStatus.CREATED).body(articleServiceImpl.insertArticle(articleDTO));

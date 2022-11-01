@@ -4,9 +4,16 @@ import com.example.benomad.dto.ArticleDTO;
 import com.example.benomad.entity.Article;
 import com.example.benomad.exception.UserNotFoundException;
 import com.example.benomad.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
+@RequiredArgsConstructor
 public class ArticleMapper {
-    public static ArticleDTO entityToDto(Article article){
+
+    private final UserRepository userRepository;
+
+    public ArticleDTO entityToDto(Article article){
         return ArticleDTO.builder()
                 .id(article.getId())
                 .body(article.getBody())
@@ -16,7 +23,7 @@ public class ArticleMapper {
                 .build();
     }
 
-    public static Article dtoToEntity(ArticleDTO dto, UserRepository userRepository){
+    public Article dtoToEntity(ArticleDTO dto){
         return Article.builder()
                 .id(dto.getId())
                 .body(dto.getBody())

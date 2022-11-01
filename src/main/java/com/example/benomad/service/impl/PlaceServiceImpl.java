@@ -28,6 +28,7 @@ public class PlaceServiceImpl implements PlaceService {
     private final PlaceRepository placeRepository;
     private final RatingRepository ratingRepository;
     private final UserRepository userRepository;
+    private final PlaceMapper placeMapper;
 
     @Override
     public List<PlaceDTO> getPlacesByAttributes(String name, Region region, PlaceType placeType,
@@ -35,20 +36,20 @@ public class PlaceServiceImpl implements PlaceService {
         Place builtPlace = Place.builder().name(name).address(address).region(region).placeType(placeType).build();
         Example<Place> exampleOfPlace = Example.of(builtPlace,getExampleMatcher(match));
         Page<Place> pages = placeRepository.findAll(exampleOfPlace,pageRequest);
-        return PlaceMapper.entityListToDtoList(pages.stream().toList(), ratingRepository);
+        return placeMapper.entityListToDtoList(pages.stream().toList());
     }
 
 
     @Override
     public PlaceDTO getPlaceById(Long id) throws PlaceNotFoundException {
-        return PlaceMapper.entityToDto(placeRepository.findById(id)
-                .orElseThrow(PlaceNotFoundException::new), ratingRepository);
+        return placeMapper.entityToDto(placeRepository.findById(id)
+                .orElseThrow(PlaceNotFoundException::new));
     }
 
     @Override
     public PlaceDTO insertPlace(PlaceDTO placeDTO) {
         placeDTO.setId(null);
-        placeRepository.save(PlaceMapper.dtoToEntity(placeDTO));
+        placeRepository.save(placeMapper.dtoToEntity(placeDTO));
         return placeDTO;
     }
 
@@ -56,13 +57,13 @@ public class PlaceServiceImpl implements PlaceService {
     public PlaceDTO deletePlaceById(Long id) throws PlaceNotFoundException {
         Place place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
         placeRepository.delete(place);
-        return PlaceMapper.entityToDto(place, ratingRepository);
+        return placeMapper.entityToDto(place);
     }
 
     @Override
     public PlaceDTO updatePlaceById(Long id, PlaceDTO placeDTO) throws PlaceNotFoundException {
         placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
-        placeRepository.save(PlaceMapper.dtoToEntity(placeDTO));
+        placeRepository.save(placeMapper.dtoToEntity(placeDTO));
         return placeDTO;
     }
 
@@ -116,6 +117,6 @@ public class PlaceServiceImpl implements PlaceService {
                 .withMatcher("placeType",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("address",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withIgnorePaths("id","description","imageUrl","linkUrl");
-        return match ?  matches : notMatches;
+        return match ? matches : notMatches;
     }
 }

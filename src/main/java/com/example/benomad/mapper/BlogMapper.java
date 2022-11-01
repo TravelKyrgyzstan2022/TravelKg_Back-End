@@ -6,25 +6,33 @@ import com.example.benomad.enums.Status;
 import com.example.benomad.exception.UserNotFoundException;
 import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class BlogMapper {
 
-    public static BlogDTO entityToDto(Blog blog, Long currentUserId, BlogRepository blogRepository){
+    private final BlogRepository blogRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+
+    public BlogDTO entityToDto(Blog blog, Long currentUserId){
         return BlogDTO.builder()
                 .id(blog.getId())
                 .status(blog.getStatus())
                 .title(blog.getTitle())
                 .body(blog.getBody())
-                .authorId((UserMapper.entityToDto(blog.getAuthor()).getId()))
+                .authorId((userMapper.entityToDto(blog.getAuthor()).getId()))
                 .likes(blogRepository.getLikesNumberById(blog.getId()))
                 .isLikedByCurrentUser(blogRepository.isBlogLikedByUser(blog.getId(), currentUserId))
                 .build();
     }
 
-    public static Blog dtoToEntity(BlogDTO blogDTO, UserRepository userRepository){
+    public Blog dtoToEntity(BlogDTO blogDTO){
         if(blogDTO.getStatus() == null){
             blogDTO.setStatus(Status.BEING_REVIEWED);
         }
@@ -37,18 +45,18 @@ public class BlogMapper {
                 .build();
     }
 
-    public static List<BlogDTO> entityListToDtoList(List<Blog> entities, Long currentUserId, BlogRepository blogRepository){
+    public List<BlogDTO> entityListToDtoList(List<Blog> entities, Long currentUserId){
         List<BlogDTO> dtos = new ArrayList<>();
         for(Blog e : entities){
-            dtos.add(BlogMapper.entityToDto(e, currentUserId, blogRepository));
+            dtos.add(entityToDto(e, currentUserId));
         }
         return dtos;
     }
 
-    public static List<Blog> dtoListToEntityList(List<BlogDTO> dtos, UserRepository userRepository){
+    public List<Blog> dtoListToEntityList(List<BlogDTO> dtos, UserRepository userRepository){
         List<Blog> entities = new ArrayList<>();
         for(BlogDTO d: dtos){
-            entities.add(BlogMapper.dtoToEntity(d, userRepository));
+            entities.add(dtoToEntity(d));
         }
         return entities;
     }

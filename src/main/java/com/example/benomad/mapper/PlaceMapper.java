@@ -4,12 +4,19 @@ package com.example.benomad.mapper;
 import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.entity.Place;
 import com.example.benomad.repository.RatingRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class PlaceMapper {
-    public static Place dtoToEntity(PlaceDTO placeDTO) {
+
+    private final RatingRepository ratingRepository;
+
+    public Place dtoToEntity(PlaceDTO placeDTO) {
 
         return Place.builder()
                 .id(placeDTO.getId())
@@ -23,7 +30,7 @@ public class PlaceMapper {
                 .build();
     }
 
-    public static PlaceDTO entityToDto(Place place, RatingRepository ratingRepository) {
+    public PlaceDTO entityToDto(Place place) {
         return PlaceDTO.builder()
                 .id(place.getId())
                 .name(place.getName())
@@ -38,10 +45,10 @@ public class PlaceMapper {
                 .build();
     }
 
-    public static List<PlaceDTO> entityListToDtoList(List<Place> places, RatingRepository ratingRepository) {
+    public List<PlaceDTO> entityListToDtoList(List<Place> places) {
         List<PlaceDTO> placeDTOS = new ArrayList<>();
         for (Place place : places) {
-            placeDTOS.add(entityToDto(place, ratingRepository));
+            placeDTOS.add(entityToDto(place));
         }
         return placeDTOS;
     }

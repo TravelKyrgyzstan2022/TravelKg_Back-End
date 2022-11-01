@@ -19,10 +19,11 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public UserDTO getUserById(Long id) throws UserNotFoundException {
-        return UserMapper.entityToDto(userRepository.findById(id).orElseThrow(
+        return userMapper.entityToDto(userRepository.findById(id).orElseThrow(
                 UserNotFoundException::new
         ));
     }
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
         if(userRepository.findAll(example).size() > 0){
             throw new UserAttributeTakenException("phone_number: ('" + userDTO.getPhoneNumber() + "')");
         }
-        return UserMapper.entityToDto(userRepository.save(UserMapper.dtoToEntity(userDTO)));
+        return userMapper.entityToDto(userRepository.save(userMapper.dtoToEntity(userDTO)));
     }
 
     @Override
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
         Example<User> example = Example.of(user, getExample(MATCH_ALL));
 
-        return UserMapper.entityListToDtoList(userRepository.findAll(example));
+        return userMapper.entityListToDtoList(userRepository.findAll(example));
     }
 
     @Override
@@ -72,7 +73,7 @@ public class UserServiceImpl implements UserService {
         userRepository.findById(id).orElseThrow(
                 UserNotFoundException::new);
         userDTO.setId(id);
-        userRepository.save(UserMapper.dtoToEntity(userDTO));
+        userRepository.save(userMapper.dtoToEntity(userDTO));
         return userDTO;
     }
 
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService {
         if(id != 1L){
             userRepository.delete(user);
         }
-        return UserMapper.entityToDto(user);
+        return userMapper.entityToDto(user);
     }
 
     private ExampleMatcher getExample(boolean MATCH_ALL){

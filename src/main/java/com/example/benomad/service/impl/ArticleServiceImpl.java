@@ -19,20 +19,21 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
+    private final ArticleMapper articleMapper;
 
     @Override
     public List<ArticleDTO> getAllArticles() {
         List<Article> articles = articleRepository.findAll();
         List<ArticleDTO> articleDTOS = new ArrayList<>();
         for (Article a : articles){
-            articleDTOS.add(ArticleMapper.entityToDto(a));
+            articleDTOS.add(articleMapper.entityToDto(a));
         }
         return articleDTOS;
     }
 
     @Override
     public ArticleDTO getArticleById(Long id) throws ArticleNotFoundException {
-        return ArticleMapper.entityToDto(articleRepository.findById(id).orElseThrow(
+        return articleMapper.entityToDto(articleRepository.findById(id).orElseThrow(
                 ArticleNotFoundException::new));
     }
 
@@ -41,14 +42,14 @@ public class ArticleServiceImpl implements ArticleService {
         articleRepository.findById(id).orElseThrow(
                 ArticleNotFoundException::new);
         articleDTO.setId(id);
-        articleRepository.save(ArticleMapper.dtoToEntity(articleDTO, userRepository));
+        articleRepository.save(articleMapper.dtoToEntity(articleDTO));
         return articleDTO;
     }
 
     @Override
     public ArticleDTO insertArticle(ArticleDTO articleDTO) {
         articleDTO.setId(null);
-        articleRepository.save(ArticleMapper.dtoToEntity(articleDTO, userRepository));
+        articleRepository.save(articleMapper.dtoToEntity(articleDTO));
         articleDTO.setId(articleRepository.getLastValueOfArticleSequence());
         return articleDTO;
     }
@@ -58,6 +59,6 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleRepository.findById(id).orElseThrow(
                 ArticleNotFoundException::new);
         articleRepository.delete(article);
-        return ArticleMapper.entityToDto(article);
+        return articleMapper.entityToDto(article);
     }
 }
