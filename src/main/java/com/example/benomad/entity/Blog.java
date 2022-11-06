@@ -42,4 +42,10 @@ public class Blog {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @OneToMany
+    @JoinTable(name = "blog_comments",
+            joinColumns = @JoinColumn(name = "blog_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id")
+    )
+    private Set<Comment> comments;
 }

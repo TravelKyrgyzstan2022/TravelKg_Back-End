@@ -2,8 +2,9 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
+import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.enums.Status;
-import com.example.benomad.exception.UserNotFoundException;
+import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,12 @@ public class BlogMapper {
         }
         return Blog.builder()
                 .id(blogDTO.getId())
-                .author(userRepository.findById(blogDTO.getAuthorId()).orElseThrow(UserNotFoundException::new))
+                .author(
+                        userRepository.findById(blogDTO.getAuthorId()).orElseThrow(
+                                () -> {
+                                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, blogDTO.getAuthorId());
+                                })
+                )
                 .title(blogDTO.getTitle())
                 .body(blogDTO.getBody())
                 .status(blogDTO.getStatus())

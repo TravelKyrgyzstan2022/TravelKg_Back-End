@@ -15,6 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlaceDTO {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Schema(required = true)
@@ -28,11 +29,11 @@ public class PlaceDTO {
     private PlaceType placeType;
 
     @Schema(required = false)
-    @JsonProperty("average_rating")
+    @JsonProperty(value = "average_rating", access = JsonProperty.Access.READ_ONLY)
     private Double averageRating;
 
     @Schema(required = false)
-    @JsonProperty("rating_count")
+    @JsonProperty(value = "rating_count", access = JsonProperty.Access.READ_ONLY)
     private Integer ratingCount;
 
     @Schema(required = true)

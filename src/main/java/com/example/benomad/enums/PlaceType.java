@@ -1,25 +1,15 @@
 package com.example.benomad.enums;
 
 public enum PlaceType {
-    MOUNTAIN,
-    RIVER,
-    LAKE,
-    HOTEL,//
-    RESTAURANT,//
+    HIKING,  // see and try
+    RIVER_LAKE,
     PARK,
-    CINEMA,
-    EVENT,
-    CAFE,//
-    ENTERTAINMENT,
-    BAZAAR,
-    GORGE,
-    VALLEY,
-    HISTORICAL_BUILDING,
-    THEATRE,
-    PHILHARMONIC,
-    FOREST,
-    MALL,
-    TEAHOUSE,//
-    SQUARE,
-    SKY_RESORT
+    CULTURE,
+    COFFEE_HOUSE, // eat
+    CAFE,
+    RESTAURANT,
+    BAR,
+    HOTEL, // stay
+    HOSTEL,
+    ENTERTAINMENT, // entertainment
 }

@@ -1,8 +1,11 @@
 package com.example.benomad.controller;
 
+import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.dto.PlaceDTO;
+import com.example.benomad.enums.CommentReference;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
+import com.example.benomad.service.impl.CommentServiceImpl;
 import com.example.benomad.service.impl.PlaceServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +26,7 @@ import java.util.Optional;
 public class PlaceController {
 
     private final PlaceServiceImpl placeService;
+    private final CommentServiceImpl commentService;
 
     @Operation(summary = "Gets all places / Finds places by attributes")
     @GetMapping(produces = "application/json", value = {"/", ""})
@@ -47,10 +51,27 @@ public class PlaceController {
         return ResponseEntity.ok().body(placeService.getPlaceById(id));
     }
 
+    @Operation(summary = "Gets comments of place by ID")
+    @GetMapping(value = "/{id}/comments", produces = "application/json")
+    public ResponseEntity<?> getPlaceCommentsById(
+            @PathVariable Long id,
+            @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
+            @RequestParam(name = "page", required = false) Optional<Integer> page,
+            @RequestParam(name = "size", required = false) Optional<Integer> size){
+        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1),
+                Sort.by(sortBy.orElse("id")));
+        return ResponseEntity.ok(commentService.getReferenceCommentsById(id, CommentReference.PLACE, pageRequest));
+    }
+
     @Operation(summary = "Inserts a place to the database")
-    @PostMapping(value = {"/",""} ,produces = "application/json")
+    @PostMapping(value = {"/",""}, produces = "application/json")
     public ResponseEntity<?> savePlace(@RequestBody PlaceDTO placeDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(placeService.insertPlace(placeDTO));
+    }
+
+    @PostMapping(value = "/{id}/comment", produces = "application/json")
+    public ResponseEntity<?> commentPlace(@PathVariable Long placeId, @RequestBody CommentDTO commentDTO){
+        return ResponseEntity.ok(commentService.insertComment(CommentReference.PLACE, placeId, commentDTO));
     }
 
     @Operation(summary = "Deletes place by ID")
@@ -72,9 +93,7 @@ public class PlaceController {
                                        @RequestParam(name = "user_id") Long userId,
                                        @RequestParam(name = "rating", defaultValue = "1") Integer rating,
                                        @RequestParam(name = "remove", defaultValue = "0") Boolean isRemoval){
-
-        placeService.ratePlaceById(placeId, userId, rating, isRemoval);
-        return ResponseEntity.ok(placeService.getPlaceById(placeId));
+        return ResponseEntity.ok(placeService.ratePlaceById(placeId, userId, rating, isRemoval));
     }
 
 

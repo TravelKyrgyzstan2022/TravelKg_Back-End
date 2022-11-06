@@ -2,10 +2,14 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.ArticleDTO;
 import com.example.benomad.entity.Article;
-import com.example.benomad.exception.UserNotFoundException;
+import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +33,20 @@ public class ArticleMapper {
                 .body(dto.getBody())
                 .imageUrl(dto.getImageUrl())
                 .title(dto.getTitle())
-                .user(userRepository.findById(dto.getUserId()).orElseThrow(UserNotFoundException::new))
+                .user(
+                        userRepository.findById(dto.getUserId()).orElseThrow(
+                                () -> {
+                                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, dto.getUserId());
+                                })
+                )
                 .build();
+    }
+
+    public List<ArticleDTO> entityListToDtoList(List<Article> entities){
+        List<ArticleDTO> dtos = new ArrayList<>();
+        for(Article a : entities){
+            dtos.add(entityToDto(a));
+        }
+        return dtos;
     }
 }

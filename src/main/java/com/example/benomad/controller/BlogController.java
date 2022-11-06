@@ -1,14 +1,21 @@
 package com.example.benomad.controller;
 
 import com.example.benomad.dto.BlogDTO;
+import com.example.benomad.dto.CommentDTO;
+import com.example.benomad.enums.CommentReference;
 import com.example.benomad.enums.Status;
 import com.example.benomad.service.impl.BlogServiceImpl;
+import com.example.benomad.service.impl.CommentServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -18,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class BlogController {
 
     private final BlogServiceImpl blogService;
+    private final CommentServiceImpl commentService;
 
     @Operation(summary = "Gets all the blogs / Finds blogs by attributes",
     description = "Returns all blogs if none of the parameters are specified." +
@@ -40,11 +48,28 @@ public class BlogController {
         return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogById(id, userId));
     }
 
+    @Operation(summary = "Gets comments of blog by ID")
+    @GetMapping(value = "/{id}/comments", produces = "application/json")
+    public ResponseEntity<?> getPlaceCommentsById(
+            @PathVariable Long id,
+            @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
+            @RequestParam(name = "page", required = false) Optional<Integer> page,
+            @RequestParam(name = "size", required = false) Optional<Integer> size){
+        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1),
+                Sort.by(sortBy.orElse("id")));
+        return ResponseEntity.ok(commentService.getReferenceCommentsById(id, CommentReference.BLOG, pageRequest));
+    }
+
     @Operation(summary = "Inserts a blog to the database",
     description = "")
     @PostMapping(value = {"/", ""}, produces = "application/json")
     public ResponseEntity<?> insertBlog(@RequestBody BlogDTO dto){
         return ResponseEntity.ok(blogService.insertBlog(dto));
+    }
+
+    @PostMapping(value = "/{id}/comment", produces = "application/json")
+    public ResponseEntity<?> commentBlog(@PathVariable Long blogId, @RequestBody CommentDTO commentDTO){
+        return ResponseEntity.ok(commentService.insertComment(CommentReference.BLOG, blogId, commentDTO));
     }
 
     @Operation(summary = "Likes or dislikes the blog",
@@ -53,15 +78,14 @@ public class BlogController {
     public ResponseEntity<?> likeDislikeBlog(@RequestParam(name = "blog_id") Long blogId,
                                       @RequestParam(name = "user_id") Long userId,
                                       @RequestParam(name = "is_dislike") boolean isDislike){
-        blogService.likeDislikeBlogById(blogId, userId, isDislike);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("REQUEST ACCEPTED!");
+        return ResponseEntity.ok(blogService.likeDislikeBlogById(blogId, userId, isDislike));
     }
 
     @Operation(summary = "Updates a blog by ID")
     @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> updateBlog(@RequestBody BlogDTO blogDTO, @PathVariable Long id){
+    public ResponseEntity<?> updateBlog(@PathVariable Long id, @RequestBody BlogDTO blogDTO){
         blogDTO.setId(id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.updateBlogById(blogDTO));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.updateBlogById(id, blogDTO));
     }
 
     @Operation(summary = "Deletes the blog by ID")
