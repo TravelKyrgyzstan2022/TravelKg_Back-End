@@ -1,11 +1,14 @@
 package com.example.benomad.dto;
 
 
+import com.example.benomad.enums.PlaceCategory;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 @Getter
@@ -16,26 +19,41 @@ import lombok.*;
 public class PlaceDTO {
     private Long id;
 
+    @Schema(required = true)
     private String name;
 
+    @Schema(required = true)
     private Region region;
 
+    @Schema(required = true)
     @JsonProperty("place_type")
     private PlaceType placeType;
 
-    @JsonProperty("average_rating")
+    @Schema(required = true)
+    @JsonProperty("place_category")
+    private PlaceCategory placeCategory;
+
+    @Schema(required = false)
+    @JsonProperty(value = "average_rating",access = JsonProperty.Access.READ_ONLY)
     private Double averageRating;
 
-    @JsonProperty("rating_count")
+    @Schema(required = false)
+    @JsonProperty(value = "rating_count",access = JsonProperty.Access.READ_ONLY)
     private Integer ratingCount;
 
+    @Schema(required = true)
     private String description;
 
-    @JsonProperty("image_url")
-    private String imageUrl;
-
+    @Schema(required = true)
     @JsonProperty("link_url")
     private String linkUrl;
 
+    @Schema(required = false)
     private String address;
+
+    @JsonProperty(value = "is_favorite_of_current_user",access = JsonProperty.Access.READ_ONLY)
+    private Boolean isFavoriteOfCurrentUser;
+
+    @JsonProperty(value = "byte_image",access = JsonProperty.Access.READ_ONLY)
+    private byte[] byteImage;
 }

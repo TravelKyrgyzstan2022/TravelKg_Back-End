@@ -3,10 +3,13 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.entity.Place;
 import com.example.benomad.entity.Rating;
+import com.example.benomad.entity.User;
+import com.example.benomad.enums.PlaceCategory;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
 import com.example.benomad.exception.InvalidRatingException;
 import com.example.benomad.exception.PlaceNotFoundException;
+import com.example.benomad.exception.UserNotFoundException;
 import com.example.benomad.mapper.PlaceMapper;
 import com.example.benomad.repository.PlaceRepository;
 import com.example.benomad.repository.RatingRepository;
@@ -18,6 +21,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,27 +32,27 @@ public class PlaceServiceImpl implements PlaceService {
     private final PlaceRepository placeRepository;
     private final RatingRepository ratingRepository;
     private final UserRepository userRepository;
+    private final PlaceMapper placeMapper;
 
     @Override
-    public List<PlaceDTO> getAllPlacesByAttributes(String name, Region region, PlaceType placeType,
-                                                   String address,Boolean match,PageRequest pageRequest) {
-        Place builtPlace = Place.builder().name(name).address(address).region(region).placeType(placeType).build();
+    public List<PlaceDTO> getPlacesByAttributes(String name, Region region, PlaceType placeType, PlaceCategory placeCategory,
+                                                   String address, Boolean match, Long currentUserId,PageRequest pageRequest) {
+        Place builtPlace = Place.builder().name(name).address(address).region(region).placeType(placeType).placeCategory(placeCategory).build();
         Example<Place> exampleOfPlace = Example.of(builtPlace,getExampleMatcher(match));
         Page<Place> pages = placeRepository.findAll(exampleOfPlace,pageRequest);
-        return PlaceMapper.entityListToDtoList(pages.stream().toList(), ratingRepository);
+        return placeMapper.entityListToDtoList(pages.stream().toList(),currentUserId);
     }
 
 
     @Override
-    public PlaceDTO getPlaceById(Long id) throws PlaceNotFoundException {
-        return PlaceMapper.entityToDto(placeRepository.findById(id)
-                .orElseThrow(PlaceNotFoundException::new), ratingRepository);
+    public PlaceDTO getPlaceById(Long id,Long currentUserId) throws PlaceNotFoundException {
+        return placeMapper.entityToDto(placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new),currentUserId);
     }
 
     @Override
-    public PlaceDTO insertPlace(PlaceDTO placeDTO) {
+    public PlaceDTO insertPlace(PlaceDTO placeDTO, MultipartFile file) {
         placeDTO.setId(null);
-        placeRepository.save(PlaceMapper.dtoToEntity(placeDTO));
+        placeRepository.save(placeMapper.dtoToEntity(placeDTO,file));
         return placeDTO;
     }
 
@@ -56,13 +60,13 @@ public class PlaceServiceImpl implements PlaceService {
     public PlaceDTO deletePlaceById(Long id) throws PlaceNotFoundException {
         Place place = placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
         placeRepository.delete(place);
-        return PlaceMapper.entityToDto(place, ratingRepository);
+        return placeMapper.entityToDto(place,null);
     }
 
     @Override
-    public PlaceDTO updatePlaceById(Long id, PlaceDTO placeDTO) throws PlaceNotFoundException {
+    public PlaceDTO updatePlaceById(Long id, PlaceDTO placeDTO,MultipartFile file) throws PlaceNotFoundException {
         placeRepository.findById(id).orElseThrow(PlaceNotFoundException::new);
-        placeRepository.save(PlaceMapper.dtoToEntity(placeDTO));
+        placeRepository.save(placeMapper.dtoToEntity(placeDTO, file));
         return placeDTO;
     }
 
@@ -109,13 +113,22 @@ public class PlaceServiceImpl implements PlaceService {
                 .withMatcher("region",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("placeType",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("address",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
+                .withMatcher("placeCategory",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withIgnorePaths("id","description","imageUrl","linkUrl");
         ExampleMatcher notMatches = ExampleMatcher.matchingAny()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("region",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("placeType",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("address",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
+                .withMatcher("placeCategory",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withIgnorePaths("id","description","imageUrl","linkUrl");
-        return match ?  matches : notMatches;
+        return match ? matches : notMatches;
+    }
+
+    public void addPlaceToFavorites(Long placeId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
+        user.getPlaces().add(place);
+        userRepository.save(user);
     }
 }

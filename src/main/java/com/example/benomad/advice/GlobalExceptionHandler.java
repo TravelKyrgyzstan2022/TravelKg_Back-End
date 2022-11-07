@@ -15,15 +15,15 @@ import java.time.LocalDateTime;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Object> handleNotFoundException(HttpServletRequest request, RuntimeException exception) {
-        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
-                .statusCode(490)
-                .message(exception.getMessage())
-                .timestamp(LocalDateTime.now())
-                .build();
-        return ResponseEntity.status(exceptionResponse.getStatusCode()).body(exceptionResponse);
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<Object> handleNotFoundException(HttpServletRequest request, RuntimeException exception) {
+//        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+//                .statusCode(490)
+//                .message(exception.getMessage())
+//                .timestamp(LocalDateTime.now())
+//                .build();
+//        return ResponseEntity.status(exceptionResponse.getStatusCode()).body(exceptionResponse);
+//    }
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<Object> handleCustomException(HttpServletRequest request, CustomException exception) {
@@ -35,14 +35,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(exceptionResponse.getStatusCode()).body(exceptionResponse);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Object> handleIllegalArgumentException(HttpServletRequest request,IllegalArgumentException exception) {
-        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
-                .statusCode(490)
-                .message(exception.getMessage())
-                .timestamp(LocalDateTime.now())
-                .build();
-        return ResponseEntity.status(exceptionResponse.getStatusCode()).body(exceptionResponse);
-    }
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    public ResponseEntity<Object> handleIllegalArgumentException(HttpServletRequest request,IllegalArgumentException exception) {
+//        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+//                .statusCode(490)
+//                .message(exception.getMessage())
+//                .timestamp(LocalDateTime.now())
+//                .build();
+//        return ResponseEntity.status(exceptionResponse.getStatusCode()).body(exceptionResponse);
+//    }
 
 }

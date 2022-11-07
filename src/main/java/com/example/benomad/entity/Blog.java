@@ -33,10 +33,10 @@ public class Blog {
     )
     private Set<User> likedUsers;
 
-    @Column(length = 400)
+    @Column(length = 500, nullable = false)
     private String title;
 
-    @Column(length = 10000)
+    @Column(length = 10000, nullable = false)
     private String body;
 
     @Enumerated(EnumType.STRING)

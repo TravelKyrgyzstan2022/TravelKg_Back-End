@@ -1,7 +1,6 @@
 package com.example.benomad.enums;
 
 public enum PlaceType {
-
     MOUNTAIN,
     RIVER,
     LAKE,

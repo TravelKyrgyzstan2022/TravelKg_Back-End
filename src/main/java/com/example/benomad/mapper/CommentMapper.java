@@ -6,11 +6,17 @@ import com.example.benomad.exception.PlaceNotFoundException;
 import com.example.benomad.exception.UserNotFoundException;
 import com.example.benomad.repository.PlaceRepository;
 import com.example.benomad.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-
+@Service
+@RequiredArgsConstructor
 public class CommentMapper {
-    public static Comment dtoToEntity(CommentDTO commentDTO, PlaceRepository placeRepository,
-                                      UserRepository userRepository) {
+
+    private final PlaceRepository placeRepository;
+    private final UserRepository userRepository;
+
+    public Comment dtoToEntity(CommentDTO commentDTO) {
         return Comment.builder()
                 .id(commentDTO.getId())
                 .place(placeRepository.findById(commentDTO.getPlaceId()).orElseThrow(PlaceNotFoundException::new))
@@ -19,7 +25,7 @@ public class CommentMapper {
                 .build();
     }
 
-    public static CommentDTO entityToDto(Comment comment) {
+    public CommentDTO entityToDto(Comment comment) {
         return CommentDTO.builder()
                 .id(comment.getId())
                 .placeId(comment.getPlace().getId())

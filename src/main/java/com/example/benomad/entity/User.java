@@ -28,13 +28,16 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(nullable = false)
     private String login;
 
+    @Column(nullable = false)
     private String password;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
+    @Column(nullable = false)
     private String email;
 
     @ManyToMany
@@ -42,11 +45,10 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-
     private Collection<Role> roles;
 
     @ManyToMany
-    @JoinTable(name = "users_places",
+    @JoinTable(name = "favorite_places",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "place_id"))
     private List<Place> places;

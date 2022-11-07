@@ -2,16 +2,14 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class UserMapper {
-    public static User dtoToEntity(UserDTO userDTO){
+    public User dtoToEntity(UserDTO userDTO){
         return User.builder()
                 .id(userDTO.getId())
                 .login(userDTO.getLogin())
@@ -23,7 +21,7 @@ public class UserMapper {
                 .build();
     }
 
-    public static UserDTO entityToDto(User user){
+    public UserDTO entityToDto(User user){
         return UserDTO.builder()
                 .id(user.getId())
                 .login(user.getLogin())
@@ -34,25 +32,19 @@ public class UserMapper {
                 .build();
     }
 
-    public static UserDTO entityToDtoShort(User user){ // need to change the func name tbh
-        return UserDTO.builder()
-                .id(user.getId())
-                .login(user.getLogin())
-                .build();
-    }
-
-    public static List<UserDTO> entityListToDtoList(List<User> entities){
+    public List<UserDTO> entityListToDtoList(List<User> entities){
         List<UserDTO> dtos = new ArrayList<>();
         for(User u : entities){
-            dtos.add(UserMapper.entityToDto(u));
+            u.setPlaces(null);
+            dtos.add(entityToDto(u));
         }
         return dtos;
     }
 
-    public static List<User> dtoListToEntityList(List<UserDTO> dtos){
+    public List<User> dtoListToEntityList(List<UserDTO> dtos){
         List<User> entities = new ArrayList<>();
         for(UserDTO u : dtos){
-            entities.add(UserMapper.dtoToEntity(u));
+            entities.add(dtoToEntity(u));
         }
         return entities;
     }

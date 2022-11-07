@@ -18,11 +18,13 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 500)
     private String title;
 
+    @Column(nullable = false, length = 10000)
     private String body;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
     @ManyToOne

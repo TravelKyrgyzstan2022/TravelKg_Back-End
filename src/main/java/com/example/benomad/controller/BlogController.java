@@ -3,7 +3,6 @@ package com.example.benomad.controller;
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.enums.Status;
 import com.example.benomad.service.impl.BlogServiceImpl;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -11,27 +10,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 @RestController
+@CrossOrigin
 @RequiredArgsConstructor
-@Tag(name = "Blog Resource", description = "The Blog API ")
 @RequestMapping("api/v1/blogs")
+@Tag(name = "Blog Resource", description = "The Blog API ")
 public class BlogController {
 
     private final BlogServiceImpl blogService;
 
-    @Hidden
-    @GetMapping("")
-    void redirect(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/api/v1/blogs/");
-    }
-
     @Operation(summary = "Gets all the blogs / Finds blogs by attributes",
     description = "Returns all blogs if none of the parameters are specified." +
             "\n*Note = current_user_id is needed to check whether the blogs are liked by the user or not.")
-    @GetMapping(value = "/", produces = "application/json")
+    @GetMapping(value = {"/", ""}, produces = "application/json")
     public ResponseEntity<?> findBlogs(@RequestParam(name = "author_id", required = false) Long authorId,
                                        @RequestParam(name = "title", required = false) String title,
                                        @RequestParam(name = "status", required = false) Status status,
@@ -51,7 +42,7 @@ public class BlogController {
 
     @Operation(summary = "Inserts a blog to the database",
     description = "")
-    @PostMapping(value = "/", produces = "application/json")
+    @PostMapping(value = {"/", ""}, produces = "application/json")
     public ResponseEntity<?> insertBlog(@RequestBody BlogDTO dto){
         return ResponseEntity.ok(blogService.insertBlog(dto));
     }
@@ -67,14 +58,14 @@ public class BlogController {
     }
 
     @Operation(summary = "Updates a blog by ID")
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> updateBlog(@RequestBody BlogDTO blogDTO, @PathVariable Long id){
         blogDTO.setId(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.updateBlogById(blogDTO));
     }
 
     @Operation(summary = "Deletes the blog by ID")
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> deleteBlogById(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.deleteBlogById(id));
     }

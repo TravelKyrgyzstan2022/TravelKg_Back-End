@@ -23,26 +23,27 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PlaceRepository placeRepository;
+    private final CommentMapper commentMapper;
 
     @Override
     public List<CommentDTO> getAllComments() {
         List<Comment> comments = commentRepository.findAll();
         List<CommentDTO> commentDTOS = new ArrayList<>();
         for (Comment comment : comments) {
-            commentDTOS.add(CommentMapper.entityToDto(comment));
+            commentDTOS.add(commentMapper.entityToDto(comment));
         }
         return commentDTOS;
     }
 
     @Override
     public CommentDTO getCommentById(Long id) throws CommentNotFoundException {
-        return CommentMapper.entityToDto(commentRepository.findById(id).orElseThrow(CommentNotFoundException::new));
+        return commentMapper.entityToDto(commentRepository.findById(id).orElseThrow(CommentNotFoundException::new));
     }
 
     @Override
     public CommentDTO insertComment(CommentDTO commentDTO) {
         commentDTO.setId(null);
-        commentRepository.save(CommentMapper.dtoToEntity(commentDTO, placeRepository, userRepository));
+        commentRepository.save(commentMapper.dtoToEntity(commentDTO));
         return commentDTO;
     }
 
@@ -50,13 +51,13 @@ public class CommentServiceImpl implements CommentService {
     public CommentDTO deleteCommentById(Long id) throws CommentNotFoundException {
         Comment comment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
         commentRepository.delete(comment);
-        return CommentMapper.entityToDto(comment);
+        return commentMapper.entityToDto(comment);
     }
 
     @Override
     public CommentDTO updateCommentById(Long id, CommentDTO commentDTO) throws CommentNotFoundException {
         commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
-        commentRepository.save(CommentMapper.dtoToEntity(commentDTO, placeRepository, userRepository));
+        commentRepository.save(commentMapper.dtoToEntity(commentDTO));
         return commentDTO;
     }
 }
