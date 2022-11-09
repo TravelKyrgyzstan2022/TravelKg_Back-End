@@ -1,6 +1,7 @@
 package com.example.benomad.advice;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ExceptionResponse {
     private int statusCode;
 

@@ -2,8 +2,9 @@ package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.User;
+import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.exception.UserAttributeTakenException;
-import com.example.benomad.exception.UserNotFoundException;
+import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.mapper.UserMapper;
 import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.UserService;
@@ -22,9 +23,11 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public UserDTO getUserById(Long id) throws UserNotFoundException {
-        return userMapper.entityToDto(userRepository.findById(id).orElseThrow(
-                UserNotFoundException::new
+    public UserDTO getUserById(Long userId) throws ContentNotFoundException {
+        return userMapper.entityToDto(userRepository.findById(userId).orElseThrow(
+                () -> {
+                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
+                }
         ));
     }
 
@@ -49,7 +52,9 @@ public class UserServiceImpl implements UserService {
         if(userRepository.findAll(example).size() > 0){
             throw new UserAttributeTakenException("phone_number: ('" + userDTO.getPhoneNumber() + "')");
         }
-        return userMapper.entityToDto(userRepository.save(userMapper.dtoToEntity(userDTO)));
+        userRepository.save(userMapper.dtoToEntity(userDTO));
+        userDTO.setId(userRepository.getLastValueOfSequence());
+        return userDTO;
     }
 
     @Override
@@ -69,19 +74,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUserById(Long id, UserDTO userDTO) throws UserNotFoundException {
-        userRepository.findById(id).orElseThrow(
-                UserNotFoundException::new);
-        userDTO.setId(id);
+    public UserDTO updateUserById(Long userId, UserDTO userDTO) throws ContentNotFoundException {
+        if(!userRepository.existsById(userId)){
+            throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
+        }
+        userDTO.setId(userId);
         userRepository.save(userMapper.dtoToEntity(userDTO));
         return userDTO;
     }
 
     @Override
-    public UserDTO deleteUserById(Long id) throws UserNotFoundException {
-        User user = userRepository.findById(id).orElseThrow(
-                UserNotFoundException::new);
-        if(id != 1L){
+    public UserDTO deleteUserById(Long userId) throws ContentNotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> {
+                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
+                });
+        if(userId != 1L){
             userRepository.delete(user);
         }
         return userMapper.entityToDto(user);

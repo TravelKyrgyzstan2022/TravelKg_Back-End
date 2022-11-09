@@ -3,6 +3,7 @@ package com.example.benomad.repository;
 
 import com.example.benomad.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public interface UserRepository extends JpaRepository <User, Long> {
     List<User> findByFirstNameAndLastName(String firstName, String lastName);
     Optional<User> findByEmail(String email);
     Optional<User> findByPhoneNumber(String phoneNumber);
-
+    @Query(value = "SELECT last_value FROM users_id_seq", nativeQuery = true)
+    Long getLastValueOfSequence();
 
 }

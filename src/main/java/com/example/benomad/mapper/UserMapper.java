@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserMapper {
@@ -33,20 +34,7 @@ public class UserMapper {
     }
 
     public List<UserDTO> entityListToDtoList(List<User> entities){
-        List<UserDTO> dtos = new ArrayList<>();
-        for(User u : entities){
-            u.setPlaces(null);
-            dtos.add(entityToDto(u));
-        }
-        return dtos;
-    }
-
-    public List<User> dtoListToEntityList(List<UserDTO> dtos){
-        List<User> entities = new ArrayList<>();
-        for(UserDTO u : dtos){
-            entities.add(dtoToEntity(u));
-        }
-        return entities;
+        return entities.stream().map(this::entityToDto).collect(Collectors.toList());
     }
 
 }

@@ -1,12 +1,13 @@
 package com.example.benomad.entity;
 
 
-import com.example.benomad.enums.PlaceCategory;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Optional;
+import java.util.Set;
 
 @Builder
 @Entity
@@ -29,14 +30,13 @@ public class Place {
     @Enumerated(EnumType.STRING)
     private PlaceType placeType;
 
-    @Enumerated(EnumType.STRING)
-    private PlaceCategory placeCategory;
-
     @Column(nullable = false, length = 2000)
     private String description;
 
-    @Column(nullable = false, name = "image_id")
-    private Long imageId;
+
+    @Getter(AccessLevel.NONE)
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @Column(nullable = false, name = "link_url")
     private String linkUrl;
@@ -44,4 +44,15 @@ public class Place {
     @Column(nullable = true)
     private String address;
 
+    @OneToMany
+    @JoinTable(name = "place_comments",
+            joinColumns = @JoinColumn(name = "place_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id")
+    )
+    private Set<Comment> comments;
+
+
+    public Optional<String> getImageUrl() {
+        return Optional.ofNullable(imageUrl);
+    }
 }

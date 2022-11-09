@@ -13,11 +13,13 @@ import lombok.*;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BlogDTO {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @JsonProperty("author_id")
     private Long authorId;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long likes;
 
     private String title;
@@ -26,6 +28,6 @@ public class BlogDTO {
 
     private Status status;
 
-    @JsonProperty("is_liked_by_current_user")
+    @JsonProperty(value = "is_liked_by_current_user", access = JsonProperty.Access.READ_ONLY)
     private Boolean isLikedByCurrentUser;
 }

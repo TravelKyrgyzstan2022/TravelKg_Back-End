@@ -1,9 +1,6 @@
 package com.example.benomad.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-
+import com.fasterxml.jackson.annotation.JsonInclude;;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -14,10 +11,16 @@ import lombok.*;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ArticleDTO {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
+
+    @JsonProperty("user_id")
     private Long userId;
+
     private String body;
+
     private String title;
+
     @JsonProperty("image_url")
     private String imageUrl;
 }
