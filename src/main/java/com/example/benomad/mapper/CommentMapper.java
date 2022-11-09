@@ -41,7 +41,9 @@ public class CommentMapper {
                 .userId(comment.getUser().getId())
                 .body(comment.getBody())
                 .likeCount(commentRepository.getLikesNumberById(comment.getId()))
-                .isLikedByCurrentUser(commentRepository.isCommentLikedByUser(comment.getId(), userId))
+                .isLikedByCurrentUser(
+                        userId != null ?
+                                commentRepository.isCommentLikedByUser(comment.getId(), userId) : null)
                 .build();
     }
 

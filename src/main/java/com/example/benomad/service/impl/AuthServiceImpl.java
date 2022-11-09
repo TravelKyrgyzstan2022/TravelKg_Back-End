@@ -1,5 +1,6 @@
 package com.example.benomad.service.impl;
 
+import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.RefreshToken;
 import com.example.benomad.exception.RefreshTokenException;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
 
         String jwt = userService.getUserAuthenticationToken(userDetails);
 
-        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+        List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         RefreshToken refreshToken = refreshTokenService.createToken(userDetails.getId());
@@ -77,8 +79,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void logoutUser(Long id) {
-        UserDTO userDTO = userService.getNotDeletedUserById(id);
+    public MessageResponse logoutUser(Long id) {
+        UserDTO userDTO = userService.getUserById(id);
         refreshTokenService.deleteByUserId(userDTO.getId());
+        return new MessageResponse("User has been successfully logged out!", 200);
     }
 }

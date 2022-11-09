@@ -35,9 +35,6 @@ public class User {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "login", nullable = false)
-    private String login;
-
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 

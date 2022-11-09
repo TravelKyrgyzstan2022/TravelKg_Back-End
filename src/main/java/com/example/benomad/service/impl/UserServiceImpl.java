@@ -1,5 +1,6 @@
 package com.example.benomad.service.impl;
 
+import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.entity.User;
 
 import com.example.benomad.enums.ContentNotFoundEnum;
@@ -9,7 +10,6 @@ import com.example.benomad.security.domain.Role;
 import com.example.benomad.security.domain.UserDetailsImpl;
 import com.example.benomad.security.jwt.JwtUtils;
 import com.example.benomad.dto.UserDTO;
-import com.example.benomad.exception.UserNotFoundException;
 
 import com.example.benomad.mapper.UserMapper;
 import com.example.benomad.repository.UserRepository;
@@ -21,15 +21,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Collections;
@@ -45,8 +41,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final JwtUtils jwtUtils;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    private MailSender mailSender;
+    private final MailSender mailSender;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -73,27 +68,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
 
-    public UserDTO getNotDeletedUserById(Long id) {
+    public UserDTO addUser(User user) {
 
-        User user = userRepository.findById(id).get();
-
-        return UserMapper.userToUserDto(user);
-    }
-
-
-
-    public boolean addUser(User user) {
-        User userFromDb = userRepository.findByEmail(user.getEmail());
-
-        if (userFromDb != null) {
-            return false;
+        Example<User> example = Example.of(user, getExampleForAttribute("email"));
+        if(userRepository.findAll(example).size() > 0){
+            throw new UserAttributeTakenException("email: ('" + user.getEmail() + "')");
+        }
+        example = Example.of(user, getExampleForAttribute("phoneNumber"));
+        if(userRepository.findAll(example).size() > 0){
+            throw new UserAttributeTakenException("phone_number: ('" + user.getPhoneNumber() + "')");
         }
 
+        user.setId(null);
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.ROLE_USER));
         user.setActivationCode(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
 
         userRepository.save(user);
 
@@ -108,7 +98,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             mailSender.send(user.getEmail(), "Account activation", message);
         }
 
-        return true;
+        return userMapper.entityToDto(user);
     }
 
     public boolean activateUser(String code) {
@@ -138,33 +128,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDTO insertUser(UserDTO userDTO) throws UserAttributeTakenException {
         userDTO.setId(null);
         User user = User.builder()
-                .login(userDTO.getLogin())
                 .email(userDTO.getEmail())
                 .phoneNumber(userDTO.getPhoneNumber())
                 .build();
 
-        Example<User> example = Example.of(user, getExampleForAttribute("login"));
-        if(userRepository.findAll(example).size() > 0){
-            throw new UserAttributeTakenException("login: ('" + userDTO.getLogin() + "')");
-        }
-        example = Example.of(user, getExampleForAttribute("email"));
-        if(userRepository.findAll(example).size() > 0){
-            throw new UserAttributeTakenException("email: ('" + userDTO.getEmail() + "')");
-        }
-        example = Example.of(user, getExampleForAttribute("phoneNumber"));
-        if(userRepository.findAll(example).size() > 0){
-            throw new UserAttributeTakenException("phone_number: ('" + userDTO.getPhoneNumber() + "')");
-        }
         userRepository.save(userMapper.dtoToEntity(userDTO));
         userDTO.setId(userRepository.getLastValueOfSequence());
         return userDTO;
     }
 
     @Override
-    public List<UserDTO> getUsersByAttributes(String login, String firstName, String lastName,
+    public List<UserDTO> getUsersByAttributes(String firstName, String lastName,
                                               String email, String phoneNumber, boolean MATCH_ALL) {
         User user = User.builder()
-                .login(login)
                 .firstName(firstName)
                 .lastName(lastName)
                 .email(email)
@@ -174,6 +150,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Example<User> example = Example.of(user, getExample(MATCH_ALL));
 
         return userMapper.entityListToDtoList(userRepository.findAll(example));
+    }
+
+    @Override
+    public UserDTO getUserByEmail(String email) throws ContentNotFoundException {
+        return null;
+    }
+
+    @Override
+    public UserDTO getUserByPhoneNumber(String phoneNumber) throws ContentNotFoundException {
+        return null;
     }
 
     @Override

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,13 +32,21 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
 
     @Override
-    public List<CommentDTO> getAllComments(Long cuserId) {
-        return commentMapper.entityListToDtoList(commentRepository.findAll(), cuserId);
+    public List<CommentDTO> getAllComments(Principal principal) {
+        Long userId = null;
+        if(principal != null){
+            userId = userRepository.findByEmail(principal.getName()).getId();
+        }
+        return commentMapper.entityListToDtoList(commentRepository.findAll(), userId);
     }
 
     @Override
-    public List<CommentDTO> getReferenceCommentsById(Long cuserId, Long referenceId, CommentReference reference, PageRequest pageRequest) {
+    public List<CommentDTO> getReferenceCommentsById(Principal principal, Long referenceId, CommentReference reference, PageRequest pageRequest) {
         Page<Comment> page;
+        Long userId = null;
+        if(principal != null){
+            userId = userRepository.findByEmail(principal.getName()).getId();
+        }
         if(reference == CommentReference.BLOG){
             if(!blogRepository.existsById(referenceId)){
                 throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, referenceId);
@@ -49,20 +58,29 @@ public class CommentServiceImpl implements CommentService {
             }
             page = commentRepository.getPlaceCommentsById(referenceId, pageRequest);
         }
-        return commentMapper.entityListToDtoList(page.stream().collect(Collectors.toList()), cuserId);
+        return commentMapper.entityListToDtoList(page.stream().collect(Collectors.toList()), userId);
     }
 
     @Override
-    public CommentDTO getCommentById(Long commentId, Long cuserId) throws ContentNotFoundException {
+    public CommentDTO getCommentById(Long commentId, Principal principal) throws ContentNotFoundException {
+        Long userId = null;
+        if(principal != null){
+            userId = userRepository.findByEmail(principal.getName()).getId();
+        }
         return commentMapper.entityToDto(commentRepository.findById(commentId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, commentId);
-                }), cuserId
+                }), userId
         );
     }
 
     @Override
-    public CommentDTO likeDislikeComment(Long commentId, Long userId, boolean isDislike) throws ContentNotFoundException{
+    public CommentDTO likeDislikeComment(Long commentId, boolean isDislike, Principal principal) throws ContentNotFoundException{
+        Long userId = null;
+        if(principal != null){
+            userId = userRepository.findByEmail(principal.getName()).getId();
+        }
+
         if(!commentRepository.existsById(commentId)){
             throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, commentId);
         }

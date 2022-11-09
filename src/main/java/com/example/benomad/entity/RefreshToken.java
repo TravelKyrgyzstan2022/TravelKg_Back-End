@@ -9,7 +9,7 @@ import java.time.Instant;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "refreshtoken")
+@Table(name = "refreshtokens")
 public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

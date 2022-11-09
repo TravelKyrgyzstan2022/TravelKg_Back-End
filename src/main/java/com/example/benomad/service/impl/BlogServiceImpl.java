@@ -3,7 +3,7 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
 import com.example.benomad.enums.ContentNotFoundEnum;
-import com.example.benomad.enums.Status;
+import com.example.benomad.enums.ReviewStatus;
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.exception.ContentIsAlreadyLikedException;
 import com.example.benomad.exception.ContentIsNotLikedException;
@@ -16,6 +16,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -34,46 +35,62 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogDTO getBlogById(Long blogId, Long currentUserId) throws ContentNotFoundException {
+    public BlogDTO getBlogById(Long blogId, Principal principal) throws ContentNotFoundException {
+        Long userId = null;
+        if(principal != null){
+            userId = userRepository.findByEmail(principal.getName()).getId();
+        }
         return blogMapper.entityToDto(
                 blogRepository.findById(blogId).orElseThrow(
                         () -> {
                             throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, blogId);
                         }),
-                currentUserId);
+                userId);
     }
 
     @Override
-    public List<BlogDTO> getBlogsByAttributes(Long authorId, Long currentUserId,
-                                              String title, Status status, boolean MATCH_ALL)
+    public List<BlogDTO> getBlogsByAttributes(Long authorId, Principal principal,
+                                              String title, ReviewStatus reviewStatus, boolean MATCH_ALL)
             throws ContentNotFoundException {
+        Long userId = null;
+        if(principal != null){
+            userId = userRepository.findByEmail(principal.getName()).getId();
+        }
+
         Blog blog = Blog.builder()
                 .title(title)
-                .author(
-                        userRepository.findById(authorId).orElseThrow(
-                                () -> {
-                                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, authorId);
-                                })
-                )
-                .status(status)
+                .reviewStatus(reviewStatus)
                 .build();
+
+        if(authorId != null){
+            blog.setAuthor(
+                    userRepository.findById(authorId).orElseThrow(
+                            () -> {
+                                throw new ContentNotFoundException(ContentNotFoundEnum.USER, authorId);
+                            })
+            );
+        }
 
         Example<Blog> example = Example.of(blog, getExample(MATCH_ALL));
 
         List<Blog> blogs = blogRepository.findAll(example);
 
-        return blogMapper.entityListToDtoList(blogs, currentUserId);
+        return blogMapper.entityListToDtoList(blogs, userId);
     }
 
 
     @Override
-    public BlogDTO likeDislikeBlogById(Long blogId, Long userId, boolean isDislike) throws ContentNotFoundException {
+    public BlogDTO likeDislikeBlogById(Long blogId, Principal principal, boolean isDislike) throws ContentNotFoundException {
+        Long userId = null;
+        if(principal != null){
+            userId = userRepository.findByEmail(principal.getName()).getId();
+            if(!userRepository.existsById(userId)){
+                throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
+            }
+        }
         Blog blog = blogRepository.findById(blogId).orElseThrow(() -> {
             throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, blogId);
         });
-        if(!userRepository.existsById(userId)){
-            throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
-        }
         boolean isAlreadyLiked = blogRepository.isBlogLikedByUser(blogId, userId);
         if(isDislike){
             if(!isAlreadyLiked){

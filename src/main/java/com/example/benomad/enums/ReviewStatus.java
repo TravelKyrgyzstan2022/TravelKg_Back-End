@@ -1,7 +1,7 @@
 package com.example.benomad.enums;
 
-public enum Status {
-    BEING_REVIEWED,
+public enum ReviewStatus {
+    PENDING,
     REJECTED,
     APPROVED
 }

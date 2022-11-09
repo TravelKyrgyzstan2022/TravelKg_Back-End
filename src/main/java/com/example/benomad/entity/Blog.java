@@ -1,6 +1,6 @@
 package com.example.benomad.entity;
 
-import com.example.benomad.enums.Status;
+import com.example.benomad.enums.ReviewStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,7 +40,7 @@ public class Blog {
     private String body;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private ReviewStatus reviewStatus;
 
     @OneToMany
     @JoinTable(name = "blog_comments",

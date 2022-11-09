@@ -3,14 +3,13 @@ package com.example.benomad.mapper;
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
 import com.example.benomad.enums.ContentNotFoundEnum;
-import com.example.benomad.enums.Status;
+import com.example.benomad.enums.ReviewStatus;
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,18 +24,19 @@ public class BlogMapper {
     public BlogDTO entityToDto(Blog blog, Long userId){
         return BlogDTO.builder()
                 .id(blog.getId())
-                .status(blog.getStatus())
+                .reviewStatus(blog.getReviewStatus())
                 .title(blog.getTitle())
                 .body(blog.getBody())
                 .authorId((userMapper.entityToDto(blog.getAuthor()).getId()))
                 .likes(blogRepository.getLikesNumberById(blog.getId()))
-                .isLikedByCurrentUser(blogRepository.isBlogLikedByUser(blog.getId(), userId))
+                .isLikedByCurrentUser(userId != null ?
+                        blogRepository.isBlogLikedByUser(blog.getId(), userId) : null)
                 .build();
     }
 
     public Blog dtoToEntity(BlogDTO blogDTO){
-        if(blogDTO.getStatus() == null){
-            blogDTO.setStatus(Status.BEING_REVIEWED);
+        if(blogDTO.getReviewStatus() == null){
+            blogDTO.setReviewStatus(ReviewStatus.PENDING);
         }
         return Blog.builder()
                 .id(blogDTO.getId())
@@ -48,7 +48,7 @@ public class BlogMapper {
                 )
                 .title(blogDTO.getTitle())
                 .body(blogDTO.getBody())
-                .status(blogDTO.getStatus())
+                .reviewStatus(blogDTO.getReviewStatus())
                 .build();
     }
 

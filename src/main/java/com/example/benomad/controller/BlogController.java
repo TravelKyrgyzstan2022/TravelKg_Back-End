@@ -3,7 +3,7 @@ package com.example.benomad.controller;
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.enums.CommentReference;
-import com.example.benomad.enums.Status;
+import com.example.benomad.enums.ReviewStatus;
 import com.example.benomad.service.impl.BlogServiceImpl;
 import com.example.benomad.service.impl.CommentServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -33,32 +34,32 @@ public class BlogController {
     @GetMapping(value = {"/", ""}, produces = "application/json")
     public ResponseEntity<?> findBlogs(@RequestParam(name = "author_id", required = false) Long authorId,
                                        @RequestParam(name = "title", required = false) String title,
-                                       @RequestParam(name = "status", required = false) Status status,
-                                       @RequestParam(name = "current_user_id", defaultValue = "1") Long userId,
-                                       @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
+                                       @RequestParam(name = "status", required = false) ReviewStatus reviewStatus,
+                                       @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL,
+                                       Principal principal){
         return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogsByAttributes(
-                authorId, userId, title, status, MATCH_ALL));
+                authorId, principal, title, reviewStatus, MATCH_ALL));
     }
 
     @Operation(summary = "Finds blog by ID",
     description = "*Note = current_user_id is needed to check whether the blogs are liked by the user or not.")
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> findBlogById(@PathVariable Long id,
-                                          @RequestParam(value = "current_user_id", defaultValue = "1") Long userId){
-        return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogById(id, userId));
+                                          Principal principal){
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogById(id, principal));
     }
 
     @Operation(summary = "Gets comments of blog by ID")
     @GetMapping(value = "/{id}/comments", produces = "application/json")
     public ResponseEntity<?> getBlogCommentsById(
             @PathVariable Long id,
-            @RequestParam(name = "current_user_id", defaultValue = "1") Long cuserId,
             @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
             @RequestParam(name = "page", required = false) Optional<Integer> page,
-            @RequestParam(name = "size", required = false) Optional<Integer> size){
+            @RequestParam(name = "size", required = false) Optional<Integer> size,
+            Principal principal){
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1),
                 Sort.by(sortBy.orElse("id")));
-        return ResponseEntity.ok(commentService.getReferenceCommentsById(cuserId, id, CommentReference.BLOG, pageRequest));
+        return ResponseEntity.ok(commentService.getReferenceCommentsById(principal, id, CommentReference.BLOG, pageRequest));
     }
 
     @Operation(summary = "Inserts a blog to the database",
@@ -77,9 +78,9 @@ public class BlogController {
             description = "Dislike is just a removal of a like, not an actual dislike :)")
     @PutMapping("/like")
     public ResponseEntity<?> likeDislikeBlog(@RequestParam(name = "blog_id") Long blogId,
-                                      @RequestParam(name = "user_id") Long userId,
-                                      @RequestParam(name = "is_dislike") boolean isDislike){
-        return ResponseEntity.ok(blogService.likeDislikeBlogById(blogId, userId, isDislike));
+                                             @RequestParam(name = "is_dislike") boolean isDislike,
+                                             Principal principal){
+        return ResponseEntity.ok(blogService.likeDislikeBlogById(blogId, principal, isDislike));
     }
 
     @Operation(summary = "Updates a blog by ID")

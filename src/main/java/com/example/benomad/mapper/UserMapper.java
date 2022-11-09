@@ -2,19 +2,16 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Service
 public class UserMapper {
-    public static User dtoToEntity(UserDTO userDTO){
+    public User dtoToEntity(UserDTO userDTO){
         return User.builder()
                 .id(userDTO.getId())
-                .login(userDTO.getLogin())
                 .password(userDTO.getPassword())
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
@@ -24,10 +21,9 @@ public class UserMapper {
                 .build();
     }
 
-    public static UserDTO entityToDto(User user){
+    public UserDTO entityToDto(User user){
         return UserDTO.builder()
                 .id(user.getId())
-                .login(user.getLogin())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
@@ -40,7 +36,7 @@ public class UserMapper {
         return entities.stream().map(this::entityToDto).collect(Collectors.toList());
     }
 
-    public List<User> entityListToDtoList(List<UserDTO> dtos){
+    public List<User> dtoListToEntity(List<UserDTO> dtos){
         return dtos.stream().map(this::dtoToEntity).collect(Collectors.toList());
     }
 

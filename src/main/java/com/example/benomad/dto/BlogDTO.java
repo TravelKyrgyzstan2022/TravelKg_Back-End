@@ -1,6 +1,6 @@
 package com.example.benomad.dto;
 
-import com.example.benomad.enums.Status;
+import com.example.benomad.enums.ReviewStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,7 +26,7 @@ public class BlogDTO {
 
     private String body;
 
-    private Status status;
+    private ReviewStatus reviewStatus;
 
     @JsonProperty(value = "is_liked_by_current_user", access = JsonProperty.Access.READ_ONLY)
     private Boolean isLikedByCurrentUser;

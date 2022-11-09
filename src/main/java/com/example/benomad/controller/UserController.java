@@ -21,13 +21,12 @@ public class UserController {
 
     @Operation(summary = "Gets all users / Finds users by attributes  (will be finished in the next update)")
     @GetMapping(value = {"/", ""}, produces = "application/json")
-    public ResponseEntity<?> findUserByAttributes(@RequestParam(name = "login", required = false) String login,
-                                          @RequestParam(name = "first_name", required = false) String firstName,
+    public ResponseEntity<?> findUserByAttributes(@RequestParam(name = "first_name", required = false) String firstName,
                                           @RequestParam(name = "last_name", required = false) String lastName,
                                           @RequestParam(name = "email", required = false) String email,
                                           @RequestParam(name = "phone_number", required = false) String phoneNumber,
                                           @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
-        return ResponseEntity.ok(userService.getUsersByAttributes(login, firstName, lastName, email, phoneNumber,
+        return ResponseEntity.ok(userService.getUsersByAttributes(firstName, lastName, email, phoneNumber,
                 MATCH_ALL));
     }
 

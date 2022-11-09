@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,8 +82,9 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public PlaceDTO ratePlaceById(Long placeId, Long userId, Integer rating, boolean isRemoval)
+    public PlaceDTO ratePlaceById(Long placeId, Principal principal, Integer rating, boolean isRemoval)
             throws ContentNotFoundException, InvalidRatingException {
+        Long userId = userRepository.findByEmail(principal.getName()).getId();
         if(isRemoval){
             rating = 1;
             Rating neededRating = ratingRepository.findByPlaceAndUser(

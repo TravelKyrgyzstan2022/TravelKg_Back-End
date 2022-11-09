@@ -38,12 +38,8 @@ public class UserDTO {
     @NotBlank(message = "Last name can't be null or empty")
     private String lastName;
 
-    @NotBlank(message = "Login name can't be null or empty")
-    private String login;
-
     @NotBlank(message = "Phone number can't be null or empty")
     private String phoneNumber;
-
 
     @NotBlank(message = "Email can't be null or empty")
     @Email(message = "Email is invalid")

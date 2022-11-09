@@ -6,6 +6,7 @@ import com.example.benomad.security.jwt.AuthTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -50,8 +51,12 @@ public class WebSecurityConfig {
                 .cors()
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/api/auth/**", "/api/v1/forgot_password",
-                            "/api/v1/reset_password", "/swagger-ui/**").permitAll()
+                    .antMatchers("/api/auth/**", "/documentation/**").permitAll()
+                    .antMatchers(HttpMethod.GET,  "/api/v1/users", "/api/v1/users/**").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/v1/**").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, "/api/v1/**").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, "/api/v1/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
                 .and()
                     .exceptionHandling()

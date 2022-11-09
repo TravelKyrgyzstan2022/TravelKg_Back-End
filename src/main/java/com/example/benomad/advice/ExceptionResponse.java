@@ -20,5 +20,4 @@ public class ExceptionResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss",timezone="GMT+6")
     private LocalDateTime timestamp;
     private String message;
-    private List<String> errors;
 }

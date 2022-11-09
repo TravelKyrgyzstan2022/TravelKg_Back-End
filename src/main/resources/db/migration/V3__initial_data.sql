@@ -18,8 +18,5 @@ INSERT INTO places (name, address, place_type, region, image_url, link_url, desc
 INSERT INTO places (name, address, place_type, region, image_url, link_url, description) VALUES ('Kegeti', 'Not Specified', 'GORGE', 'BISHKEK', 'https://upload.tury.club/data/839a7f2c2d7cf82d3a6570515f6a13a3/NDwNDtsv/hfVx4kR1.jpg', 'https://too.kg/kegety/', 'Great place for spending time');
 INSERT INTO places (name, address, place_type, region, image_url, link_url, description) VALUES ('Bellagio Coffee', 'Kiev 71', 'CAFE', 'BISHKEK', 'https://lh3.googleusercontent.com/p/AF1QipOHKq6Ss5LHRhOsA10f2HQnr4NFjeXwOurzh-px=w768-h768-n-o-v1', 'https://www.instagram.com/bellagio_coffee/?hl=ru', 'Great place for spending time');
 INSERT INTO places (name, address, place_type, region, image_url, link_url, description) VALUES ('Chunkurchak', 'Not Specified', 'SKY_RESORT', 'CHUY', 'https://www.chunkurchak.kg/images/lift3.jpg', 'https://www.chunkurchak.kg/', 'Great place for spending time');
-INSERT INTO users (id, login, password, first_name, last_name, email, phone_number) VALUES (1, 'admin', 'admin', 'admin', 'adminov', 'admin@admin.admin', '+000000000000');
-INSERT INTO users (id, login, password, first_name, last_name, email, phone_number) VALUES (2, 'pizza', 'pass', 'Remy', 'Ratatoille', 'harrypotter@hogwarts.uk', '+123456789');
-INSERT INTO users (id, login, password, first_name, last_name, email, phone_number) VALUES (3, 'edward', '1234', 'Edward', 'Cullin', 'jacob_loh@twilight.sumerki', '-3214786852');
-INSERT INTO users (id, login, password, first_name, last_name, email, phone_number) VALUES (4, 'therock', 'ggwp', 'Dwayne', 'Johnson', 'rock@motivation.kerekpi.com', '+8888888888');
-INSERT INTO users (id, login, password, first_name, last_name, email, phone_number) VALUES (5, 'volya_pavel', 'ssss', 'Denis', 'Dobrovolsky', 'shutka@comedy.club', '+7147892917');
+INSERT INTO users (id, password, first_name, last_name, email, phone_number, active) VALUES (1, '$2a$12$bWeU.HrrI2hddpkhOrWCTesyQOd8cOJ3WuKNyzWsAbaTz0W6CO7tC', 'admin', 'adminov', 'admin@admin.admin', '+000000000000', true);
+INSERT INTO roles (user_id, roles) VALUES (1, 'ROLE_ADMIN');
