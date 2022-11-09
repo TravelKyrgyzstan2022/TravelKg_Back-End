@@ -1,39 +1,55 @@
 package com.example.benomad.controller;
 
-import com.example.benomad.dto.UserDTO;
-import com.example.benomad.service.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
-@RequestMapping("/auth")
+import com.example.benomad.exception.NotFoundException;
+import com.example.benomad.exception.RefreshTokenException;
+import com.example.benomad.security.request.LogOutRequest;
+import com.example.benomad.security.request.LoginRequest;
+import com.example.benomad.security.request.TokenRefreshRequest;
+import com.example.benomad.dto.MessageResponse;
+import com.example.benomad.service.impl.AuthServiceImpl;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+@RestController
+@RequestMapping("/api/auth/")
+@Validated
+@RequiredArgsConstructor
+//@Tag(name = "Auth Controller", description = "The Auth API with documentation annotations")
 public class AuthController {
 
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private final AuthServiceImpl authService;
 
-    @GetMapping("/login")
-    public String getLoginPage() {
-        return "login";
+
+    @PostMapping(value = "/signin", produces = "application/json")
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(authService.authenticateUser(loginRequest));
+    }
+    
+    @PostMapping(value = "/refreshtoken", produces = "application/json")
+    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
+        try{
+            return ResponseEntity.ok(authService.refreshToken(request));
+        } catch (RefreshTokenException ex) {
+            throw new RefreshTokenException(request.getRefreshToken(), ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(new MessageResponse(ex.getMessage()));
+        }
     }
 
-    @GetMapping("/success")
-    public String getSuccessPage() {
-        return "success";
-    }
-
-    @GetMapping("/signup")
-    public String getSignupPage(){
-        return  "register";
-    }
-
-
-    @PostMapping("/signup")
-    public String registre(UserDTO userDTO){
-        userDetailsService.save(userDTO);
-        return "login";
+    @PostMapping(value = "/logout", produces = "application/json")
+    public ResponseEntity<?> logoutUser(@Valid @RequestBody LogOutRequest logOutRequest) {
+        try{
+            authService.logoutUser(logOutRequest.getUserId());
+            return ResponseEntity.ok(new MessageResponse("Log out successful!"));
+        } catch (NotFoundException ex) {
+            throw new NotFoundException(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(new MessageResponse(ex.getMessage()));
+        }
     }
 }

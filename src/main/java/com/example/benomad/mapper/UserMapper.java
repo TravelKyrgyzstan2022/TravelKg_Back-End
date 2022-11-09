@@ -2,46 +2,42 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.User;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
-@Component
 public class UserMapper {
-//    private static PasswordEncoder bCryptPasswordEncoder;
-//
-//    @Autowired
-//    public UserMapper(PasswordEncoder bCryptPasswordEncoder) {
-//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-//    }
 
+    public static User userDtoToUser(UserDTO userDTO) {
+        User user = new User();
+        user.setId(userDTO.getId());
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
 
-    public static User dtoToEntity(UserDTO userDTO) {
-        return User.builder()
-                .id(userDTO.getId())
-                .firstName(userDTO.getFirstName())
-                .lastName(userDTO.getLastName())
-                .login(userDTO.getLogin())
-                .password(userDTO.getPassword())
-                .phoneNumber(userDTO.getPhoneNumber())
-                .email(userDTO.getEmail())
-                .role(userDTO.getRole())
-                .status(userDTO.getStatus())
-                .build();
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+        user.setRoles(userDTO.getRoles());
+
+//        user.setResetPasswordCode(userDTO.getResetPasswordCode());
+//        user.setCodeExpirationDate(userDTO.getCodeExpirationDate());
+//        user.setPwdChangeRequired(userDTO.isPwdChangeRequired());
+
+        return user;
     }
-    public static UserDTO entityToDto(User user) {
-        return UserDTO.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .login(user.getLogin())
-                .password(user.getPassword())
-                .phoneNumber(user.getPhoneNumber())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .status(user.getStatus())
-                .build();
+
+    public static UserDTO userToUserDto(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+
+        userDTO.setPhoneNumber(user.getPhoneNumber());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setRoles(user.getRoles());
+
+//        userDTO.setResetPasswordCode(user.getResetPasswordCode());
+//        userDTO.setCodeExpirationDate(user.getCodeExpirationDate());
+//        userDTO.setPwdChangeRequired(user.isPwdChangeRequired());
+
+        return userDTO;
     }
 }
