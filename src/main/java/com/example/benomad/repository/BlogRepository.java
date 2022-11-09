@@ -26,11 +26,10 @@ public interface BlogRepository extends JpaRepository <Blog, Long> {
             nativeQuery = true)
     List<Blog> findLikedBlogsOfUser(@Param("userId") Long userId);
 
-    @Query(value = "SELECT count(t) FROM blog_likes t WHERE t.blog_id = :blogId", nativeQuery = true)
+    @Query(value = "SELECT COUNT(t) FROM blog_likes t WHERE t.blog_id = :blogId", nativeQuery = true)
     Long getLikesNumberById(@Param("blogId") Long blogId);
 
-    List<Blog> findAllByAuthor(User author);
-    List<Blog> findAllByTitle(String title);
-    List<Blog> findAllByStatus(Status status);
+    @Query(value = "SELECT last_value FROM blogs_id_seq", nativeQuery = true)
+    Long getLastValueOfSequence();
 
 }

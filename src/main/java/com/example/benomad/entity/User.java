@@ -61,12 +61,12 @@ public class User {
     private Set<Role> roles;
 
     @ManyToMany
-    @JoinTable(name = "users_places",
+    @JoinTable(name = "favorite_places",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "place_id"))
-    private List<Place> places;
+    private Set<Place> places;
 
     @ManyToMany(mappedBy = "likedUsers")
-    private List<Blog> blogs;
+    private Set<Blog> blogs;
 
 }

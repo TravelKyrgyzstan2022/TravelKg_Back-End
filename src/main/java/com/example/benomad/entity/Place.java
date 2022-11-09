@@ -6,6 +6,7 @@ import com.example.benomad.enums.Region;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Builder
 @Entity
@@ -28,7 +29,7 @@ public class Place {
     @Enumerated(EnumType.STRING)
     private PlaceType placeType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2000)
     private String description;
 
     @Column(nullable = false, name = "image_url")
@@ -39,5 +40,12 @@ public class Place {
 
     @Column(nullable = true)
     private String address;
+
+    @OneToMany
+    @JoinTable(name = "place_comments",
+            joinColumns = @JoinColumn(name = "place_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id")
+    )
+    private Set<Comment> comments;
 
 }

@@ -36,20 +36,12 @@ public class UserMapper {
                 .build();
     }
 
-    public static List<UserDTO> entityListToDtoList(List<User> entities){
-        List<UserDTO> dtos = new ArrayList<>();
-        for(User u : entities){
-            dtos.add(UserMapper.entityToDto(u));
-        }
-        return dtos;
+    public List<UserDTO> entityListToDtoList(List<User> entities){
+        return entities.stream().map(this::entityToDto).collect(Collectors.toList());
     }
 
-    public static List<User> dtoListToEntityList(List<UserDTO> dtos){
-        List<User> entities = new ArrayList<>();
-        for(UserDTO u : dtos){
-            entities.add(UserMapper.dtoToEntity(u));
-        }
-        return entities;
+    public List<User> entityListToDtoList(List<UserDTO> dtos){
+        return dtos.stream().map(this::dtoToEntity).collect(Collectors.toList());
     }
 
 }

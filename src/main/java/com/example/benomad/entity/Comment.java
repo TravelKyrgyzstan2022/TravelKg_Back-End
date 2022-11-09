@@ -4,6 +4,8 @@ package com.example.benomad.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Set;
 
 @Builder
 @Entity
@@ -18,13 +20,21 @@ public class Comment {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "place_id",nullable = false,referencedColumnName = "id")
-    private Place place;
-
-    @ManyToOne
     @JoinColumn(name = "user_id",nullable = false,referencedColumnName = "id")
     private User user;
 
     @Column(nullable = false,length = 2000)
     private String body;
+
+    @ManyToMany
+    @JoinTable(name = "comment_likes",
+            joinColumns = @JoinColumn(columnDefinition = "comment_id",
+                    referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(columnDefinition = "user_id",
+                    referencedColumnName = "id")
+    )
+    private Set<User> likedUsers;
+
+    @Column(name = "creation_date")
+    private LocalDate creationDate;
 }

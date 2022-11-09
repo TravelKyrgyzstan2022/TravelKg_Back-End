@@ -27,5 +27,6 @@ public class Rating {
             referencedColumnName = "id")
     private User user;
 
+    @Column(nullable = false)
     private Integer rating;
 }

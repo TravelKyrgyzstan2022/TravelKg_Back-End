@@ -26,10 +26,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties("favorite_places")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-
 public class UserDTO {
-
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @NotBlank(message = "First name can't be null or empty")

@@ -33,13 +33,19 @@ public class Blog {
     )
     private Set<User> likedUsers;
 
-    @Column(length = 400)
+    @Column(length = 500, nullable = false)
     private String title;
 
-    @Column(length = 10000)
+    @Column(length = 10000, nullable = false)
     private String body;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @OneToMany
+    @JoinTable(name = "blog_comments",
+            joinColumns = @JoinColumn(name = "blog_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id")
+    )
+    private Set<Comment> comments;
 }

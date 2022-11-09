@@ -1,12 +1,14 @@
 package com.example.benomad.service;
 
 import com.example.benomad.dto.UserDTO;
+
+import com.example.benomad.exception.UserAttributeTakenException;
+import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.entity.User;
 import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.security.domain.UserDetailsImpl;
 import com.example.benomad.security.response.JwtResponse;
 import com.example.benomad.security.response.TokenRefreshResponse;
-
 
 
 public interface UserService {
