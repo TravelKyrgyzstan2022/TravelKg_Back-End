@@ -1,3 +1,4 @@
+
 package com.example.benomad.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,10 +13,20 @@ import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+
+import java.util.List;
+
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 
 public class UserDTO {
 
@@ -43,7 +54,9 @@ public class UserDTO {
 
     @NotNull(message = "Role can't be null or empty")
     private Set<Role> roles = new HashSet<Role>();
-
+    
+    @JsonProperty("favorite_places")
+    private List<PlaceDTO> placeDTOS;
 
 //    @JsonIgnore
 //    private Integer resetPasswordCode;

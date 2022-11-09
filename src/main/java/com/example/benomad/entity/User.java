@@ -1,3 +1,4 @@
+
 package com.example.benomad.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,11 +23,12 @@ import java.util.Set;
                 @UniqueConstraint(name = "uk_phone_number", columnNames = "phone_number")
         }
 )
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
@@ -57,5 +59,14 @@ public class User {
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "roles", foreignKey = @ForeignKey(name = "fk_users_role"))
     private Set<Role> roles;
+
+    @ManyToMany
+    @JoinTable(name = "users_places",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "place_id"))
+    private List<Place> places;
+
+    @ManyToMany(mappedBy = "likedUsers")
+    private List<Blog> blogs;
 
 }

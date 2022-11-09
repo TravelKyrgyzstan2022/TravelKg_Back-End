@@ -2,42 +2,54 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserMapper {
-
-    public static User userDtoToUser(UserDTO userDTO) {
-        User user = new User();
-        user.setId(userDTO.getId());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-
-        user.setPhoneNumber(userDTO.getPhoneNumber());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-        user.setRoles(userDTO.getRoles());
-
-//        user.setResetPasswordCode(userDTO.getResetPasswordCode());
-//        user.setCodeExpirationDate(userDTO.getCodeExpirationDate());
-//        user.setPwdChangeRequired(userDTO.isPwdChangeRequired());
-
-        return user;
+    public static User dtoToEntity(UserDTO userDTO){
+        return User.builder()
+                .id(userDTO.getId())
+                .login(userDTO.getLogin())
+                .password(userDTO.getPassword())
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .roles(userDTO.getRoles())
+                .email(userDTO.getEmail())
+                .phoneNumber(userDTO.getPhoneNumber())
+                .build();
     }
 
-    public static UserDTO userToUserDto(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setFirstName(user.getFirstName());
-        userDTO.setLastName(user.getLastName());
-
-        userDTO.setPhoneNumber(user.getPhoneNumber());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setRoles(user.getRoles());
-
-//        userDTO.setResetPasswordCode(user.getResetPasswordCode());
-//        userDTO.setCodeExpirationDate(user.getCodeExpirationDate());
-//        userDTO.setPwdChangeRequired(user.isPwdChangeRequired());
-
-        return userDTO;
+    public static UserDTO entityToDto(User user){
+        return UserDTO.builder()
+                .id(user.getId())
+                .login(user.getLogin())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phoneNumber(user.getPhoneNumber())
+                .roles(user.getRoles())
+                .build();
     }
+
+    public static List<UserDTO> entityListToDtoList(List<User> entities){
+        List<UserDTO> dtos = new ArrayList<>();
+        for(User u : entities){
+            dtos.add(UserMapper.entityToDto(u));
+        }
+        return dtos;
+    }
+
+    public static List<User> dtoListToEntityList(List<UserDTO> dtos){
+        List<User> entities = new ArrayList<>();
+        for(UserDTO u : dtos){
+            entities.add(UserMapper.dtoToEntity(u));
+        }
+        return entities;
+    }
+
 }

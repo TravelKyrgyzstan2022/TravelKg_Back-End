@@ -1,15 +1,24 @@
+
 package com.example.benomad.repository;
 
 import com.example.benomad.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+@Repository
+public interface UserRepository extends JpaRepository <User, Long> {
+    Optional<User> findByLogin(String login);
+    List<User> findByFirstName(String firstName);
+    List<User> findByLastName(String lastName);
+    List<User> findByFirstNameAndLastName(String firstName, String lastName);
+    Optional<User> findByEmail(String email);
+    Optional<User> findByPhoneNumber(String phoneNumber);
     Boolean existsByEmail(String email);
-
     Boolean existsByPhoneNumber(String phoneNumber);
-
     User findByEmail(String email);
-
     User findByActivationCode(String code);
+
 }
