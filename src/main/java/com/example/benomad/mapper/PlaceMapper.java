@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,11 +46,7 @@ public class PlaceMapper {
                 .build();
     }
 
-    public List<PlaceDTO> entityListToDtoList(List<Place> places) {
-        List<PlaceDTO> placeDTOS = new ArrayList<>();
-        for (Place place : places) {
-            placeDTOS.add(entityToDto(place));
-        }
-        return placeDTOS;
+    public List<PlaceDTO> entityListToDtoList(List<Place> entities) {
+        return entities.stream().map(this::entityToDto).collect(Collectors.toList());
     }
 }

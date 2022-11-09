@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class PlaceServiceImpl implements PlaceService {
         Place builtPlace = Place.builder().name(name).address(address).region(region).placeType(placeType).build();
         Example<Place> exampleOfPlace = Example.of(builtPlace,getExampleMatcher(match));
         Page<Place> pages = placeRepository.findAll(exampleOfPlace,pageRequest);
-        return placeMapper.entityListToDtoList(pages.stream().toList());
+        return placeMapper.entityListToDtoList(pages.stream().collect(Collectors.toList()));
     }
 
 

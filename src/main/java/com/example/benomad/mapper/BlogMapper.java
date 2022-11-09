@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class BlogMapper {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public BlogDTO entityToDto(Blog blog, Long currentUserId){
+    public BlogDTO entityToDto(Blog blog, Long userId){
         return BlogDTO.builder()
                 .id(blog.getId())
                 .status(blog.getStatus())
@@ -29,7 +30,7 @@ public class BlogMapper {
                 .body(blog.getBody())
                 .authorId((userMapper.entityToDto(blog.getAuthor()).getId()))
                 .likes(blogRepository.getLikesNumberById(blog.getId()))
-                .isLikedByCurrentUser(blogRepository.isBlogLikedByUser(blog.getId(), currentUserId))
+                .isLikedByCurrentUser(blogRepository.isBlogLikedByUser(blog.getId(), userId))
                 .build();
     }
 
@@ -51,19 +52,7 @@ public class BlogMapper {
                 .build();
     }
 
-    public List<BlogDTO> entityListToDtoList(List<Blog> entities, Long currentUserId){
-        List<BlogDTO> dtos = new ArrayList<>();
-        for(Blog e : entities){
-            dtos.add(entityToDto(e, currentUserId));
-        }
-        return dtos;
-    }
-
-    public List<Blog> dtoListToEntityList(List<BlogDTO> dtos, UserRepository userRepository){
-        List<Blog> entities = new ArrayList<>();
-        for(BlogDTO d: dtos){
-            entities.add(dtoToEntity(d));
-        }
-        return entities;
+    public List<BlogDTO> entityListToDtoList(List<Blog> entities, Long userId){
+        return entities.stream().map(entity -> entityToDto(entity, userId)).collect(Collectors.toList());
     }
 }

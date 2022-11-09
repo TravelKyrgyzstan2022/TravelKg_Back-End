@@ -29,7 +29,10 @@ public class CommentDTO {
     private String creationDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Integer likeCount;
+    private Long likeCount;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Boolean isLikedByCurrentUser;
 
     private CommentReference reference;
 }

@@ -44,20 +44,21 @@ public class BlogController {
     description = "*Note = current_user_id is needed to check whether the blogs are liked by the user or not.")
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> findBlogById(@PathVariable Long id,
-                                          @RequestParam(value = "current_user_id", defaultValue = "1L") Long userId){
+                                          @RequestParam(value = "current_user_id", defaultValue = "1") Long userId){
         return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogById(id, userId));
     }
 
     @Operation(summary = "Gets comments of blog by ID")
     @GetMapping(value = "/{id}/comments", produces = "application/json")
-    public ResponseEntity<?> getPlaceCommentsById(
+    public ResponseEntity<?> getBlogCommentsById(
             @PathVariable Long id,
+            @RequestParam(name = "current_user_id", defaultValue = "1") Long cuserId,
             @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
             @RequestParam(name = "page", required = false) Optional<Integer> page,
             @RequestParam(name = "size", required = false) Optional<Integer> size){
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1),
                 Sort.by(sortBy.orElse("id")));
-        return ResponseEntity.ok(commentService.getReferenceCommentsById(id, CommentReference.BLOG, pageRequest));
+        return ResponseEntity.ok(commentService.getReferenceCommentsById(cuserId, id, CommentReference.BLOG, pageRequest));
     }
 
     @Operation(summary = "Inserts a blog to the database",

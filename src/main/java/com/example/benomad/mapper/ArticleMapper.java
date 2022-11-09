@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,10 +44,6 @@ public class ArticleMapper {
     }
 
     public List<ArticleDTO> entityListToDtoList(List<Article> entities){
-        List<ArticleDTO> dtos = new ArrayList<>();
-        for(Article a : entities){
-            dtos.add(entityToDto(a));
-        }
-        return dtos;
+        return entities.stream().map(this::entityToDto).collect(Collectors.toList());
     }
 }

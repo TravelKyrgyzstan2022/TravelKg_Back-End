@@ -22,14 +22,15 @@ public class CommentController {
 
     @Operation(summary = "Gets all comments")
     @GetMapping(value = {"/", ""}, produces = "application/json")
-    public ResponseEntity<?> getAllComments(){
-        return ResponseEntity.ok(commentService.getAllComments());
+    public ResponseEntity<?> getAllComments(@RequestParam(name = "current_user_id", defaultValue = "1") Long cuserid){
+        return ResponseEntity.ok(commentService.getAllComments(cuserid));
     }
 
     @Operation(summary = "Finds comment by id")
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> getCommentById(@PathVariable Long id){
-        return ResponseEntity.ok(commentService.getCommentById(id));
+    public ResponseEntity<?> getCommentById(@PathVariable Long id,
+                                            @RequestParam(name = "current_user_id", defaultValue = "1") Long cuserId){
+        return ResponseEntity.ok(commentService.getCommentById(id, cuserId));
     }
 
     @Operation(summary = "Inserts a comment to the database (admin)")

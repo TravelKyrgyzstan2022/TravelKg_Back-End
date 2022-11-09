@@ -55,12 +55,13 @@ public class PlaceController {
     @GetMapping(value = "/{id}/comments", produces = "application/json")
     public ResponseEntity<?> getPlaceCommentsById(
             @PathVariable Long id,
+            @RequestParam(name = "current_user_id", defaultValue = "1") Long cuserid,
             @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
             @RequestParam(name = "page", required = false) Optional<Integer> page,
             @RequestParam(name = "size", required = false) Optional<Integer> size){
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1),
                 Sort.by(sortBy.orElse("id")));
-        return ResponseEntity.ok(commentService.getReferenceCommentsById(id, CommentReference.PLACE, pageRequest));
+        return ResponseEntity.ok(commentService.getReferenceCommentsById(cuserid, id, CommentReference.PLACE, pageRequest));
     }
 
     @Operation(summary = "Inserts a place to the database")

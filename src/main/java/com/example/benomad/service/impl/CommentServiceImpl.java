@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -30,12 +31,12 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
 
     @Override
-    public List<CommentDTO> getAllComments() {
-        return commentMapper.entityListToDtoList(commentRepository.findAll());
+    public List<CommentDTO> getAllComments(Long cuserId) {
+        return commentMapper.entityListToDtoList(commentRepository.findAll(), cuserId);
     }
 
     @Override
-    public List<CommentDTO> getReferenceCommentsById(Long referenceId, CommentReference reference, PageRequest pageRequest) {
+    public List<CommentDTO> getReferenceCommentsById(Long cuserId, Long referenceId, CommentReference reference, PageRequest pageRequest) {
         Page<Comment> page;
         if(reference == CommentReference.BLOG){
             if(!blogRepository.existsById(referenceId)){
@@ -48,15 +49,15 @@ public class CommentServiceImpl implements CommentService {
             }
             page = commentRepository.getPlaceCommentsById(referenceId, pageRequest);
         }
-        return commentMapper.entityListToDtoList(page.stream().toList());
+        return commentMapper.entityListToDtoList(page.stream().collect(Collectors.toList()), cuserId);
     }
 
     @Override
-    public CommentDTO getCommentById(Long commentId) throws ContentNotFoundException {
+    public CommentDTO getCommentById(Long commentId, Long cuserId) throws ContentNotFoundException {
         return commentMapper.entityToDto(commentRepository.findById(commentId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, commentId);
-                })
+                }), cuserId
         );
     }
 
@@ -87,7 +88,7 @@ public class CommentServiceImpl implements CommentService {
                 commentRepository.findById(commentId).orElseThrow(
                         () -> {
                             throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, commentId);
-                        })
+                        }), userId
         );
     }
 
@@ -117,7 +118,7 @@ public class CommentServiceImpl implements CommentService {
                     throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, commentId);
                 });
         commentRepository.deleteById(commentId);
-        return commentMapper.entityToDto(comment);
+        return commentMapper.entityToDto(comment, null);
     }
 
     @Override
