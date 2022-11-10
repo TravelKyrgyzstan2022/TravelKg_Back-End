@@ -188,39 +188,31 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private ExampleMatcher getExample(boolean MATCH_ALL){
         ExampleMatcher MATCHER_ANY = ExampleMatcher.matchingAny()
-                .withMatcher("login", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("firstName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("lastName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
                 .withMatcher("phoneNumber", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withIgnorePaths("id", "password", "roles", "places", "blogs");
+                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active", "activationCode");
         ExampleMatcher MATCHER_ALL = ExampleMatcher.matchingAll()
-                .withMatcher("login", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("firstName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("lastName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
                 .withMatcher("phoneNumber", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withIgnorePaths("id", "password", "roles", "places", "blogs");
+                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active", "activationCode");
         return MATCH_ALL ? MATCHER_ALL:MATCHER_ANY;
     }
 
     private ExampleMatcher getExampleForAttribute(String attribute){
-        if(attribute.equals("login")){
-            return ExampleMatcher.matchingAny()
-                    .withMatcher("login", ExampleMatcher.GenericPropertyMatchers.exact())
-                    .withIgnorePaths("id", "password", "roles", "places", "blogs", "firstName", "lastName",
-                            "email", "phoneNumber");
-        }
         if(attribute.equals("email")){
             return ExampleMatcher.matchingAny()
                     .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.exact())
                     .withIgnorePaths("id", "password", "roles", "places", "blogs", "firstName", "lastName",
-                            "login", "phoneNumber");
+                            "active", "activationCode", "phoneNumber");
         }
         return ExampleMatcher.matchingAny()
                 .withMatcher("phoneNumber", ExampleMatcher.GenericPropertyMatchers.exact())
                 .withIgnorePaths("id", "password", "roles", "places", "blogs", "firstName", "lastName",
-                        "login", "email");
+                        "active", "activationCode", "email");
     }
 
 }

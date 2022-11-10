@@ -32,7 +32,6 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
     private final JwtUtils jwtUtils;
-    private String currentUsername = "";
 
     @Override
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
@@ -98,16 +97,18 @@ public class AuthServiceImpl implements AuthService {
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             return authentication.getName();
         }
-        return currentUsername;
+        return null;
     }
 
     @Override
     public Long getCurrentUserId() {
-        String username = getCurrentUsername();
-        return username != null ? userService.getUserByEmail(username).getId() : null;
+//        String username = getCurrentUsername();
+//        if(username == null){
+//            return null;
+//        }else{
+//            return userService.getUserByEmail(username).getId();
+//        }
+        return null;
     }
 
-    public void setCurrentUsername(String username){
-        currentUsername = username;
-    }
 }
