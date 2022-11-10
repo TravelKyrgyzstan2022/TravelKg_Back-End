@@ -3,14 +3,17 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.RefreshToken;
+import com.example.benomad.entity.User;
 import com.example.benomad.exception.RefreshTokenException;
 import com.example.benomad.security.domain.UserDetailsImpl;
+import com.example.benomad.security.jwt.JwtUtils;
 import com.example.benomad.security.request.LoginRequest;
 import com.example.benomad.security.request.TokenRefreshRequest;
 import com.example.benomad.security.response.JwtResponse;
 import com.example.benomad.security.response.TokenRefreshResponse;
 import com.example.benomad.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,6 +31,8 @@ public class AuthServiceImpl implements AuthService {
     private final UserServiceImpl userService;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
+    private final JwtUtils jwtUtils;
+    private String currentUsername = "";
 
     @Override
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
@@ -39,7 +44,9 @@ public class AuthServiceImpl implements AuthService {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        String jwt = userService.getUserAuthenticationToken(userDetails);
+        String email = ((UserDetailsImpl) authentication.getPrincipal()).getEmail();
+
+        String jwt = jwtUtils.generateTokenFromEmail(email);
 
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
@@ -83,5 +90,24 @@ public class AuthServiceImpl implements AuthService {
         UserDTO userDTO = userService.getUserById(id);
         refreshTokenService.deleteByUserId(userDTO.getId());
         return new MessageResponse("User has been successfully logged out!", 200);
+    }
+
+    @Override
+    public String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            return authentication.getName();
+        }
+        return currentUsername;
+    }
+
+    @Override
+    public Long getCurrentUserId() {
+        String username = getCurrentUsername();
+        return username != null ? userService.getUserByEmail(username).getId() : null;
+    }
+
+    public void setCurrentUsername(String username){
+        currentUsername = username;
     }
 }

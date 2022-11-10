@@ -36,7 +36,6 @@ public class ArticleController {
     @Operation(summary = "Inserts an article to the database")
     @PostMapping(value = {"/", ""}, consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> insertArticle(@RequestBody ArticleDTO articleDTO){
-        articleDTO.setUserId(1L); //для тестов, а так, в будущем будем работать с токенами
         return ResponseEntity.status(HttpStatus.CREATED).body(articleServiceImpl.insertArticle(articleDTO));
     }
 

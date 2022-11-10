@@ -6,6 +6,7 @@ import com.example.benomad.enums.CommentReference;
 import com.example.benomad.enums.ReviewStatus;
 import com.example.benomad.service.impl.BlogServiceImpl;
 import com.example.benomad.service.impl.CommentServiceImpl;
+import io.jsonwebtoken.Jwt;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Optional;
 
@@ -35,18 +38,16 @@ public class BlogController {
     public ResponseEntity<?> findBlogs(@RequestParam(name = "author_id", required = false) Long authorId,
                                        @RequestParam(name = "title", required = false) String title,
                                        @RequestParam(name = "status", required = false) ReviewStatus reviewStatus,
-                                       @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL,
-                                       Principal principal){
+                                       @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
         return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogsByAttributes(
-                authorId, principal, title, reviewStatus, MATCH_ALL));
+                authorId, title, reviewStatus, MATCH_ALL));
     }
 
     @Operation(summary = "Finds blog by ID",
     description = "*Note = current_user_id is needed to check whether the blogs are liked by the user or not.")
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> findBlogById(@PathVariable Long id,
-                                          Principal principal){
-        return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogById(id, principal));
+    public ResponseEntity<?> findBlogById(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogById(id));
     }
 
     @Operation(summary = "Gets comments of blog by ID")
@@ -55,11 +56,10 @@ public class BlogController {
             @PathVariable Long id,
             @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
             @RequestParam(name = "page", required = false) Optional<Integer> page,
-            @RequestParam(name = "size", required = false) Optional<Integer> size,
-            Principal principal){
+            @RequestParam(name = "size", required = false) Optional<Integer> size){
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1),
                 Sort.by(sortBy.orElse("id")));
-        return ResponseEntity.ok(commentService.getReferenceCommentsById(principal, id, CommentReference.BLOG, pageRequest));
+        return ResponseEntity.ok(commentService.getReferenceCommentsById(id, CommentReference.BLOG, pageRequest));
     }
 
     @Operation(summary = "Inserts a blog to the database",
@@ -78,9 +78,8 @@ public class BlogController {
             description = "Dislike is just a removal of a like, not an actual dislike :)")
     @PutMapping("/like")
     public ResponseEntity<?> likeDislikeBlog(@RequestParam(name = "blog_id") Long blogId,
-                                             @RequestParam(name = "is_dislike") boolean isDislike,
-                                             Principal principal){
-        return ResponseEntity.ok(blogService.likeDislikeBlogById(blogId, principal, isDislike));
+                                             @RequestParam(name = "is_dislike") boolean isDislike){
+        return ResponseEntity.ok(blogService.likeDislikeBlogById(blogId, isDislike));
     }
 
     @Operation(summary = "Updates a blog by ID")

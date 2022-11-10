@@ -21,6 +21,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final ArticleMapper articleMapper;
+    private final AuthServiceImpl authService;
 
     @Override
     public List<ArticleDTO> getAllArticles() {
@@ -51,7 +52,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ArticleDTO insertArticle(ArticleDTO articleDTO) {
-        articleDTO.setId(null);
+        articleDTO.setId(authService.getCurrentUserId());
         articleRepository.save(articleMapper.dtoToEntity(articleDTO));
         articleDTO.setId(articleRepository.getLastValueOfSequence());
         return articleDTO;

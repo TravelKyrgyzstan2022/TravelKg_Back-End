@@ -15,5 +15,5 @@ public interface PlaceService {
     PlaceDTO insertPlace(PlaceDTO placeDTO);
     PlaceDTO deletePlaceById(Long id) throws ContentNotFoundException;
     PlaceDTO updatePlaceById(Long id, PlaceDTO placeDTO) throws ContentNotFoundException;
-    PlaceDTO ratePlaceById(Long placeId, Principal principal, Integer rating, boolean isRemoval) throws ContentNotFoundException;
+    PlaceDTO ratePlaceById(Long placeId, Integer rating, boolean isRemoval) throws ContentNotFoundException;
 }

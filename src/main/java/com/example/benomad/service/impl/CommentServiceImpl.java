@@ -27,26 +27,21 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final AuthServiceImpl authService;
     private final PlaceRepository placeRepository;
     private final BlogRepository blogRepository;
     private final CommentMapper commentMapper;
 
     @Override
-    public List<CommentDTO> getAllComments(Principal principal) {
-        Long userId = null;
-        if(principal != null){
-            userId = userRepository.findByEmail(principal.getName()).getId();
-        }
+    public List<CommentDTO> getAllComments() {
+        Long userId = authService.getCurrentUserId();
         return commentMapper.entityListToDtoList(commentRepository.findAll(), userId);
     }
 
     @Override
-    public List<CommentDTO> getReferenceCommentsById(Principal principal, Long referenceId, CommentReference reference, PageRequest pageRequest) {
+    public List<CommentDTO> getReferenceCommentsById(Long referenceId, CommentReference reference, PageRequest pageRequest) {
         Page<Comment> page;
-        Long userId = null;
-        if(principal != null){
-            userId = userRepository.findByEmail(principal.getName()).getId();
-        }
+        Long userId = authService.getCurrentUserId();
         if(reference == CommentReference.BLOG){
             if(!blogRepository.existsById(referenceId)){
                 throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, referenceId);
@@ -62,11 +57,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO getCommentById(Long commentId, Principal principal) throws ContentNotFoundException {
-        Long userId = null;
-        if(principal != null){
-            userId = userRepository.findByEmail(principal.getName()).getId();
-        }
+    public CommentDTO getCommentById(Long commentId) throws ContentNotFoundException {
+        Long userId = authService.getCurrentUserId();
         return commentMapper.entityToDto(commentRepository.findById(commentId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, commentId);
@@ -75,11 +67,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO likeDislikeComment(Long commentId, boolean isDislike, Principal principal) throws ContentNotFoundException{
-        Long userId = null;
-        if(principal != null){
-            userId = userRepository.findByEmail(principal.getName()).getId();
-        }
+    public CommentDTO likeDislikeComment(Long commentId, boolean isDislike) throws ContentNotFoundException{
+        Long userId = authService.getCurrentUserId();
 
         if(!commentRepository.existsById(commentId)){
             throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, commentId);

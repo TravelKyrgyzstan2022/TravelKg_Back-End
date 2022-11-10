@@ -56,14 +56,12 @@ public class PlaceController {
     @GetMapping(value = "/{id}/comments", produces = "application/json")
     public ResponseEntity<?> getPlaceCommentsById(
             @PathVariable Long id,
-//            @RequestParam(name = "current_user_id", defaultValue = "1") Long userid,
             @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
             @RequestParam(name = "page", required = false) Optional<Integer> page,
-            @RequestParam(name = "size", required = false) Optional<Integer> size,
-            Principal principal){
+            @RequestParam(name = "size", required = false) Optional<Integer> size){
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1),
                 Sort.by(sortBy.orElse("id")));
-        return ResponseEntity.ok(commentService.getReferenceCommentsById(principal, id, CommentReference.PLACE, pageRequest));
+        return ResponseEntity.ok(commentService.getReferenceCommentsById(id, CommentReference.PLACE, pageRequest));
     }
 
     @Operation(summary = "Inserts a place to the database")
@@ -95,9 +93,8 @@ public class PlaceController {
     public ResponseEntity<?> ratePlace(@RequestParam(name = "place_id") Long placeId,
 //                                       @RequestParam(name = "user_id") Long userId,
                                        @RequestParam(name = "rating", defaultValue = "1") Integer rating,
-                                       @RequestParam(name = "remove", defaultValue = "0") Boolean isRemoval,
-                                       Principal principal){
-        return ResponseEntity.ok(placeService.ratePlaceById(placeId, principal, rating, isRemoval));
+                                       @RequestParam(name = "remove", defaultValue = "0") Boolean isRemoval){
+        return ResponseEntity.ok(placeService.ratePlaceById(placeId, rating, isRemoval));
     }
 
 

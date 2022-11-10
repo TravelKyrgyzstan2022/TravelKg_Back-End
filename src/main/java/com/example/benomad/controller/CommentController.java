@@ -24,14 +24,14 @@ public class CommentController {
 
     @Operation(summary = "Gets all comments")
     @GetMapping(value = {"/", ""}, produces = "application/json")
-    public ResponseEntity<?> getAllComments(Principal principal){
-        return ResponseEntity.ok(commentService.getAllComments(principal));
+    public ResponseEntity<?> getAllComment(){
+        return ResponseEntity.ok(commentService.getAllComments());
     }
 
     @Operation(summary = "Finds comment by id")
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> getCommentById(@PathVariable Long id, Principal principal){
-        return ResponseEntity.ok(commentService.getCommentById(id, principal));
+    public ResponseEntity<?> getCommentById(@PathVariable Long id){
+        return ResponseEntity.ok(commentService.getCommentById(id));
     }
 
     @Operation(summary = "Inserts a comment to the database (admin)")
@@ -56,8 +56,7 @@ public class CommentController {
     @PutMapping(value = "/like", produces = "application/json")
     public ResponseEntity<?> likeDislikeComment(@RequestParam("comment_id") Long commentId,
 //                                                @RequestParam(name = "user_id", required = false) Long userId,
-                                                @RequestParam(name = "is_dislike", defaultValue = "0") boolean isDislike,
-                                                Principal principal){
-        return ResponseEntity.ok(commentService.likeDislikeComment(commentId, isDislike, principal));
+                                                @RequestParam(name = "is_dislike", defaultValue = "0") boolean isDislike){
+        return ResponseEntity.ok(commentService.likeDislikeComment(commentId, isDislike));
     }
 }

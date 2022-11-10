@@ -25,6 +25,7 @@ public class BlogServiceImpl implements BlogService {
 
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
+    private final AuthServiceImpl authService;
     private final BlogMapper blogMapper;
 
     @Override
@@ -35,11 +36,8 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogDTO getBlogById(Long blogId, Principal principal) throws ContentNotFoundException {
-        Long userId = null;
-        if(principal != null){
-            userId = userRepository.findByEmail(principal.getName()).getId();
-        }
+    public BlogDTO getBlogById(Long blogId) throws ContentNotFoundException {
+        Long userId = authService.getCurrentUserId();
         return blogMapper.entityToDto(
                 blogRepository.findById(blogId).orElseThrow(
                         () -> {
@@ -49,14 +47,10 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<BlogDTO> getBlogsByAttributes(Long authorId, Principal principal,
-                                              String title, ReviewStatus reviewStatus, boolean MATCH_ALL)
+    public List<BlogDTO> getBlogsByAttributes(Long authorId, String title,
+                                              ReviewStatus reviewStatus, boolean MATCH_ALL)
             throws ContentNotFoundException {
-        Long userId = null;
-        if(principal != null){
-            userId = userRepository.findByEmail(principal.getName()).getId();
-        }
-
+        Long userId = authService.getCurrentUserId();
         Blog blog = Blog.builder()
                 .title(title)
                 .reviewStatus(reviewStatus)
@@ -80,14 +74,9 @@ public class BlogServiceImpl implements BlogService {
 
 
     @Override
-    public BlogDTO likeDislikeBlogById(Long blogId, Principal principal, boolean isDislike) throws ContentNotFoundException {
-        Long userId = null;
-        if(principal != null){
-            userId = userRepository.findByEmail(principal.getName()).getId();
-            if(!userRepository.existsById(userId)){
-                throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
-            }
-        }
+    public BlogDTO likeDislikeBlogById(Long blogId, boolean isDislike) throws ContentNotFoundException {
+        Long userId = authService.getCurrentUserId();
+
         Blog blog = blogRepository.findById(blogId).orElseThrow(() -> {
             throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, blogId);
         });

@@ -33,6 +33,7 @@ public class PlaceServiceImpl implements PlaceService {
     private final RatingRepository ratingRepository;
     private final UserRepository userRepository;
     private final PlaceMapper placeMapper;
+    private final AuthServiceImpl authService;
 
     @Override
     public List<PlaceDTO> getPlacesByAttributes(String name, Region region, PlaceType placeType,
@@ -82,9 +83,9 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public PlaceDTO ratePlaceById(Long placeId, Principal principal, Integer rating, boolean isRemoval)
+    public PlaceDTO ratePlaceById(Long placeId, Integer rating, boolean isRemoval)
             throws ContentNotFoundException, InvalidRatingException {
-        Long userId = userRepository.findByEmail(principal.getName()).getId();
+        Long userId = authService.getCurrentUserId();
         if(isRemoval){
             rating = 1;
             Rating neededRating = ratingRepository.findByPlaceAndUser(

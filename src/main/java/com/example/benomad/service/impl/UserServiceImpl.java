@@ -112,6 +112,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         userRepository.save(user);
 
+        System.out.println(getUserAuthenticationToken(user));
+
         return true;
     }
     
