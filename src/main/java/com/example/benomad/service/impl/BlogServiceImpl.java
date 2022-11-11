@@ -2,11 +2,14 @@ package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
+import com.example.benomad.enums.AwsBucket;
 import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.enums.ImagePath;
 import com.example.benomad.enums.Status;
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.exception.ContentIsAlreadyLikedException;
 import com.example.benomad.exception.ContentIsNotLikedException;
+import com.example.benomad.exception.FailedWhileUploadingException;
 import com.example.benomad.mapper.BlogMapper;
 import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.repository.UserRepository;
@@ -15,8 +18,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +32,7 @@ public class BlogServiceImpl implements BlogService {
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
     private final BlogMapper blogMapper;
+    private final ImageServiceImpl imageService;
 
     @Override
     public BlogDTO insertBlog(BlogDTO blogDTO) throws ContentNotFoundException {
@@ -107,6 +115,33 @@ public class BlogServiceImpl implements BlogService {
         });
         blogRepository.delete(blog);
         return blogMapper.entityToDto(blog, null);
+    }
+
+    @Override
+    public Long insertImageByBlogId(Long id, MultipartFile file) {
+        Blog blog = blogRepository.findById(id)
+                .orElseThrow(() -> new ContentNotFoundException(ContentNotFoundEnum.BLOG,id));
+        imageService.checkIsNotEmpty(file);
+        imageService.checkIsImage(file);
+        Map<String, String> metadata = imageService.getMetaData(file);
+        String pathToFile = String.format("%s/%s", AwsBucket.MAIN_BUCKET.getBucketName(),ImagePath.BLOG.getPathToImage());
+        String uniqueFileName = String.format("%s-%s",file.getOriginalFilename(), UUID.randomUUID());
+        try {
+            imageService.saveImageAws(pathToFile,uniqueFileName, Optional.of(metadata),file.getInputStream());
+            blog.setImageUrl(uniqueFileName);
+            blogRepository.save(blog);
+            return blog.getId();
+        } catch (IOException e) {
+            throw new FailedWhileUploadingException();
+        }
+    }
+
+    @Override
+    public byte[] getImageByBlogId(Long id) {
+        Blog blog = blogRepository.findById(id)
+                .orElseThrow(() -> new ContentNotFoundException(ContentNotFoundEnum.PLACE,id));
+        String pathToFile = String.format("%s/%s", AwsBucket.MAIN_BUCKET.getBucketName(), ImagePath.BLOG.getPathToImage());
+        return blog.getImageUrl().map(x -> imageService.getAwsImageByPathAndKey(pathToFile,x)).orElse(new byte[0]);
     }
 
     public boolean checkBlogForLikeByIdWithoutException(Long blogId, Long userId){

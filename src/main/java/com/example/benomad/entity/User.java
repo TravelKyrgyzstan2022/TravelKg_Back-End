@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -51,7 +52,7 @@ public class User {
     @JoinTable(name = "favorite_places",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "place_id"))
-    private Set<Place> places;
+    private List<Place> places;
 
     @ManyToMany(mappedBy = "likedUsers")
     private Set<Blog> blogs;

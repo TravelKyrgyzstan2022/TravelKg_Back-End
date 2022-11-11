@@ -12,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -93,5 +95,19 @@ public class BlogController {
     @DeleteMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> deleteBlogById(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.deleteBlogById(id));
+    }
+
+    @Operation(summary = "Uploads image by blog ID",
+            description = "Adds new image record to a blog by its ID and image itself.")
+    @PutMapping(path = "/uploadImage/{userId}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> uploadUserProfileImage(@PathVariable("userId") Long id, @RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(blogService.insertImageByBlogId(id,file));
+    }
+
+    @Operation(summary = "Gets image by by blog ID",
+            description = "Adds new rating record blog a  by its ID and users ID.")
+    @GetMapping(path = "/getImage/{userId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserProfileImage(@PathVariable("userId") Long id) {
+        return ResponseEntity.ok(blogService.getImageByBlogId(id));
     }
 }

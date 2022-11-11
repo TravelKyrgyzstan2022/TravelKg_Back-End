@@ -1,11 +1,14 @@
 package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.UserDTO;
+import com.example.benomad.entity.Place;
 import com.example.benomad.entity.User;
 import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.exception.ContentIsAlreadyInFavoritesException;
 import com.example.benomad.exception.UserAttributeTakenException;
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.mapper.UserMapper;
+import com.example.benomad.repository.PlaceRepository;
 import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PlaceRepository placeRepository;
 
     @Override
     public UserDTO getUserById(Long userId) throws ContentNotFoundException {
@@ -74,6 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+
     public UserDTO updateUserById(Long userId, UserDTO userDTO) throws ContentNotFoundException {
         if(!userRepository.existsById(userId)){
             throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
@@ -92,6 +97,22 @@ public class UserServiceImpl implements UserService {
         if(userId != 1L){
             userRepository.delete(user);
         }
+        return userMapper.entityToDto(user);
+    }
+
+    @Override
+    public UserDTO addPlaceToFavorites(Long id, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> {
+                   throw new ContentNotFoundException(ContentNotFoundEnum.USER,userId);
+                });
+        Place place = placeRepository.findById(id).orElseThrow(
+                () -> {
+                   throw new ContentNotFoundException(ContentNotFoundEnum.PLACE,id);
+                });
+        if (user.getPlaces().contains(place)) throw new ContentIsAlreadyInFavoritesException(ContentNotFoundEnum.PLACE);
+        user.getPlaces().add(place);
+        userRepository.save(user);
         return userMapper.entityToDto(user);
     }
 

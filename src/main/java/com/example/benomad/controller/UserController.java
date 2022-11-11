@@ -56,4 +56,12 @@ public class UserController {
         return ResponseEntity.ok(userService.deleteUserById(id));
     }
 
+    @Operation(summary = "Inserts place to user's favorites")
+    @PutMapping(value = "/favorites/{id}", produces = "application/json")
+    public ResponseEntity<?> addPlaceToUser(@PathVariable Long id,@RequestParam("current_user") Long userId){
+        return ResponseEntity.ok(userService.addPlaceToFavorites(id,userId));
+    }
+
+
+
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
 @Data
@@ -33,4 +34,8 @@ public class Article {
             referencedColumnName = "id"
     )
     private User user;
+
+    public Optional<String> getImageUrl() {
+        return Optional.ofNullable(imageUrl);
+    }
 }

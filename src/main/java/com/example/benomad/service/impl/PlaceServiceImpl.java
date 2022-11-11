@@ -58,12 +58,11 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public PlaceDTO insertPlace(PlaceDTO placeDTO) {
-        placeDTO.setId(null);
-        placeDTO.setImageUrl(null);
-        placeRepository.save(placeMapper.dtoToEntity(placeDTO));
+    public Long insertPlace(PlaceDTO placeDTO) {
+        //we don't need to get lastValue
+        //placeDTO.setId(placeRepository.save(placeMapper.dtoToEntity(placeDTO)).getId());
         placeDTO.setId(placeRepository.getLastValueOfSequence());
-        return placeDTO;
+        return placeRepository.save(placeMapper.dtoToEntity(placeDTO)).getId();
     }
 
     @Override

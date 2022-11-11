@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Optional;
 
 @RestController
@@ -99,11 +98,16 @@ public class PlaceController {
         return ResponseEntity.ok(placeService.ratePlaceById(placeId, userId, rating, isRemoval));
     }
 
+
+    @Operation(summary = "Uploads image by place ID",
+            description = "Adds new image record to a place by its ID and Image itself.")
     @PutMapping(path = "/uploadImage/{userId}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> uploadUserProfileImage(@PathVariable("userId") Long id, @RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok(placeService.insertImageByPlaceId(id,file));
     }
 
+    @Operation(summary = "Gets image by by place ID",
+            description = "Adds new rating record to a place by its ID and users ID.")
     @GetMapping(path = "/getImage/{userId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getUserProfileImage(@PathVariable("userId") Long id) {
         return ResponseEntity.ok(placeService.getImageByPlaceId(id));

@@ -1,6 +1,7 @@
 package com.example.benomad.dto;
 
 
+import com.example.benomad.enums.PlaceCategory;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -28,6 +29,10 @@ public class PlaceDTO {
     @JsonProperty("place_type")
     private PlaceType placeType;
 
+    @Schema(required = true)
+    @JsonProperty("place_category")
+    private PlaceCategory placeCategory;
+
     @Schema(required = false)
     @JsonProperty(value = "average_rating", access = JsonProperty.Access.READ_ONLY)
     private Double averageRating;
@@ -49,4 +54,7 @@ public class PlaceDTO {
 
     @Schema(required = false)
     private String address;
+
+    @JsonProperty("is_favorite_of_current_user")
+    private boolean isFavoriteOfCurrentUser;
 }

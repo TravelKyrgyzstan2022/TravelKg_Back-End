@@ -3,6 +3,7 @@ package com.example.benomad.service;
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.enums.Status;
 import com.example.benomad.exception.ContentNotFoundException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface BlogService {
     BlogDTO likeDislikeBlogById(Long blogId, Long userId, boolean isDislike) throws ContentNotFoundException;
     BlogDTO updateBlogById(Long blogId, BlogDTO blogDTO) throws ContentNotFoundException;
     BlogDTO deleteBlogById(Long blogId) throws ContentNotFoundException;
+    Long insertImageByBlogId(Long id, MultipartFile file);
+    byte[] getImageByBlogId(Long id);
 }

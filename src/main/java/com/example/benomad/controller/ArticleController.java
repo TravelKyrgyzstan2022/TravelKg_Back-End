@@ -8,8 +8,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -38,6 +40,20 @@ public class ArticleController {
     public ResponseEntity<?> insertArticle(@RequestBody ArticleDTO articleDTO){
         articleDTO.setUserId(1L); //для тестов, а так, в будущем будем работать с токенами
         return ResponseEntity.status(HttpStatus.CREATED).body(articleServiceImpl.insertArticle(articleDTO));
+    }
+
+    @Operation(summary = "Uploads image by article ID",
+            description = "Adds new image record to an article by its ID and Image itself.")
+    @PutMapping(path = "/uploadImage/{userId}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> uploadUserProfileImage(@PathVariable("userId") Long id, @RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(articleServiceImpl.insertImageByArticleId(id,file));
+    }
+
+    @Operation(summary = "Gets image by by article ID",
+            description = "Adds new rating record to an article by its ID and Image itself.")
+    @GetMapping(path = "/getImage/{userId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserProfileImage(@PathVariable("userId") Long id) {
+        return ResponseEntity.ok(articleServiceImpl.getImageByArticleId(id));
     }
 
     @Operation(summary = "Deletes article by ID")

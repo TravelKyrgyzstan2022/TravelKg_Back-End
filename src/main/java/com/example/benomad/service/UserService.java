@@ -13,4 +13,6 @@ public interface UserService {
     UserDTO getUserById(Long id) throws ContentNotFoundException;
     UserDTO updateUserById(Long id, UserDTO userDTO) throws ContentNotFoundException;
     UserDTO deleteUserById(Long id) throws ContentNotFoundException;
+
+    UserDTO addPlaceToFavorites(Long id, Long userId);
 }

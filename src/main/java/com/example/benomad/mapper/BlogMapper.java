@@ -9,8 +9,6 @@ import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +29,7 @@ public class BlogMapper {
                 .authorId((userMapper.entityToDto(blog.getAuthor()).getId()))
                 .likes(blogRepository.getLikesNumberById(blog.getId()))
                 .isLikedByCurrentUser(blogRepository.isBlogLikedByUser(blog.getId(), userId))
+                .imageUrl(blog.getImageUrl().orElse(null))
                 .build();
     }
 
@@ -46,6 +45,7 @@ public class BlogMapper {
                                     throw new ContentNotFoundException(ContentNotFoundEnum.USER, blogDTO.getAuthorId());
                                 })
                 )
+                .imageUrl(blogDTO.getImageUrl())
                 .title(blogDTO.getTitle())
                 .body(blogDTO.getBody())
                 .status(blogDTO.getStatus())
@@ -54,5 +54,9 @@ public class BlogMapper {
 
     public List<BlogDTO> entityListToDtoList(List<Blog> entities, Long userId){
         return entities.stream().map(entity -> entityToDto(entity, userId)).collect(Collectors.toList());
+    }
+
+    public List<Blog> dtoListToEntityList(List<BlogDTO> blogDTOS) {
+        return blogDTOS.stream().map(this::dtoToEntity).collect(Collectors.toList());
     }
 }

@@ -1,6 +1,7 @@
 package com.example.benomad.entity;
 
 
+import com.example.benomad.enums.PlaceCategory;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
 import lombok.*;
@@ -29,6 +30,9 @@ public class Place {
 
     @Enumerated(EnumType.STRING)
     private PlaceType placeType;
+
+    @Enumerated(EnumType.STRING)
+    private PlaceCategory placeCategory;
 
     @Column(nullable = false, length = 2000)
     private String description;

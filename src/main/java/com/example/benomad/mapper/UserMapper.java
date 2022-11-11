@@ -2,6 +2,7 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,7 +10,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserMapper {
+    private final BlogMapper blogMapper;
+    private final PlaceMapper placeMapper;
     public User dtoToEntity(UserDTO userDTO){
         return User.builder()
                 .id(userDTO.getId())
@@ -19,6 +23,7 @@ public class UserMapper {
                 .lastName(userDTO.getLastName())
                 .email(userDTO.getEmail())
                 .phoneNumber(userDTO.getPhoneNumber())
+                .places(placeMapper.dtoListToEntityList(userDTO.getPlaceDTOS()))
                 .build();
     }
 
