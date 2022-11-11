@@ -46,7 +46,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> {throw new ContentNotFoundException(ContentNotFoundEnum.USER, "email", email);}
+        );
         return UserDetailsImpl.build(user);
     }
 
@@ -104,27 +106,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userMapper.entityToDto(user);
     }
 
-    public boolean activateUser(String code) {
-        User user = userRepository.findByActivationCode(code);
-
-        if (user == null) {
-            return false;
-        }
-
-        user.setActivationCode(null);
-
-        userRepository.save(user);
-
-        System.out.println(getUserAuthenticationToken(user));
-
-        return true;
-    }
+//    public boolean activateUser(String code) {
+//        User user = userRepository.findByActivationCode(code);
+//
+//        if (user == null) {
+//            return false;
+//        }
+//
+//        user.setActivationCode(null);
+//
+//        userRepository.save(user);
+//
+//        System.out.println(getUserAuthenticationToken(user));
+//
+//        return true;
+//    }
     
     @Override
     public UserDTO getUserById(Long userId) throws ContentNotFoundException {
         return userMapper.entityToDto(userRepository.findById(userId).orElseThrow(
                 () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
+                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
                 }
         ));
     }
@@ -172,7 +174,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDTO updateUserById(Long userId, UserDTO userDTO) throws ContentNotFoundException {
         if(!userRepository.existsById(userId)){
-            throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
+            throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
         }
         userDTO.setId(userId);
         userRepository.save(userMapper.dtoToEntity(userDTO));
@@ -183,7 +185,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDTO deleteUserById(Long userId) throws ContentNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
+                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
                 });
         if(userId != 1L){
             userRepository.delete(user);

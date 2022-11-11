@@ -49,7 +49,7 @@ public class PlaceServiceImpl implements PlaceService {
     public PlaceDTO getPlaceById(Long placeId) throws ContentNotFoundException {
         return placeMapper.entityToDto(placeRepository.findById(placeId).orElseThrow(
                 () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, placeId);
+                    throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
                 })
         );
     }
@@ -66,7 +66,7 @@ public class PlaceServiceImpl implements PlaceService {
     public PlaceDTO deletePlaceById(Long placeId) throws ContentNotFoundException {
         Place place = placeRepository.findById(placeId).orElseThrow(
                 () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, placeId);
+                    throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
                 }
         );
         placeRepository.delete(place);
@@ -76,7 +76,7 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public PlaceDTO updatePlaceById(Long placeId, PlaceDTO placeDTO) throws ContentNotFoundException {
         if(!placeRepository.existsById(placeId)){
-            throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, placeId);
+            throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
         }
         placeRepository.save(placeMapper.dtoToEntity(placeDTO));
         return placeDTO;
@@ -91,11 +91,11 @@ public class PlaceServiceImpl implements PlaceService {
             Rating neededRating = ratingRepository.findByPlaceAndUser(
                     placeRepository.findById(placeId).orElseThrow(
                             () -> {
-                                throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, placeId);
+                                throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
                             }),
                     userRepository.findById(userId).orElseThrow(
                             () -> {
-                                throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
+                                throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
                             })
             ).orElseThrow(
                     () -> {
@@ -110,11 +110,11 @@ public class PlaceServiceImpl implements PlaceService {
             Rating neededRating = ratingRepository.findByPlaceAndUser(
                     placeRepository.findById(placeId).orElseThrow(
                             () -> {
-                                throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, placeId);
+                                throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
                             }),
                     userRepository.findById(userId).orElseThrow(
                             () -> {
-                                throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
+                                throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
                             }
                     )).orElseThrow(
                             () -> {
@@ -126,19 +126,19 @@ public class PlaceServiceImpl implements PlaceService {
             ratingRepository.save(Rating.builder()
                     .place(placeRepository.findById(placeId).orElseThrow(
                             () -> {
-                                throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, placeId);
+                                throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
                             }
                     ))
                     .user(userRepository.findById(userId).orElseThrow(
                             () -> {
-                                throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
+                                throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
                             }
                     ))
                     .rating(rating)
                     .build());
         }
         return placeMapper.entityToDto(placeRepository.findById(placeId).orElseThrow(() -> {
-            throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, placeId);
+            throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
         }));
     }
 

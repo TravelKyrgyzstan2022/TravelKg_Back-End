@@ -35,12 +35,12 @@ public class PlanMapper {
                 .id(dto.getId())
                 .user(userRepository.findById(dto.getUserId()).orElseThrow(
                         () -> {
-                            throw new ContentNotFoundException(ContentNotFoundEnum.USER, dto.getUserId());
+                            throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(dto.getUserId()));
                         }
                 ))
                 .place(placeRepository.findById(dto.getPlaceId()).orElseThrow(
                         () -> {
-                            throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, dto.getPlaceId());
+                            throw new ContentNotFoundException(ContentNotFoundEnum.PLACE,  "id", String.valueOf(dto.getPlaceId()));
                         }
                 ))
                 .startDate(dto.getStartDate())

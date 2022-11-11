@@ -11,7 +11,7 @@ create table places (id  bigserial not null, address varchar(255), description v
 create table plans (id  bigserial not null, end_date date, note varchar(500), start_date date, place_id int8, user_id int8, primary key (id));
 create table refreshtokens (id  bigserial not null, expiry_date timestamp not null, token varchar(255) not null, user_id int8, primary key (id));
 create table roles (user_id int8 not null, roles varchar(255));
-create table users (id  bigserial not null, activation_code varchar(255), active boolean not null, email varchar(255) not null, first_name varchar(255) not null, last_name varchar(255) not null, password varchar(255) not null, phone_number varchar(255) not null, primary key (id));
+create table users (id  bigserial not null, activation_code varchar(255), active boolean not null, email varchar(255) not null, first_name varchar(255) not null, last_name varchar(255) not null, password varchar(255) not null, phone_number varchar(255), primary key (id));
 alter table blog_comments add constraint UK_ny0y7e9s53y6l4sfgpksye42j unique (comment_id);
 alter table place_comments add constraint UK_ja9pdfmnuagk0g89e29gpbw4n unique (comment_id);
 alter table refreshtokens add constraint UK_1lfxk1odre7ch1v66hsfi5xq6 unique (token);

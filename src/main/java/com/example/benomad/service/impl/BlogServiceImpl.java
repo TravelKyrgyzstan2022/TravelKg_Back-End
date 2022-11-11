@@ -42,7 +42,7 @@ public class BlogServiceImpl implements BlogService {
         return blogMapper.entityToDto(
                 blogRepository.findById(blogId).orElseThrow(
                         () -> {
-                            throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, blogId);
+                            throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id", String.valueOf(blogId));
                         }),
                 userId);
     }
@@ -62,7 +62,7 @@ public class BlogServiceImpl implements BlogService {
             blog.setAuthor(
                     userRepository.findById(authorId).orElseThrow(
                             () -> {
-                                throw new ContentNotFoundException(ContentNotFoundEnum.USER, authorId);
+                                throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(authorId));
                             })
             );
         }
@@ -80,7 +80,7 @@ public class BlogServiceImpl implements BlogService {
         Long userId = authService.getCurrentUserId();
 
         Blog blog = blogRepository.findById(blogId).orElseThrow(() -> {
-            throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, blogId);
+            throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id", String.valueOf(blogId));
         });
         boolean isAlreadyLiked = blogRepository.isBlogLikedByUser(blogId, userId);
         if(isDislike){
@@ -100,7 +100,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogDTO updateBlogById(Long blogId, BlogDTO blogDTO) throws ContentNotFoundException {
         if(!blogRepository.existsById(blogId)){
-            throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, blogId);
+            throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id" , String.valueOf(blogId));
         }
         blogDTO.setId(blogId);
         blogRepository.save(blogMapper.dtoToEntity(blogDTO));
@@ -111,7 +111,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogDTO deleteBlogById(Long blogId) throws ContentNotFoundException {
         Blog blog = blogRepository.findById(blogId).orElseThrow(() -> {
-            throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, blogId);
+            throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id" , String.valueOf(blogId));
         });
         blogRepository.delete(blog);
         return blogMapper.entityToDto(blog, null);

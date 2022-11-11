@@ -43,7 +43,7 @@ public class BlogMapper {
                 .author(
                         userRepository.findById(blogDTO.getAuthorId()).orElseThrow(
                                 () -> {
-                                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, blogDTO.getAuthorId());
+                                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(blogDTO.getAuthorId()));
                                 })
                 )
                 .title(blogDTO.getTitle())

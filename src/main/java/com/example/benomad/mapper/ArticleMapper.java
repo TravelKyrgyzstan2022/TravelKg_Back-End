@@ -37,7 +37,7 @@ public class ArticleMapper {
                 .user(
                         userRepository.findById(dto.getUserId()).orElseThrow(
                                 () -> {
-                                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, dto.getUserId());
+                                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(dto.getUserId()));
                                 })
                 )
                 .build();

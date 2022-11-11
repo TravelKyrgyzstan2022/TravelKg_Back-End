@@ -27,7 +27,7 @@ public class CommentMapper {
                 .id(commentDTO.getId())
                 .user(userRepository.findById(commentDTO.getUserId()).orElseThrow(
                         () -> {
-                            throw new ContentNotFoundException(ContentNotFoundEnum.USER, commentDTO.getUserId());
+                            throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(commentDTO.getUserId()));
                         }
                 ))
                 .body(commentDTO.getBody())

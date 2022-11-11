@@ -32,7 +32,7 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDTO getArticleById(Long articleId) throws ContentNotFoundException {
         return articleMapper.entityToDto(articleRepository.findById(articleId).orElseThrow(
                 () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, articleId);
+                    throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
                 })
         );
     }
@@ -40,10 +40,10 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public ArticleDTO updateArticleById(Long articleId, ArticleDTO articleDTO) throws ContentNotFoundException {
         if(!articleRepository.existsById(articleId)){
-            throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, articleId);
+            throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
         }
         if(!userRepository.existsById(articleDTO.getUserId())){
-            throw new ContentNotFoundException(ContentNotFoundEnum.USER, articleDTO.getUserId());
+            throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(articleId));
         }
         articleDTO.setId(articleId);
         articleRepository.save(articleMapper.dtoToEntity(articleDTO));
@@ -62,7 +62,7 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDTO deleteArticleById(Long articleId) throws ContentNotFoundException {
         Article article = articleRepository.findById(articleId).orElseThrow(
                 () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, articleId);
+                    throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
                 });
         articleRepository.delete(article);
         return articleMapper.entityToDto(article);

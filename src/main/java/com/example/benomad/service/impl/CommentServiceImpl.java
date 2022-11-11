@@ -44,12 +44,12 @@ public class CommentServiceImpl implements CommentService {
         Long userId = authService.getCurrentUserId();
         if(reference == CommentReference.BLOG){
             if(!blogRepository.existsById(referenceId)){
-                throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, referenceId);
+                throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id", String.valueOf(referenceId));
             }
             page = commentRepository.getBlogCommentsById(referenceId, pageRequest);
         }else{
             if(!placeRepository.existsById(referenceId)){
-                throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, referenceId);
+                throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(referenceId));
             }
             page = commentRepository.getPlaceCommentsById(referenceId, pageRequest);
         }
@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
         Long userId = authService.getCurrentUserId();
         return commentMapper.entityToDto(commentRepository.findById(commentId).orElseThrow(
                 () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, commentId);
+                    throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, "id", String.valueOf(commentId));
                 }), userId
         );
     }
@@ -71,10 +71,10 @@ public class CommentServiceImpl implements CommentService {
         Long userId = authService.getCurrentUserId();
 
         if(!commentRepository.existsById(commentId)){
-            throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, commentId);
+            throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, "id", String.valueOf(commentId));
         }
         if(!userRepository.existsById(userId)){
-            throw new ContentNotFoundException(ContentNotFoundEnum.USER, userId);
+            throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
         }
 
         boolean isAlreadyLiked = commentRepository.isCommentLikedByUser(commentId, userId);
@@ -94,7 +94,7 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.entityToDto(
                 commentRepository.findById(commentId).orElseThrow(
                         () -> {
-                            throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, commentId);
+                            throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, "id", String.valueOf(commentId));
                         }), userId
         );
     }
@@ -122,7 +122,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentDTO deleteCommentById(Long commentId) throws ContentNotFoundException {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, commentId);
+                    throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, "id", String.valueOf(commentId));
                 });
         commentRepository.deleteById(commentId);
         return commentMapper.entityToDto(comment, null);
@@ -131,7 +131,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDTO updateCommentById(Long commentId, CommentDTO commentDTO) throws ContentNotFoundException {
         if(!commentRepository.existsById(commentId)){
-            throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, commentId);
+            throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, "id", String.valueOf(commentId));
         }
         commentDTO.setId(commentId);
         commentDTO.setCreationDate(null);
