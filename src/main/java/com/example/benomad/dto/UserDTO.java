@@ -40,7 +40,6 @@ public class UserDTO {
     @JsonProperty("last_name")
     private String lastName;
 
-    @NotBlank(message = "Phone number can't be null or empty")
     @JsonProperty("phone_number")
     private String phoneNumber;
 
