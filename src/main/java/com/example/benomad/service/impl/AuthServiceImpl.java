@@ -21,6 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,8 @@ public class AuthServiceImpl implements AuthService {
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
+        String role = roles.contains("ROLE_ADMIN") ? "ADMIN" : "USER";
+
         RefreshToken refreshToken = refreshTokenService.createToken(userDetails.getId());
 
         return JwtResponse.builder()
@@ -62,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
                 .phoneNumber(userDetails.getPhoneNumber())
                 .email(userDetails.getEmail())
 
-                .roles(roles)
+                .role(role)
                 .build();
     }
 

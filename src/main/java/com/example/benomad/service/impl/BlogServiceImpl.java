@@ -14,6 +14,7 @@ import com.example.benomad.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -50,6 +51,7 @@ public class BlogServiceImpl implements BlogService {
     public List<BlogDTO> getBlogsByAttributes(Long authorId, String title,
                                               ReviewStatus reviewStatus, boolean MATCH_ALL)
             throws ContentNotFoundException {
+        System.out.println("$$$$$$$$$$$$$$$$$$$$" + SecurityContextHolder.getContext().getAuthentication().getName());
         Long userId = authService.getCurrentUserId();
         Blog blog = Blog.builder()
                 .title(title)

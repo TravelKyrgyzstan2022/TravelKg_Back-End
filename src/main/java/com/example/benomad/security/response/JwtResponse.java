@@ -1,5 +1,6 @@
 package com.example.benomad.security.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,13 +20,18 @@ public class JwtResponse {
 
     private Long id;
 
+    @JsonProperty("first_name")
     private String firstName;
 
+    @JsonProperty("last_name")
     private String lastName;
 
+    @JsonProperty("phone_number")
     private String phoneNumber;
 
     private String email;
 
-    private List<String> roles;
+    private String role;
+
+    private List<String> claims;
 }

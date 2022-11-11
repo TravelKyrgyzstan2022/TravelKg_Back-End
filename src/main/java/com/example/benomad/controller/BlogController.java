@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +60,7 @@ public class BlogController {
             @RequestParam(name = "size", required = false) Optional<Integer> size){
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1),
                 Sort.by(sortBy.orElse("id")));
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok(commentService.getReferenceCommentsById(id, CommentReference.BLOG, pageRequest));
     }
 

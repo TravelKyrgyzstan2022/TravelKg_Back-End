@@ -17,6 +17,7 @@ import com.example.benomad.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -68,7 +69,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
 
-    public UserDTO addUser(User user) {
+    public UserDTO addUser(UserDTO userDTO) {
+
+        User user = userMapper.dtoToEntity(userDTO);
 
         Example<User> example = Example.of(user, getExampleForAttribute("email"));
         if(userRepository.findAll(example).size() > 0){
@@ -87,16 +90,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         userRepository.save(user);
 
-        if (!StringUtils.isEmpty(user.getEmail())) {
-            String message = String.format(
-                    "Hello, %s! \n" +
-                            "Welcome to BeNomad. Please, visit next link to activate your account: http://localhost:8080/api/auth/activate/%s",
-                    user.getEmail(),
-                    user.getActivationCode()
-            );
-
-            mailSender.send(user.getEmail(), "Account activation", message);
-        }
+//        if (!StringUtils.isEmpty(user.getEmail())) {
+//            String message = String.format(
+//                    "Hello, %s! \n" +
+//                            "Welcome to BeNomad. Please, visit next link to activate your account: http://localhost:8080/api/auth/activate/%s",
+//                    user.getEmail(),
+//                    user.getActivationCode()
+//            );
+//
+//            mailSender.send(user.getEmail(), "Account activation", message);
+//        }
 
         return userMapper.entityToDto(user);
     }
@@ -150,6 +153,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .build();
 
         Example<User> example = Example.of(user, getExample(MATCH_ALL));
+
+        System.out.println("######## - " + SecurityContextHolder.getContext().getAuthentication().getName());
 
         return userMapper.entityListToDtoList(userRepository.findAll(example));
     }

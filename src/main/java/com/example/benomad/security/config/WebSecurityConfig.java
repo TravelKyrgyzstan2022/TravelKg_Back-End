@@ -51,7 +51,8 @@ public class WebSecurityConfig {
                 .cors()
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/api/auth/**", "/documentation/**").permitAll()
+                    .antMatchers("/api/auth/**", "/documentation/**", "/v3/api-docs/**",
+                            "/swagger-ui/**", "/v3/api-docs.yaml").permitAll()
                     .antMatchers(HttpMethod.GET,  "/api/v1/users", "/api/v1/users/**").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/v1/**").hasRole("ADMIN")
