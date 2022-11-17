@@ -2,6 +2,7 @@ package com.example.benomad.controller;
 
 import com.example.benomad.dto.PlanDTO;
 import com.example.benomad.service.impl.PlanServiceImpl;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/users/{userId}/plans")
+@Tag(name = "Planner resource", description = "Not finished")
 public class PlanController {
 
     private final PlanServiceImpl planService;

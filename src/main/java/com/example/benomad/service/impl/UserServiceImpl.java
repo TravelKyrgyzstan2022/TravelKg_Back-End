@@ -15,6 +15,7 @@ import com.example.benomad.mapper.UserMapper;
 import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +36,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
 
 
@@ -103,7 +105,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 //
 //            mailSender.send(user.getEmail(), "Account activation", message);
 //        }
-
+        log.info("Registered new user with email - " + userDTO.getEmail());
         return userMapper.entityToDto(user);
     }
 
@@ -162,7 +164,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         Example<User> example = Example.of(user, getExample(MATCH_ALL));
 
-        System.out.println("######## - " + SecurityContextHolder.getContext().getAuthentication().getName());
+        log.info("Returned all users to admin with email - "
+                + SecurityContextHolder.getContext().getAuthentication().getName());
 
         return userMapper.entityListToDtoList(userRepository.findAll(example));
     }
@@ -197,6 +200,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userDTO.setId(userId);
         userDTO.setEmail(user.getEmail());
         userRepository.save(userMapper.dtoToEntity(userDTO));
+        log.info("Updated user with id - " + userId);
         return userDTO;
     }
 
@@ -209,6 +213,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if(userId != 1L){
             userRepository.delete(user);
         }
+        log.info("Deleted user with id - " + userId);
         return userMapper.entityToDto(user);
     }
 

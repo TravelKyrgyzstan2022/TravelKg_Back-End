@@ -23,9 +23,9 @@ public class UserDetailsImpl implements UserDetails {
     private String username;
     private String firstName;
     private String lastName;
-
-    private String phoneNumber;
     private String email;
+    private String phoneNumber;
+
     @JsonIgnore
     private String password;
 
@@ -35,10 +35,11 @@ public class UserDetailsImpl implements UserDetails {
     public static UserDetailsImpl build(User user) {
         return UserDetailsImpl.builder()
                 .id(user.getId())
+                .username(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .phoneNumber(user.getPhoneNumber())
                 .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
                 .password(user.getPassword())
                 .authorities(user.getRoles())
                 .build();

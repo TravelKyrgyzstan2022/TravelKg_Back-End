@@ -67,8 +67,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO likeDislikeComment(Long commentId, boolean isDislike) throws ContentNotFoundException{
-        Long userId = authService.getCurrentUserId();
+    public CommentDTO likeDislikeComment(Long commentId, Long userId, boolean isDislike) throws ContentNotFoundException{
+        if(userId == null){
+            userId = authService.getCurrentUserId();
+        }
 
         if(!commentRepository.existsById(commentId)){
             throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, "id", String.valueOf(commentId));

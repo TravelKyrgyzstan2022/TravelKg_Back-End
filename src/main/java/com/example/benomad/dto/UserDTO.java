@@ -27,7 +27,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties({"favorite_places", "roles"})
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;

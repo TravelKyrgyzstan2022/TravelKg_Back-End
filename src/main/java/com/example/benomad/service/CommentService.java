@@ -12,7 +12,7 @@ public interface CommentService {
     List<CommentDTO> getAllComments() throws ContentNotFoundException;
     List<CommentDTO> getReferenceCommentsById(Long placeId, CommentReference reference, PageRequest pageRequest);
     CommentDTO getCommentById(Long id) throws ContentNotFoundException;
-    CommentDTO likeDislikeComment(Long commentId, boolean isDislike) throws ContentNotFoundException;
+    CommentDTO likeDislikeComment(Long commentId, Long userId, boolean isDislike) throws ContentNotFoundException;
     CommentDTO insertComment(CommentReference reference, Long referenceId, CommentDTO commentDTO);
     CommentDTO deleteCommentById(Long id) throws ContentNotFoundException;
     CommentDTO updateCommentById(Long id, CommentDTO commentDTO) throws ContentNotFoundException;

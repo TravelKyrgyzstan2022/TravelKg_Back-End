@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @NoArgsConstructor
 @Data
-@ResponseStatus(HttpStatus.BAD_REQUEST)
+@ResponseStatus(HttpStatus.CONFLICT)
 public class ContentIsAlreadyLikedException extends CustomException{
     private final String messageFormat = "Couldn't like the %s: the %s has already been liked by the user";
-    private final Integer statusCode = 400;
+    private final Integer statusCode = 409;
     private String message;
 
     public ContentIsAlreadyLikedException(ContentNotFoundEnum content){

@@ -13,6 +13,7 @@ import com.example.benomad.security.response.JwtResponse;
 import com.example.benomad.security.response.TokenRefreshResponse;
 import com.example.benomad.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private final UserServiceImpl userService;
@@ -46,15 +48,22 @@ public class AuthServiceImpl implements AuthService {
 
         String email = ((UserDetailsImpl) authentication.getPrincipal()).getEmail();
 
-        String jwt = jwtUtils.generateTokenFromEmail(email);
-
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        String role = roles.contains("ROLE_ADMIN") ? "ADMIN" : "USER";
+        String role;
+        String jwt;
+
+        if(roles.contains("ROLE_ADMIN")){
+            role = "ADMIN";
+            jwt = jwtUtils.generateAdminTokenFromEmail(email);
+        }else{
+            role = "USER";
+            jwt = jwtUtils.generateTokenFromEmail(email);
+        }
 
         RefreshToken refreshToken = refreshTokenService.createToken(userDetails.getId());
-
+        log.info("Authenticated user with email - " + loginRequest.getEmail());
         return JwtResponse.builder()
                 .token(jwt)
                 .refreshToken(refreshToken.getToken())
@@ -73,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
     public TokenRefreshResponse refreshToken(TokenRefreshRequest request) {
 
         String requestRefreshToken = request.getRefreshToken();
-
+        log.info("JWT refreshed");
         return refreshTokenService.findByToken(requestRefreshToken)
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
@@ -91,6 +100,7 @@ public class AuthServiceImpl implements AuthService {
     public MessageResponse logoutUser(Long id) {
         UserDTO userDTO = userService.getUserById(id);
         refreshTokenService.deleteByUserId(userDTO.getId());
+        log.info("User logged out - " + userDTO.getEmail());
         return new MessageResponse("User has been successfully logged out!", 200);
     }
 
@@ -105,13 +115,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Long getCurrentUserId() {
-//        String username = getCurrentUsername();
-//        if(username == null){
-//            return null;
-//        }else{
-//            return userService.getUserByEmail(username).getId();
-//        }
-        return null;
+        String username = getCurrentUsername();
+        if(username == null){
+            return null;
+        }else{
+            return userService.getUserByEmail(username).getId();
+        }
     }
 
 }

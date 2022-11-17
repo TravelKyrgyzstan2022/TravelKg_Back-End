@@ -27,6 +27,36 @@ public class WebSecurityConfig {
 
     private final AuthEntryPointHandler unauthorizedHandler;
     private final AuthAccessDeniedHandler accessDeniedHandler;
+    private final String[] PERMIT_ALL_COMMON = {
+            "/api/auth/**",
+            "/documentation/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/v3/api-docs.yaml",
+    };
+
+    private final String[] ADMIN_GET = {
+            "/actuator/**",
+            "/api/v1/users",
+            "/api/v1/users/**"
+    };
+
+    private final String[] PERMIT_ALL_GET = {
+            "/api/v1/**"
+    };
+
+    private final String[] ADMIN_POST = {
+            "/api/v1/**"
+    };
+
+    private final String[] ADMIN_PUT = {
+            "/api/v1/**"
+    };
+
+    private final String[] ADMIN_DELETE = {
+            "/api/v1/**"
+    };
+
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -51,13 +81,12 @@ public class WebSecurityConfig {
                 .cors()
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/api/auth/**", "/documentation/**", "/v3/api-docs/**",
-                            "/swagger-ui/**", "/v3/api-docs.yaml").permitAll()
-                    .antMatchers(HttpMethod.GET,  "/api/v1/users", "/api/v1/users/**").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
-                    .antMatchers(HttpMethod.POST, "/api/v1/**").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE, "/api/v1/**").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, "/api/v1/**").hasRole("ADMIN")
+                    .antMatchers(PERMIT_ALL_COMMON).permitAll()
+                    .antMatchers(HttpMethod.GET, ADMIN_GET).hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, PERMIT_ALL_GET).permitAll()
+                    .antMatchers(HttpMethod.POST, ADMIN_POST).hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, ADMIN_DELETE).hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, ADMIN_PUT).hasRole("ADMIN")
                     .anyRequest().authenticated()
                 .and()
                     .exceptionHandling()

@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @NoArgsConstructor
 @Data
-@ResponseStatus(HttpStatus.BAD_REQUEST)
+@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
 public class InvalidJwtException extends CustomException{
     private String message;
-    private final Integer statusCode = 400;
+    private final Integer statusCode = 498;
 
     public InvalidJwtException(String message){
         this.message = message;

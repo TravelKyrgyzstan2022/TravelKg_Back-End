@@ -9,6 +9,7 @@ import com.example.benomad.repository.ArticleRepository;
 import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.ArticleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
@@ -47,6 +49,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
         articleDTO.setId(articleId);
         articleRepository.save(articleMapper.dtoToEntity(articleDTO));
+        log.info("Updated article with id - " + articleId);
         return articleDTO;
     }
 
@@ -55,6 +58,7 @@ public class ArticleServiceImpl implements ArticleService {
         articleDTO.setId(authService.getCurrentUserId());
         articleRepository.save(articleMapper.dtoToEntity(articleDTO));
         articleDTO.setId(articleRepository.getLastValueOfSequence());
+        log.info("Inserted article with id - " + articleDTO.getId());
         return articleDTO;
     }
 
@@ -65,6 +69,7 @@ public class ArticleServiceImpl implements ArticleService {
                     throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
                 });
         articleRepository.delete(article);
+        log.info("Deleted article with id - " + articleId);
         return articleMapper.entityToDto(article);
     }
 }
