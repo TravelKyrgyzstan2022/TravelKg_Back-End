@@ -26,6 +26,21 @@ public class Comment {
     @Column(nullable = false,length = 2000)
     private String body;
 
+    @Column(name = "creation_date")
+    private LocalDate creationDate;
+
+    @Column(name = "update_date")
+    private LocalDate updateDate;
+
+    private boolean isDeleted;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(
+            columnDefinition = "deleted_content_info_id",
+            referencedColumnName = "id"
+    )
+    private DeletionInfo deletionInfo;
+
     @ManyToMany
     @JoinTable(name = "comment_likes",
             joinColumns = @JoinColumn(columnDefinition = "comment_id",
@@ -35,6 +50,8 @@ public class Comment {
     )
     private Set<User> likedUsers;
 
-    @Column(name = "creation_date")
-    private LocalDate creationDate;
+    //fixme
+//    public void addLikedUser(User user){
+//        likedUsers.add(user);
+//    }
 }

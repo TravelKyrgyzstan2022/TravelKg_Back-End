@@ -18,5 +18,15 @@ INSERT INTO places (id, name, address, place_type, region, image_url, link_url, 
 INSERT INTO places (id, name, address, place_type, region, image_url, link_url, description) VALUES (nextval('places_id_seq'),'Kegeti', 'Not Specified', 'GORGE', 'BISHKEK', 'https://upload.tury.club/data/839a7f2c2d7cf82d3a6570515f6a13a3/NDwNDtsv/hfVx4kR1.jpg', 'https://too.kg/kegety/', 'Great place for spending time');
 INSERT INTO places (id, name, address, place_type, region, image_url, link_url, description) VALUES (nextval('places_id_seq'),'Bellagio Coffee', 'Kiev 71', 'CAFE', 'BISHKEK', 'https://lh3.googleusercontent.com/p/AF1QipOHKq6Ss5LHRhOsA10f2HQnr4NFjeXwOurzh-px=w768-h768-n-o-v1', 'https://www.instagram.com/bellagio_coffee/?hl=ru', 'Great place for spending time');
 INSERT INTO places (id, name, address, place_type, region, image_url, link_url, description) VALUES (nextval('places_id_seq'),'Chunkurchak', 'Not Specified', 'SKY_RESORT', 'CHUY', 'https://www.chunkurchak.kg/images/lift3.jpg', 'https://www.chunkurchak.kg/', 'Great place for spending time');
-INSERT INTO users (id, password, first_name, last_name, email, phone_number, active) VALUES (nextval('users_id_seq'), '$2a$12$bWeU.HrrI2hddpkhOrWCTesyQOd8cOJ3WuKNyzWsAbaTz0W6CO7tC', 'admin', 'adminov', 'admin@admin.admin', '+000000000000', true);
+INSERT INTO users (id, password, first_name, last_name, email, phone_number, is_activated, is_deleted)
+VALUES (nextval('users_id_seq'), '$2a$12$R1zew/xsTUq4eWAiZCsrG.c1ouk8SvN.eJveY3RkoFh1PI1BtvGU.', 'admin', 'admin', 'admin@admin.a', '+000000000000', true, false);
+INSERT INTO users (id, password, first_name, last_name, email, phone_number, is_activated, is_deleted)
+VALUES (nextval('users_id_seq'), '$2a$12$tzp.n0FfFjWMoh6ojeiQPOQDSw.IUdGUJGxVJ0f8uNeSMWUux2X3K', 'Asel', 'Asel', 'Asel@admin.a', '+1542134213213', true, false);
+INSERT INTO users (id, password, first_name, last_name, email, phone_number, is_activated, is_deleted)
+VALUES (nextval('users_id_seq'), '$2a$12$tzp.n0FfFjWMoh6ojeiQPOQDSw.IUdGUJGxVJ0f8uNeSMWUux2X3K', 'Adelina', 'Adelina', 'Adelina@admin.a', '+42424124213321', true, false);
+INSERT INTO users (id, password, first_name, last_name, email, phone_number, is_activated, is_deleted)
+VALUES (nextval('users_id_seq'), '$2a$12$tzp.n0FfFjWMoh6ojeiQPOQDSw.IUdGUJGxVJ0f8uNeSMWUux2X3K', 'Kanay', 'Kanay', 'Kanay@admin.a', '+42142142142133', true, false);
 INSERT INTO roles (user_id, roles) VALUES (1, 'ROLE_ADMIN');
+INSERT INTO roles (user_id, roles) VALUES (2, 'ROLE_ADMIN');
+INSERT INTO roles (user_id, roles) VALUES (3, 'ROLE_ADMIN');
+INSERT INTO roles (user_id, roles) VALUES (4, 'ROLE_ADMIN');

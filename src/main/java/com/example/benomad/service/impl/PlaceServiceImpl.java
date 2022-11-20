@@ -9,6 +9,7 @@ import com.example.benomad.enums.Region;
 import com.example.benomad.exception.ContentIsNotRatedException;
 import com.example.benomad.exception.InvalidRatingException;
 import com.example.benomad.exception.ContentNotFoundException;
+import com.example.benomad.logger.LogWriter;
 import com.example.benomad.mapper.PlaceMapper;
 import com.example.benomad.repository.PlaceRepository;
 import com.example.benomad.repository.RatingRepository;
@@ -21,7 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,24 +41,28 @@ public class PlaceServiceImpl implements PlaceService {
         Place builtPlace = Place.builder().name(name).address(address).region(region).placeType(placeType).build();
         Example<Place> exampleOfPlace = Example.of(builtPlace,getExampleMatcher(match));
         Page<Place> pages = placeRepository.findAll(exampleOfPlace,pageRequest);
-        return placeMapper.entityListToDtoList(pages.stream().collect(Collectors.toList()));
+        List<PlaceDTO> placeDTOS = placeMapper.entityListToDtoList(pages.stream().collect(Collectors.toList()));
+        LogWriter.get(String.format("%s - Returned %d places", authService.getName(), placeDTOS.size()));
+        return placeDTOS;
     }
 
 
     @Override
     public PlaceDTO getPlaceById(Long placeId) throws ContentNotFoundException {
-        return placeMapper.entityToDto(placeRepository.findById(placeId).orElseThrow(
+        PlaceDTO placeDTO = placeMapper.entityToDto(placeRepository.findById(placeId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
                 })
         );
+        LogWriter.get(String.format("%s - Returned place with id = %d", authService.getName(), placeId));
+        return placeDTO;
     }
 
     @Override
     public PlaceDTO insertPlace(PlaceDTO placeDTO) {
         placeDTO.setId(null);
-        placeRepository.save(placeMapper.dtoToEntity(placeDTO));
-        placeDTO.setId(placeRepository.getLastValueOfSequence());
+        placeDTO.setId(placeRepository.save(placeMapper.dtoToEntity(placeDTO)).getId());
+        LogWriter.insert(String.format("%s - Inserted place with id = %d", authService.getName(), placeDTO.getId()));
         return placeDTO;
     }
 
@@ -70,6 +74,7 @@ public class PlaceServiceImpl implements PlaceService {
                 }
         );
         placeRepository.delete(place);
+        LogWriter.delete(String.format("%s - Deleted place with id = %d", authService.getName(), placeId));
         return placeMapper.entityToDto(place);
     }
 
@@ -79,6 +84,7 @@ public class PlaceServiceImpl implements PlaceService {
             throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
         }
         placeRepository.save(placeMapper.dtoToEntity(placeDTO));
+        LogWriter.update(String.format("%s - Deleted place with id = %d", authService.getName(), placeId));
         return placeDTO;
     }
 
@@ -137,12 +143,14 @@ public class PlaceServiceImpl implements PlaceService {
                     .rating(rating)
                     .build());
         }
+        LogWriter.update(String.format("%s - %s place with id = %d", authService.getName(),
+                isRemoval ? "Removed rated for" : "Rated", placeId));
         return placeMapper.entityToDto(placeRepository.findById(placeId).orElseThrow(() -> {
             throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
         }));
     }
 
-    public ExampleMatcher getExampleMatcher(Boolean match) {
+    private ExampleMatcher getExampleMatcher(Boolean match) {
         ExampleMatcher matches = ExampleMatcher.matchingAll()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("region",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))

@@ -1,5 +1,6 @@
 package com.example.benomad.service;
 
+import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.dto.UserDTO;
 
 import com.example.benomad.exception.UserAttributeTakenException;
@@ -23,7 +24,7 @@ public interface UserService {
     UserDTO getUserByEmail(String email) throws ContentNotFoundException;
     UserDTO getUserByPhoneNumber(String phoneNumber) throws ContentNotFoundException;
     UserDTO updateUserById(Long id, UserDTO userDTO) throws ContentNotFoundException;
-    UserDTO deleteUserById(Long id) throws ContentNotFoundException;
+    UserDTO deleteUserById(Long userId, DeletionInfoDTO infoDTO) throws ContentNotFoundException;
 
 
 

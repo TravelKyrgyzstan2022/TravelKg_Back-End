@@ -1,14 +1,10 @@
 package com.example.benomad.controller;
 
-import antlr.Token;
 import com.example.benomad.advice.ExceptionResponse;
-import com.example.benomad.dto.ArticleDTO;
 import com.example.benomad.dto.UserDTO;
-import com.example.benomad.entity.User;
 import com.example.benomad.security.request.LogOutRequest;
 import com.example.benomad.security.request.LoginRequest;
 import com.example.benomad.security.request.TokenRefreshRequest;
-import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.security.response.JwtResponse;
 import com.example.benomad.security.response.TokenRefreshResponse;
 import com.example.benomad.service.impl.AuthServiceImpl;
@@ -20,7 +16,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

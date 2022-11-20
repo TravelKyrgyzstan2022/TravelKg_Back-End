@@ -1,7 +1,4 @@
-
 package com.example.benomad.dto;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.example.benomad.security.domain.Role;
 import lombok.*;
@@ -10,13 +7,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
 
 import java.util.List;
 
@@ -27,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties({"favorite_places", "roles"})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
@@ -49,18 +47,26 @@ public class UserDTO {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    //fixme
     @NotNull(message = "Role can't be null or empty")
-    private Set<Role> roles = new HashSet<Role>();
+    private Set<Role> roles = new HashSet<>();
     
     @JsonProperty("favorite_places")
     private List<PlaceDTO> placeDTOS;
 
-//    @JsonIgnore
-//    private Integer resetPasswordCode;
-//
-//    @JsonIgnore
-//    private Instant codeExpirationDate;
-//
-//    @JsonIgnore
-//    private boolean pwdChangeRequired;
+    @JsonProperty("registration_date")
+    private LocalDate registrationDate;
+
+    @JsonProperty(value = "last_visit_date", access = JsonProperty.Access.READ_ONLY)
+    private LocalDate lastVisitDate;
+
+    @JsonProperty(value = "is_activated", access = JsonProperty.Access.READ_ONLY)
+    private boolean isActivated;
+
+    @JsonProperty(value = "is_deleted", access = JsonProperty.Access.READ_ONLY)
+    private boolean isDeleted;
+
+    @JsonProperty("deletion_info")
+    private DeletionInfoDTO deletionInfoDTO;
+
 }

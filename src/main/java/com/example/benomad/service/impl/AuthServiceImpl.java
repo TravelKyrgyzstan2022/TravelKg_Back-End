@@ -5,6 +5,8 @@ import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.RefreshToken;
 import com.example.benomad.entity.User;
 import com.example.benomad.exception.RefreshTokenException;
+import com.example.benomad.logger.LogWriter;
+import com.example.benomad.mapper.UserMapper;
 import com.example.benomad.security.domain.UserDetailsImpl;
 import com.example.benomad.security.jwt.JwtUtils;
 import com.example.benomad.security.request.LoginRequest;
@@ -22,16 +24,18 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private final UserServiceImpl userService;
+    private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
     private final JwtUtils jwtUtils;
@@ -63,18 +67,16 @@ public class AuthServiceImpl implements AuthService {
         }
 
         RefreshToken refreshToken = refreshTokenService.createToken(userDetails.getId());
-        log.info("Authenticated user with email - " + loginRequest.getEmail());
+        UserDTO userDTO = userService.getUserById(userDetails.getId());
+        User user = User.builder()
+                .id(userDetails.getId())
+                .lastVisitDate(LocalDate.now(ZoneId.of("Asia/Bishkek")))
+                .build();
+        LogWriter.auth(String.format("%s - Authenticated", loginRequest.getEmail()));
         return JwtResponse.builder()
                 .token(jwt)
                 .refreshToken(refreshToken.getToken())
-                .id(userDetails.getId())
-                .firstName(userDetails.getFirstName())
-                .lastName(userDetails.getLastName())
-
-                .phoneNumber(userDetails.getPhoneNumber())
-                .email(userDetails.getEmail())
-
-                .role(role)
+                .userDTO(userDTO)
                 .build();
     }
 
@@ -82,7 +84,6 @@ public class AuthServiceImpl implements AuthService {
     public TokenRefreshResponse refreshToken(TokenRefreshRequest request) {
 
         String requestRefreshToken = request.getRefreshToken();
-        log.info("JWT refreshed");
         return refreshTokenService.findByToken(requestRefreshToken)
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
@@ -100,22 +101,13 @@ public class AuthServiceImpl implements AuthService {
     public MessageResponse logoutUser(Long id) {
         UserDTO userDTO = userService.getUserById(id);
         refreshTokenService.deleteByUserId(userDTO.getId());
-        log.info("User logged out - " + userDTO.getEmail());
+        LogWriter.auth(String.format("%s - Logged out", userDTO.getEmail()));
         return new MessageResponse("User has been successfully logged out!", 200);
     }
 
     @Override
-    public String getCurrentUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            return authentication.getName();
-        }
-        return null;
-    }
-
-    @Override
     public Long getCurrentUserId() {
-        String username = getCurrentUsername();
+        String username = getName();
         if(username == null){
             return null;
         }else{
@@ -123,4 +115,11 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    public String getName(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            return authentication.getName();
+        }
+        return null;
+    }
 }

@@ -33,6 +33,7 @@ public class WebSecurityConfig {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/v3/api-docs.yaml",
+            "/error"
     };
 
     private final String[] ADMIN_GET = {

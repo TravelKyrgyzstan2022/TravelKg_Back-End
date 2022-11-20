@@ -3,12 +3,11 @@ package com.example.benomad.controller;
 import com.example.benomad.advice.ExceptionResponse;
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.dto.CommentDTO;
+import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.enums.CommentReference;
 import com.example.benomad.enums.ReviewStatus;
-import com.example.benomad.security.response.JwtResponse;
 import com.example.benomad.service.impl.BlogServiceImpl;
 import com.example.benomad.service.impl.CommentServiceImpl;
-import io.jsonwebtoken.Jwt;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,12 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -307,7 +303,7 @@ public class BlogController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.updateBlogById(blogId, blogDTO));
     }
 
-    @Operation(summary = "Deletes the blog by ID")
+    @Operation(summary = "Deletes blog by ID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -341,7 +337,7 @@ public class BlogController {
             )
     })
     @DeleteMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> deleteBlogById(@PathVariable Long blogId){
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.deleteBlogById(blogId));
+    public ResponseEntity<?> deleteBlogById(@PathVariable Long blogId, @RequestBody DeletionInfoDTO infoDTO){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.deleteBlogById(blogId, infoDTO));
     }
 }

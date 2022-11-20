@@ -7,6 +7,7 @@ import com.example.benomad.security.domain.Role;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
@@ -44,14 +45,26 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "active")
-    @JsonIgnore
-    private boolean active;
+    @Column(name = "registration_date")
+    private LocalDate registrationDate;
 
-    @Column(name = "activation_code", nullable = true)
-    @JsonIgnore
-    private String activationCode;
+    private boolean isDeleted;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(
+            columnDefinition = "deleted_content_info_id",
+            referencedColumnName = "id"
+    )
+    private DeletionInfo deletionInfo;
+
+    @Column(name = "is_activated")
+    @JsonIgnore
+    private boolean isActivated;
+
+    @Column(name = "last_visit_date")
+    private LocalDate lastVisitDate;
+
+    //fixme
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "roles", foreignKey = @ForeignKey(name = "fk_users_role"))

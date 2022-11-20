@@ -1,6 +1,7 @@
 package com.example.benomad.advice;
 
 import com.example.benomad.exception.CustomException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 @ControllerAdvice()
+@Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -22,7 +24,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(exception.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
-        exception.printStackTrace();
+        log.error(exception.getMessage());
         return ResponseEntity.status(exceptionResponse.getStatus()).body(exceptionResponse);
     }
 
@@ -33,6 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(exception.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
+        log.error(exception.getMessage());
         return ResponseEntity.status(exceptionResponse.getStatus()).body(exceptionResponse);
     }
 
@@ -43,7 +46,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(exception.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
-        exception.printStackTrace();
+        log.error(exception.getMessage());
         return ResponseEntity.status(exceptionResponse.getStatus()).body(exceptionResponse);
     }
 

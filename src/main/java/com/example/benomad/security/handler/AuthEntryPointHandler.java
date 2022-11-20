@@ -1,5 +1,7 @@
 package com.example.benomad.security.handler;
 
+import com.example.benomad.exception.ContentNotFoundException;
+import com.example.benomad.repository.UserRepository;
 import com.example.benomad.security.jwt.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
@@ -27,6 +29,9 @@ public class AuthEntryPointHandler implements AuthenticationEntryPoint {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Value("${jwtSecret}")
     private String jwtSecret;
 
@@ -42,8 +47,12 @@ public class AuthEntryPointHandler implements AuthenticationEntryPoint {
         if (StringUtils.hasText(headerAuth)) {
             String token = headerAuth.substring(7);
             if(headerAuth.startsWith("Bearer ")){
+                String email = jwtUtils.getUsernameFromJwtToken(token);
                 try {
                     Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+                    if(!userRepository.existsByEmail(email)){
+                        throw new ContentNotFoundException();
+                    }
                 } catch (SignatureException e) {
                     message = ("Invalid JWT signature: " + e.getMessage());
                 } catch (MalformedJwtException e) {
@@ -54,6 +63,8 @@ public class AuthEntryPointHandler implements AuthenticationEntryPoint {
                     message = ("JWT token is unsupported: " + e.getMessage());
                 } catch (IllegalArgumentException e) {
                     message = ("JWT claims string is empty: " + e.getMessage());
+                } catch (ContentNotFoundException e){
+                    message = (String.format("Invalid JWT: User %s doesn't exist", email));
                 }
             }else{
                 message = "Invalid JWT type: Bearer not found";

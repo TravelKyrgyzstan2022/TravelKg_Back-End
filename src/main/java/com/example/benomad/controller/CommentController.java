@@ -2,8 +2,8 @@ package com.example.benomad.controller;
 
 
 import com.example.benomad.advice.ExceptionResponse;
-import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.dto.CommentDTO;
+import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.service.impl.CommentServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 
 @RestController
@@ -162,8 +160,8 @@ public class CommentController {
             )
     })
     @DeleteMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> deleteCommentById(@PathVariable Long id){
-        return ResponseEntity.ok(commentService.deleteCommentById(id));
+    public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId, @RequestBody DeletionInfoDTO infoDTO){
+        return ResponseEntity.ok(commentService.deleteCommentById(commentId, infoDTO));
     }
 
     @Operation(summary = "Updates comment by ID")

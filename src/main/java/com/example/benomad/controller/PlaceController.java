@@ -21,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -102,8 +101,8 @@ public class PlaceController {
             )
     })
     @GetMapping(value = "/{id}",produces = "application/json")
-    public ResponseEntity<?> getPlaceById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok().body(placeService.getPlaceById(id));
+    public ResponseEntity<?> getPlaceById(@PathVariable("id") Long placeId) {
+        return ResponseEntity.ok().body(placeService.getPlaceById(placeId));
     }
 
     @Operation(summary = "Gets comments of place by ID")
@@ -136,13 +135,13 @@ public class PlaceController {
     })
     @GetMapping(value = "/{id}/comments", produces = "application/json")
     public ResponseEntity<?> getPlaceCommentsById(
-            @PathVariable Long id,
+            @PathVariable("id") Long placeId,
             @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
             @RequestParam(name = "page", required = false) Optional<Integer> page,
             @RequestParam(name = "size", required = false) Optional<Integer> size){
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1),
                 Sort.by(sortBy.orElse("id")));
-        return ResponseEntity.ok(commentService.getReferenceCommentsById(id, CommentReference.PLACE, pageRequest));
+        return ResponseEntity.ok(commentService.getReferenceCommentsById(placeId, CommentReference.PLACE, pageRequest));
     }
 
     @Operation(summary = "Inserts a place to the database")

@@ -1,7 +1,7 @@
 package com.example.benomad.controller;
 
 import com.example.benomad.advice.ExceptionResponse;
-import com.example.benomad.dto.CommentDTO;
+import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -124,8 +124,8 @@ public class UserController {
             )
     })
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> getUserById(@PathVariable Long id){
-        return ResponseEntity.ok(userService.getUserById(id));
+    public ResponseEntity<?> getUserById(@PathVariable("id") Long userId){
+        return ResponseEntity.ok(userService.getUserById(userId));
     }
 
     //fixme
@@ -181,9 +181,9 @@ public class UserController {
             )
     })
     @PutMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> updateUserById(@RequestBody UserDTO userDTO, @PathVariable Long id){
-        userDTO.setId(id);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.updateUserById(id, userDTO));
+    public ResponseEntity<?> updateUserById(@RequestBody UserDTO userDTO, @PathVariable("id") Long userId){
+        userDTO.setId(userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.updateUserById(userId, userDTO));
     }
 
     @Operation(summary = "Deletes user by ID")
@@ -220,8 +220,8 @@ public class UserController {
             )
     })
     @DeleteMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> deleteUserById(@PathVariable Long id){
-        return ResponseEntity.ok(userService.deleteUserById(id));
+    public ResponseEntity<?> deleteUserById(@PathVariable("id") Long userId, @RequestBody DeletionInfoDTO infoDTO){
+        return ResponseEntity.ok(userService.deleteUserById(userId, infoDTO));
     }
 
 }

@@ -25,8 +25,11 @@ public class CommentDTO {
 
     private String body;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "creation_date", access = JsonProperty.Access.READ_ONLY)
     private String creationDate;
+
+    @JsonProperty(value = "update_date", access = JsonProperty.Access.READ_ONLY)
+    private String updateDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long likeCount;

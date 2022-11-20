@@ -4,6 +4,7 @@ import com.example.benomad.dto.ArticleDTO;
 import com.example.benomad.entity.Article;
 import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.exception.ContentNotFoundException;
+import com.example.benomad.logger.LogWriter;
 import com.example.benomad.mapper.ArticleMapper;
 import com.example.benomad.repository.ArticleRepository;
 import com.example.benomad.repository.UserRepository;
@@ -12,12 +13,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
@@ -27,11 +27,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<ArticleDTO> getAllArticles() {
-        return articleMapper.entityListToDtoList(articleRepository.findAll());
+        List<ArticleDTO> dtos = articleMapper.entityListToDtoList(articleRepository.findAll());
+        LogWriter.get(String.format("%s - Returned %d articles", authService.getName(), dtos.size()));
+        return dtos;
     }
 
     @Override
     public ArticleDTO getArticleById(Long articleId) throws ContentNotFoundException {
+        LogWriter.get(String.format("%s - Returned article with id = %d", authService.getName(), articleId));
         return articleMapper.entityToDto(articleRepository.findById(articleId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
@@ -49,16 +52,16 @@ public class ArticleServiceImpl implements ArticleService {
         }
         articleDTO.setId(articleId);
         articleRepository.save(articleMapper.dtoToEntity(articleDTO));
-        log.info("Updated article with id - " + articleId);
+        LogWriter.update(String.format("%s - Updated article with id = %d", authService.getName(), articleId));
         return articleDTO;
     }
 
     @Override
     public ArticleDTO insertArticle(ArticleDTO articleDTO) {
-        articleDTO.setId(authService.getCurrentUserId());
-        articleRepository.save(articleMapper.dtoToEntity(articleDTO));
-        articleDTO.setId(articleRepository.getLastValueOfSequence());
-        log.info("Inserted article with id - " + articleDTO.getId());
+        articleDTO.setId(null);
+        articleDTO.setUserId(authService.getCurrentUserId());
+        articleDTO.setId(articleRepository.save(articleMapper.dtoToEntity(articleDTO)).getId());
+        LogWriter.insert(String.format("%s - Inserted article with id = %d", authService.getName(), articleDTO.getId()));
         return articleDTO;
     }
 
@@ -69,7 +72,7 @@ public class ArticleServiceImpl implements ArticleService {
                     throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
                 });
         articleRepository.delete(article);
-        log.info("Deleted article with id - " + articleId);
+        LogWriter.delete(String.format("%s - Deleted article with id = %d", authService.getName(), articleId));
         return articleMapper.entityToDto(article);
     }
 }

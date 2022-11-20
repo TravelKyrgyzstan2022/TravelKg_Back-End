@@ -1,5 +1,7 @@
 package com.example.benomad.security.jwt;
 
+import com.example.benomad.exception.ContentNotFoundException;
+import com.example.benomad.exception.InvalidJwtException;
 import com.example.benomad.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +45,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            log.error("Cannot set user authentication: {}", e.getMessage());
+//            throw new InvalidJwtException("Invalid JWT : " + e.getMessage());
         }
-
         filterChain.doFilter(request, response);
     }
 

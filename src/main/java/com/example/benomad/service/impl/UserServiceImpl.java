@@ -1,11 +1,13 @@
 package com.example.benomad.service.impl;
 
-import com.example.benomad.dto.MessageResponse;
+import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.entity.User;
 
 import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.exception.UserAttributeTakenException;
 import com.example.benomad.exception.ContentNotFoundException;
+import com.example.benomad.logger.LogWriter;
+import com.example.benomad.mapper.DeletionInfoMapper;
 import com.example.benomad.security.domain.Role;
 import com.example.benomad.security.domain.UserDetailsImpl;
 import com.example.benomad.security.jwt.JwtUtils;
@@ -21,18 +23,17 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
-
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final DeletionInfoMapper deletionInfoMapper;
     private final JwtUtils jwtUtils;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -78,79 +80,49 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         User user = userMapper.dtoToEntity(userDTO);
 
-        Example<User> example = Example.of(user, getExampleForAttribute("email"));
-        if(userRepository.findAll(example).size() > 0){
+        if(userRepository.existsByEmail(userDTO.getEmail())){
             throw new UserAttributeTakenException("email: ('" + user.getEmail() + "')");
         }
-//        example = Example.of(user, getExampleForAttribute("phoneNumber"));
-//        if(userRepository.findAll(example).size() > 0){
-//            throw new UserAttributeTakenException("phone_number: ('" + user.getPhoneNumber() + "')");
-//        }
 
         user.setId(null);
-        user.setActive(true);
+        user.setActivated(true);
+        user.setRegistrationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         user.setRoles(Collections.singleton(Role.ROLE_USER));
-        user.setActivationCode(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
 
-//        if (!StringUtils.isEmpty(user.getEmail())) {
-//            String message = String.format(
-//                    "Hello, %s! \n" +
-//                            "Welcome to BeNomad. Please, visit next link to activate your account: http://localhost:8080/api/auth/activate/%s",
-//                    user.getEmail(),
-//                    user.getActivationCode()
-//            );
-//
-//            mailSender.send(user.getEmail(), "Account activation", message);
-//        }
-        log.info("Registered new user with email - " + userDTO.getEmail());
+        LogWriter.auth(String.format("%s - Registration completed", userDTO.getEmail()));
         return userMapper.entityToDto(user);
     }
 
-//    public boolean activateUser(String code) {
-//        User user = userRepository.findByActivationCode(code);
-//
-//        if (user == null) {
-//            return false;
-//        }
-//
-//        user.setActivationCode(null);
-//
-//        userRepository.save(user);
-//
-//        System.out.println(getUserAuthenticationToken(user));
-//
-//        return true;
-//    }
-    
     @Override
     public UserDTO getUserById(Long userId) throws ContentNotFoundException {
-        return userMapper.entityToDto(userRepository.findById(userId).orElseThrow(
+        UserDTO userDTO = userMapper.entityToDto(userRepository.findById(userId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
                 }
         ));
+        LogWriter.get(String.format("%s - Returned user with id = %d", getAuthName(), userId));
+        return userDTO;
     }
 
+    //is not used
     @Override
     public UserDTO insertUser(UserDTO userDTO) throws UserAttributeTakenException {
         userDTO.setId(null);
-        User user = User.builder()
-                .email(userDTO.getEmail())
-                .build();
-        if(!user.getEmail().equals(userDTO.getEmail())){
-            Example<User> example = Example.of(user, getExampleForAttribute("email"));
-            if(userRepository.findAll(example).size() > 0){
-                throw new UserAttributeTakenException("email: ('" + user.getEmail() + "')");
-            }
+        if(userRepository.existsByEmail(userDTO.getEmail())){
+            throw new UserAttributeTakenException("email: ('" + userDTO.getEmail() + "')");
         }
-
-        userRepository.save(userMapper.dtoToEntity(userDTO));
-        userDTO.setId(userRepository.getLastValueOfSequence());
+        userDTO.setId(userRepository.save(userMapper.dtoToEntity(userDTO)).getId());
+        LogWriter.insert(String.format("%s - Inserted user with id = %d", getAuthName(), userDTO.getId()));
         return userDTO;
     }
+
+    //fixme
+    public void setDeleted(){}
+    public void setActivated(){}
+    public void sameGoesForBlogsBro(){}
 
     @Override
     public List<UserDTO> getUsersByAttributes(String firstName, String lastName,
@@ -161,13 +133,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .build();
-
         Example<User> example = Example.of(user, getExample(MATCH_ALL));
-
-        log.info("Returned all users to admin with email - "
-                + SecurityContextHolder.getContext().getAuthentication().getName());
-
-        return userMapper.entityListToDtoList(userRepository.findAll(example));
+        List<UserDTO> userDTOS = userMapper.entityListToDtoList(userRepository.findAll(example));
+        LogWriter.get(String.format("%s - Returned %d users", getAuthName(), userDTOS.size()));
+        return userDTOS;
     }
 
     @Override
@@ -185,10 +154,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user =  userRepository.findById(userId).orElseThrow(
                 () -> new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId))
         );
+        boolean isAdmin = user.getRoles().contains(Role.ROLE_ADMIN);
         if(!user.getEmail().equals(userDTO.getEmail())){
             Example<User> example = Example.of(user, getExampleForAttribute("email"));
             if(userRepository.findAll(example).size() > 0){
-                throw new UserAttributeTakenException("email: ('" + user.getEmail() + "')");
+                throw new UserAttributeTakenException("email: (CHANGING EMAIL IS NOT ALLOWED)");
             }
         }
         if(!Objects.equals(user.getPhoneNumber(), userDTO.getPhoneNumber())){
@@ -197,24 +167,35 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 throw new UserAttributeTakenException("phone_number: ('" + user.getPhoneNumber() + "')");
             }
         }
-        userDTO.setId(userId);
-        userDTO.setEmail(user.getEmail());
-        userRepository.save(userMapper.dtoToEntity(userDTO));
-        log.info("Updated user with id - " + userId);
+        if(!isAdmin || getAuthName().equals(userDTO.getEmail())){
+            userDTO.setId(userId);
+            userRepository.save(userMapper.dtoToEntity(userDTO));
+        }
+        LogWriter.update(String.format("%s - Updated user with id - %d", getAuthName(), userId));
         return userDTO;
     }
 
     @Override
-    public UserDTO deleteUserById(Long userId) throws ContentNotFoundException {
+    //fixme
+    public UserDTO deleteUserById(Long userId, DeletionInfoDTO infoDTO) throws ContentNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
                 });
-        if(userId != 1L){
-            userRepository.delete(user);
+        boolean isAdmin = !user.getRoles().contains(Role.ROLE_ADMIN);
+        if(!isAdmin){
+            user.setDeleted(true);
+            infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+            user.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
+            userRepository.save(user);
         }
-        log.info("Deleted user with id - " + userId);
+        LogWriter.delete(String.format("%s - %s with id - %d", getAuthName(),
+                isAdmin ? "Couldn't delete admin" : "Deleted user", userId));
         return userMapper.entityToDto(user);
+    }
+
+    private String getAuthName(){
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     private ExampleMatcher getExample(boolean MATCH_ALL){

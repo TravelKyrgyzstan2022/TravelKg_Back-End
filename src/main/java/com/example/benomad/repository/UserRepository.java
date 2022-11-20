@@ -20,14 +20,9 @@ public interface UserRepository extends JpaRepository <User, Long> {
     
     Optional<User> findByPhoneNumber(String phoneNumber);
     
-    @Query(value = "SELECT last_value FROM users_id_seq", nativeQuery = true)
-    Long getLastValueOfSequence();
-    
     Boolean existsByEmail(String email);
     
     Boolean existsByPhoneNumber(String phoneNumber);
 
     Optional<User> findByEmail(String email);
-
-    Optional<User> findByActivationCode(String code);
 }

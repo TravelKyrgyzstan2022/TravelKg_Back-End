@@ -1,5 +1,6 @@
 package com.example.benomad.service;
 
+import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.enums.CommentReference;
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.dto.CommentDTO;
@@ -14,6 +15,6 @@ public interface CommentService {
     CommentDTO getCommentById(Long id) throws ContentNotFoundException;
     CommentDTO likeDislikeComment(Long commentId, Long userId, boolean isDislike) throws ContentNotFoundException;
     CommentDTO insertComment(CommentReference reference, Long referenceId, CommentDTO commentDTO);
-    CommentDTO deleteCommentById(Long id) throws ContentNotFoundException;
-    CommentDTO updateCommentById(Long id, CommentDTO commentDTO) throws ContentNotFoundException;
+    CommentDTO deleteCommentById(Long commentId, DeletionInfoDTO infoDTO) throws ContentNotFoundException;
+    CommentDTO updateCommentById(Long commentId, CommentDTO commentDTO) throws ContentNotFoundException;
 }

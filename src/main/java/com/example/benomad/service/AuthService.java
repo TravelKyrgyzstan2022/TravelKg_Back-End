@@ -11,6 +11,5 @@ public interface AuthService {
     JwtResponse authenticateUser(LoginRequest loginRequest);
     TokenRefreshResponse refreshToken(TokenRefreshRequest request);
     MessageResponse logoutUser(Long id);
-    String getCurrentUsername();
     Long getCurrentUserId();
 }

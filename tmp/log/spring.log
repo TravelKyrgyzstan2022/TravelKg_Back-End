@@ -1,0 +1,69 @@
+2022-11-20 22:16:41.534  INFO  2660 --- [           main] com.example.benomad.BenomadApplication   : Starting BenomadApplication using Java 17.0.1 on User-PC with PID 2660 (C:\Users\Professional\Desktop\benomad\target\classes started by Professional in C:\Users\Professional\Desktop\benomad)
+2022-11-20 22:16:41.571  INFO  2660 --- [           main] com.example.benomad.BenomadApplication   : No active profile set, falling back to 1 default profile: "default"
+2022-11-20 22:16:46.695  INFO  2660 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-11-20 22:16:47.065  INFO  2660 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 342 ms. Found 8 JPA repository interfaces.
+2022-11-20 22:16:49.138  INFO  2660 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-11-20 22:16:49.166  INFO  2660 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-11-20 22:16:49.167  INFO  2660 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.65]
+2022-11-20 22:16:49.566  INFO  2660 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-11-20 22:16:49.567  INFO  2660 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 7651 ms
+2022-11-20 22:16:50.527  INFO  2660 --- [           main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 8.5.13 by Redgate
+2022-11-20 22:16:50.528  INFO  2660 --- [           main] o.f.c.internal.license.VersionPrinter    : See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#8.5.13
+2022-11-20 22:16:50.533  INFO  2660 --- [           main] o.f.c.internal.license.VersionPrinter    : 
+2022-11-20 22:16:50.630  INFO  2660 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-11-20 22:16:51.345  INFO  2660 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-11-20 22:16:51.393  INFO  2660 --- [           main] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:postgresql://localhost:5432/temp (PostgreSQL 14.1)
+2022-11-20 22:16:51.505  INFO  2660 --- [           main] o.f.core.internal.command.DbValidate     : Successfully validated 3 migrations (execution time 00:00.070s)
+2022-11-20 22:16:51.532  INFO  2660 --- [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 4
+2022-11-20 22:16:51.535  INFO  2660 --- [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2022-11-20 22:16:51.793  INFO  2660 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-11-20 22:16:52.015  INFO  2660 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.11.Final
+2022-11-20 22:16:52.809  INFO  2660 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-11-20 22:16:53.607  INFO  2660 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2022-11-20 22:16:56.680  INFO  2660 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-11-20 22:16:56.711  INFO  2660 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-11-20 22:17:03.342  INFO  2660 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2022-11-20 22:17:03.442  INFO  2660 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@6abca7a6, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@12bb8943, org.springframework.security.web.context.SecurityContextPersistenceFilter@3e265811, org.springframework.security.web.header.HeaderWriterFilter@43cf97a8, org.springframework.web.filter.CorsFilter@45f4c27c, org.springframework.security.web.authentication.logout.LogoutFilter@2dc319cf, com.example.benomad.security.jwt.AuthTokenFilter@1ae23815, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@33986be7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@748fa354, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@64710a6, org.springframework.security.web.session.SessionManagementFilter@62c1259f, org.springframework.security.web.access.ExceptionTranslationFilter@4a0f4282, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@870413c]
+2022-11-20 22:17:04.581  INFO  2660 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-11-20 22:17:04.622  INFO  2660 --- [           main] com.example.benomad.BenomadApplication   : Started BenomadApplication in 24.759 seconds (JVM running for 26.591)
+2022-11-20 22:17:36.026  INFO  2660 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-11-20 22:17:36.035  INFO  2660 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-11-20 22:17:36.051  INFO  2660 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 16 ms
+2022-11-20 22:20:40.194  INFO  8492 --- [           main] com.example.benomad.BenomadApplication   : Starting BenomadApplication using Java 17.0.1 on User-PC with PID 8492 (C:\Users\Professional\Desktop\benomad\target\classes started by Professional in C:\Users\Professional\Desktop\benomad)
+2022-11-20 22:20:40.213  INFO  8492 --- [           main] com.example.benomad.BenomadApplication   : No active profile set, falling back to 1 default profile: "default"
+2022-11-20 22:20:45.308  INFO  8492 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-11-20 22:20:45.650  INFO  8492 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 310 ms. Found 8 JPA repository interfaces.
+2022-11-20 22:20:47.661  INFO  8492 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-11-20 22:20:47.690  INFO  8492 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-11-20 22:20:47.692  INFO  8492 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.65]
+2022-11-20 22:20:48.177  INFO  8492 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-11-20 22:20:48.178  INFO  8492 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 7637 ms
+2022-11-20 22:20:49.567  INFO  8492 --- [           main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 8.5.13 by Redgate
+2022-11-20 22:20:49.571  INFO  8492 --- [           main] o.f.c.internal.license.VersionPrinter    : See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#8.5.13
+2022-11-20 22:20:49.572  INFO  8492 --- [           main] o.f.c.internal.license.VersionPrinter    : 
+2022-11-20 22:20:49.605  INFO  8492 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-11-20 22:20:50.280  INFO  8492 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-11-20 22:20:50.327  INFO  8492 --- [           main] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:postgresql://localhost:5432/temp (PostgreSQL 14.1)
+2022-11-20 22:20:50.429  INFO  8492 --- [           main] o.f.core.internal.command.DbValidate     : Successfully validated 3 migrations (execution time 00:00.049s)
+2022-11-20 22:20:50.469  INFO  8492 --- [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2022-11-20 22:20:50.678  INFO  8492 --- [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2022-11-20 22:20:50.752  INFO  8492 --- [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - init"
+2022-11-20 22:20:51.059  INFO  8492 --- [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - initial data"
+2022-11-20 22:20:51.164  INFO  8492 --- [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - intial articles"
+2022-11-20 22:20:51.197  INFO  8492 --- [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 3 migrations to schema "public", now at version v4 (execution time 00:00.527s)
+2022-11-20 22:20:51.774  INFO  8492 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-11-20 22:20:52.179  INFO  8492 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.11.Final
+2022-11-20 22:20:53.071  INFO  8492 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-11-20 22:20:53.580  INFO  8492 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2022-11-20 22:20:56.430  INFO  8492 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-11-20 22:20:56.447  INFO  8492 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-11-20 22:21:04.194  INFO  8492 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2022-11-20 22:21:04.260  INFO  8492 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@34907a49, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4b8c9729, org.springframework.security.web.context.SecurityContextPersistenceFilter@7343d843, org.springframework.security.web.header.HeaderWriterFilter@73c1dda3, org.springframework.web.filter.CorsFilter@1ae26c59, org.springframework.security.web.authentication.logout.LogoutFilter@6f9b5f01, com.example.benomad.security.jwt.AuthTokenFilter@782ed745, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@619b7436, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6af0407c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@15ade272, org.springframework.security.web.session.SessionManagementFilter@309d54ac, org.springframework.security.web.access.ExceptionTranslationFilter@2d2fe68a, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@4a76c90]
+2022-11-20 22:21:05.555  INFO  8492 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-11-20 22:21:05.608  INFO  8492 --- [           main] com.example.benomad.BenomadApplication   : Started BenomadApplication in 27.272 seconds (JVM running for 29.263)
+2022-11-20 22:21:26.260  INFO  8492 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-11-20 22:21:26.261  INFO  8492 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-11-20 22:21:26.274  INFO  8492 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 12 ms
+2022-11-20 22:21:28.838  INFO READ 8492 --- [nio-8080-exec-2] com.example.benomad.logger.LogWriter     : admin@admin.a - Returned user with id = 1
+2022-11-20 22:21:28.840  INFO AUTH 8492 --- [nio-8080-exec-2] com.example.benomad.logger.LogWriter     : admin@admin.a - Authenticated
+2022-11-20 22:22:06.285  INFO READ 8492 --- [nio-8080-exec-3] com.example.benomad.logger.LogWriter     : admin@admin.a - Returned 4 users

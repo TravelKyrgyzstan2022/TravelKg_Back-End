@@ -1,10 +1,16 @@
 package com.example.benomad.dto;
 
+import com.example.benomad.entity.DeletionInfo;
 import com.example.benomad.enums.ReviewStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -25,6 +31,18 @@ public class BlogDTO {
     private String title;
 
     private String body;
+
+    @Column(name = "creation_date")
+    private LocalDate creationDate;
+
+    @Column(name = "update_date")
+    private LocalDate updateDate;
+
+    @JsonProperty("is_deleted")
+    private boolean isDeleted;
+
+    @JsonProperty("deletion_info")
+    private DeletionInfoDTO deletionInfoDTO;
 
     private ReviewStatus reviewStatus;
 
