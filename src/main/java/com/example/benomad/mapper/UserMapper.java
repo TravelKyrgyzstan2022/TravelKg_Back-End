@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class UserMapper {
 
     private final DeletionInfoMapper deletionInfoMapper;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' hh:mm");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' HH:mm");
 
     public User dtoToEntity(UserDTO userDTO){
         return User.builder()
