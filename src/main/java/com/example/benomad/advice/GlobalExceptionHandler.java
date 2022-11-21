@@ -25,6 +25,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .build();
         log.error(exception.getMessage());
+        exception.printStackTrace();
         return ResponseEntity.status(exceptionResponse.getStatus()).body(exceptionResponse);
     }
 
@@ -47,6 +48,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .build();
         log.error(exception.getMessage());
+        exception.printStackTrace();
         return ResponseEntity.status(exceptionResponse.getStatus()).body(exceptionResponse);
     }
 

@@ -5,6 +5,7 @@ import com.example.benomad.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 public class UserMapper {
 
     private final DeletionInfoMapper deletionInfoMapper;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' hh:mm");
 
     public User dtoToEntity(UserDTO userDTO){
         return User.builder()
@@ -36,9 +38,10 @@ public class UserMapper {
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .isActivated(user.isActivated())
-                .isDeleted(user.isDeleted())
-                .lastVisitDate(user.getLastVisitDate())
+                .activated(user.isActivated())
+                .deleted(user.isDeleted())
+                .lastVisitDate(user.getLastVisitDate() != null ?
+                        formatter.format(user.getLastVisitDate()) : "Haven't visited yet")
                 .registrationDate(user.getRegistrationDate())
                 .deletionInfoDTO(user.getDeletionInfo() != null ?
                         deletionInfoMapper.entityToDto(user.getDeletionInfo()) : null)

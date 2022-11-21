@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -134,7 +135,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .phoneNumber(phoneNumber)
                 .build();
         Example<User> example = Example.of(user, getExample(MATCH_ALL));
-        List<UserDTO> userDTOS = userMapper.entityListToDtoList(userRepository.findAll(example));
+        List<UserDTO> userDTOS = userMapper.entityListToDtoList(userRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
         LogWriter.get(String.format("%s - Returned %d users", getAuthName(), userDTOS.size()));
         return userDTOS;
     }

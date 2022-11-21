@@ -8,6 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
@@ -62,7 +63,7 @@ public class User {
     private boolean isActivated;
 
     @Column(name = "last_visit_date")
-    private LocalDate lastVisitDate;
+    private LocalDateTime lastVisitDate;
 
     //fixme
     @Enumerated(EnumType.STRING)

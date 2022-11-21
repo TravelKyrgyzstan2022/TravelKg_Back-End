@@ -7,6 +7,7 @@ import com.example.benomad.entity.User;
 import com.example.benomad.exception.RefreshTokenException;
 import com.example.benomad.logger.LogWriter;
 import com.example.benomad.mapper.UserMapper;
+import com.example.benomad.repository.UserRepository;
 import com.example.benomad.security.domain.UserDetailsImpl;
 import com.example.benomad.security.jwt.JwtUtils;
 import com.example.benomad.security.request.LoginRequest;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 public class AuthServiceImpl implements AuthService {
 
     private final UserServiceImpl userService;
+    private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
@@ -68,10 +70,6 @@ public class AuthServiceImpl implements AuthService {
 
         RefreshToken refreshToken = refreshTokenService.createToken(userDetails.getId());
         UserDTO userDTO = userService.getUserById(userDetails.getId());
-        User user = User.builder()
-                .id(userDetails.getId())
-                .lastVisitDate(LocalDate.now(ZoneId.of("Asia/Bishkek")))
-                .build();
         LogWriter.auth(String.format("%s - Authenticated", loginRequest.getEmail()));
         return JwtResponse.builder()
                 .token(jwt)

@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,13 +59,13 @@ public class UserDTO {
     private LocalDate registrationDate;
 
     @JsonProperty(value = "last_visit_date", access = JsonProperty.Access.READ_ONLY)
-    private LocalDate lastVisitDate;
+    private String lastVisitDate;
 
     @JsonProperty(value = "is_activated", access = JsonProperty.Access.READ_ONLY)
-    private boolean isActivated;
+    private boolean activated;
 
     @JsonProperty(value = "is_deleted", access = JsonProperty.Access.READ_ONLY)
-    private boolean isDeleted;
+    private boolean deleted;
 
     @JsonProperty("deletion_info")
     private DeletionInfoDTO deletionInfoDTO;
