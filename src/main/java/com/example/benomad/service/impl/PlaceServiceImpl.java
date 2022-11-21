@@ -14,13 +14,9 @@ import com.example.benomad.repository.RatingRepository;
 import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.PlaceService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -39,29 +35,27 @@ public class PlaceServiceImpl implements PlaceService {
     private final ImageServiceImpl imageService;
 
     @Override
-    public List<PlaceDTO> getPlacesByAttributes(String name, Region region, PlaceType placeType,
-                                                   String address,Boolean match,PageRequest pageRequest) {
-        Place builtPlace = Place.builder().name(name).address(address).region(region).placeType(placeType).build();
+    public List<PlaceDTO> getPlacesByAttributes(String name, Region region, PlaceType placeType,PlaceCategory placeCategory,
+                                                   String address,Boolean match,PageRequest pageRequest,Long id) {
+        Place builtPlace = Place.builder().name(name).address(address).region(region).placeType(placeType).placeCategory(placeCategory).build();
         Example<Place> exampleOfPlace = Example.of(builtPlace,getExampleMatcher(match));
         Page<Place> pages = placeRepository.findAll(exampleOfPlace,pageRequest);
-        return placeMapper.entityListToDtoList(pages.stream().collect(Collectors.toList()));
+        return placeMapper.entityListToDtoList(pages.stream().collect(Collectors.toList()),id);
     }
 
 
     @Override
-    public PlaceDTO getPlaceById(Long placeId) throws ContentNotFoundException {
+    public PlaceDTO getPlaceById(Long placeId,Long id) throws ContentNotFoundException {
         return placeMapper.entityToDto(placeRepository.findById(placeId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, placeId);
-                })
+                }),id
         );
     }
 
     @Override
     public Long insertPlace(PlaceDTO placeDTO) {
-        //we don't need to get lastValue
-        //placeDTO.setId(placeRepository.save(placeMapper.dtoToEntity(placeDTO)).getId());
-        placeDTO.setId(placeRepository.getLastValueOfSequence());
+        placeDTO.setId(placeRepository.save(placeMapper.dtoToEntity(placeDTO)).getId());
         return placeRepository.save(placeMapper.dtoToEntity(placeDTO)).getId();
     }
 
@@ -73,7 +67,7 @@ public class PlaceServiceImpl implements PlaceService {
                 }
         );
         placeRepository.delete(place);
-        return placeMapper.entityToDto(place);
+        return placeMapper.entityToDto(place,null);
     }
 
     @Override
@@ -141,11 +135,11 @@ public class PlaceServiceImpl implements PlaceService {
         }
         return placeMapper.entityToDto(placeRepository.findById(placeId).orElseThrow(() -> {
             throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, placeId);
-        }));
+        }),null);
     }
 
     @Override
-    public PlaceDTO insertImageByPlaceId(Long id, MultipartFile file) {
+    public Long insertImageByPlaceId(Long id, MultipartFile file) {
         Place place = placeRepository.findById(id)
                 .orElseThrow(() -> new ContentNotFoundException(ContentNotFoundEnum.PLACE,id));
         imageService.checkIsNotEmpty(file);
@@ -157,7 +151,7 @@ public class PlaceServiceImpl implements PlaceService {
             imageService.saveImageAws(pathToFile,uniqueFileName, Optional.of(metadata),file.getInputStream());
             place.setImageUrl(uniqueFileName);
             placeRepository.save(place);
-            return placeMapper.entityToDto(place);
+            return place.getId();
         } catch (IOException e) {
             throw new FailedWhileUploadingException();
         }
@@ -171,17 +165,33 @@ public class PlaceServiceImpl implements PlaceService {
         return place.getImageUrl().map(x -> imageService.getAwsImageByPathAndKey(pathToFile,x)).orElse(new byte[0]);
     }
 
+    @Override
+    public Long insertPlaceWithImage(PlaceDTO placeDTO, MultipartFile file) {
+        Place place = placeMapper.dtoToEntity(placeDTO);
+        return place.getId();
+    }
+
+    @Override
+    public List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories, List<PlaceType> types, Pageable pageable,Long currentUser) {
+        List<String> sCategories = categories.stream().map(Enum::name).toList();
+        List<String> sTypes = types.stream().map(Enum::name).toList();
+        Page<Place> placePage = placeRepository.findPlacesByPlaceCategoriesAndPlaceTypes(sCategories,sTypes,pageable);
+        return placeMapper.entityListToDtoList(placePage.stream().toList(),currentUser);
+    }
+
     public ExampleMatcher getExampleMatcher(Boolean match) {
         ExampleMatcher matches = ExampleMatcher.matchingAll()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("region",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("placeType",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("address",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
+                .withMatcher("placeCategory",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withIgnorePaths("id","description","imageUrl","linkUrl");
         ExampleMatcher notMatches = ExampleMatcher.matchingAny()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("region",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("placeType",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
+                .withMatcher("placeCategory",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("address",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withIgnorePaths("id","description","imageUrl","linkUrl");
         return match ? matches : notMatches;

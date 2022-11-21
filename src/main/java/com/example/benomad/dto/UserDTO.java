@@ -34,7 +34,7 @@ public class UserDTO {
 
     private String email;
 
-    @JsonProperty("favorite_places")
+    @JsonProperty(value = "favorite_places",access = JsonProperty.Access.READ_ONLY)
     private List<PlaceDTO> placeDTOS;
 
 

@@ -1,9 +1,6 @@
 package com.example.benomad.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Optional;
@@ -25,7 +22,8 @@ public class Article {
     @Column(nullable = false, length = 10000)
     private String body;
 
-    @Column(name = "image_url", nullable = false)
+    @Getter(AccessLevel.NONE)
+    @Column(name = "image_url")
     private String imageUrl;
 
     @ManyToOne

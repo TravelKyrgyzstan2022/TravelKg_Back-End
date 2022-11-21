@@ -60,14 +60,14 @@ public class ImageServiceImpl implements ImageService {
 
 
 
-    Map<String, String> getMetaData(MultipartFile file) {
+    public Map<String, String> getMetaData(MultipartFile file) {
         Map<String,String> metadata = new HashMap<>();
         metadata.put("Content-Type", file.getContentType());
         metadata.put("Content-Length", ""+ file.getSize());
         return metadata;
     }
 
-    void checkIsImage(MultipartFile file) {
+    public void checkIsImage(MultipartFile file) {
         if(!Arrays.asList(ContentType.IMAGE_GIF.getMimeType(),
                         ContentType.IMAGE_JPEG.getMimeType(),
                         ContentType.IMAGE_PNG.getMimeType(),
@@ -76,7 +76,7 @@ public class ImageServiceImpl implements ImageService {
             throw new ContentIsNotImageException();
     }
 
-    void checkIsNotEmpty(MultipartFile file) {
+    public void checkIsNotEmpty(MultipartFile file) {
         if (file.isEmpty()) throw new ContentIsEmptyException();
     }
 

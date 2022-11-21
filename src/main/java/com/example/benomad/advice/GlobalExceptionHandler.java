@@ -42,6 +42,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(exception.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
+
         return ResponseEntity.status(exceptionResponse.getStatusCode()).body(exceptionResponse);
     }
 

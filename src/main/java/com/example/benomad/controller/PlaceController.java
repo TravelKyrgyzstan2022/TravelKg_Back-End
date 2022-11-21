@@ -3,6 +3,7 @@ package com.example.benomad.controller;
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.enums.CommentReference;
+import com.example.benomad.enums.PlaceCategory;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
 import com.example.benomad.service.impl.CommentServiceImpl;
@@ -17,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -39,17 +41,32 @@ public class PlaceController {
             @RequestParam(name = "region", required = false) Region region,
             @RequestParam(name = "place_type", required = false) PlaceType placeType,
             @RequestParam(name = "address", required = false) String address,
-            @RequestParam(name = "match_all", required = false,defaultValue = "false") Boolean match) {
-
+            @RequestParam(name = "place_category",required = false) PlaceCategory placeCategory,
+            @RequestParam(name = "match_all", required = false,defaultValue = "false") Boolean match,
+            @RequestParam(name = "user_id",required = false,defaultValue = "1") Long id) {
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(20), Sort.by(sortBy.orElse("id")));
-        return ResponseEntity.ok(placeService.getPlacesByAttributes(name, region, placeType,
-                address, match, pageRequest));
+        return ResponseEntity.ok(placeService.getPlacesByAttributes(name, region, placeType,placeCategory,
+                address, match, pageRequest,id));
+    }
+
+    @Operation(summary = "Gets all places / Finds places by attributes")
+    @GetMapping(produces = "application/json", value = {"/filter", "filter"})
+    public ResponseEntity<?> getAllPlacesByTypesAndCategories(
+            @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
+            @RequestParam(name = "page", required = false) Optional<Integer> page,
+            @RequestParam(name = "size", required = false) Optional<Integer> size,
+            @RequestParam(name = "categories", required = false) Optional<List<PlaceCategory>> categories,
+            @RequestParam(name = "types", required = false) Optional<List<PlaceType>> types,
+            @RequestParam(name = "current_user_id", required = false,defaultValue = "1") Long current_user_id)
+     {
+        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(20), Sort.by(sortBy.orElse("id")));
+        return ResponseEntity.ok(placeService.getPlacesByTypesAndCategories(categories.orElse(List.of(PlaceCategory.values())),types.orElse(List.of(PlaceType.values())),pageRequest,current_user_id));
     }
 
     @Operation(summary = "Gets place by ID")
     @GetMapping(value = "/{id}",produces = "application/json")
-    public ResponseEntity<?> getPlaceById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok().body(placeService.getPlaceById(id));
+    public ResponseEntity<?> getPlaceById(@PathVariable("id") Long id,@RequestParam Long userID) {
+        return ResponseEntity.ok().body(placeService.getPlaceById(id,userID));
     }
 
     @Operation(summary = "Gets comments of place by ID")
@@ -71,7 +88,7 @@ public class PlaceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(placeService.insertPlace(placeDTO));
     }
 
-    @PostMapping(value = "/{id}/comment", produces = "application/json")
+    @PostMapping(value = "/{placeId}/comment", produces = "application/json")
     public ResponseEntity<?> commentPlace(@PathVariable Long placeId, @RequestBody CommentDTO commentDTO){
         return ResponseEntity.ok(commentService.insertComment(CommentReference.PLACE, placeId, commentDTO));
     }
@@ -112,5 +129,14 @@ public class PlaceController {
     public ResponseEntity<?> getUserProfileImage(@PathVariable("userId") Long id) {
         return ResponseEntity.ok(placeService.getImageByPlaceId(id));
     }
+
+    @Operation(summary = "Gets image by by place ID",
+            description = "Adds new rating record to a place by its ID and users ID.")
+    @PostMapping(path = "/createPlaceWithImage")
+    public ResponseEntity<?> uploadProfileImage(@ModelAttribute PlaceDTO placeDTO) {
+        System.out.println(placeDTO);
+        return ResponseEntity.ok(placeDTO);
+    }
+
 
 }

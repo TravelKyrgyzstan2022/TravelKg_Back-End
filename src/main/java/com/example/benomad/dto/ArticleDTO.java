@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,6 +22,9 @@ public class ArticleDTO {
 
     private String title;
 
-    @JsonProperty("image_url")
+
+    @JsonProperty(value = "image_url",access = JsonProperty.Access.READ_ONLY)
     private String imageUrl;
+
+
 }

@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 @Getter
 @Setter
 @AllArgsConstructor

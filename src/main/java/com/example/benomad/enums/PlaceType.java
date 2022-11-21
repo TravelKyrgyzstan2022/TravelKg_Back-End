@@ -13,5 +13,15 @@ public enum PlaceType {
     HOSTEL,
     ENTERTAINMENT,
     LAKE,
+    BAZAAR,
+    HISTORICAL_BUILDING,
+    FOREST,
+    MALL,
+    TEA_HOUSE,
+    THEATRE,
+    SQUARE,
+    GORGE,
+    SKY_RESORT
+
 
 }

@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserMapper {
-    private final BlogMapper blogMapper;
-    private final PlaceMapper placeMapper;
     public User dtoToEntity(UserDTO userDTO){
         return User.builder()
                 .id(userDTO.getId())
@@ -23,7 +21,6 @@ public class UserMapper {
                 .lastName(userDTO.getLastName())
                 .email(userDTO.getEmail())
                 .phoneNumber(userDTO.getPhoneNumber())
-                .places(placeMapper.dtoListToEntityList(userDTO.getPlaceDTOS()))
                 .build();
     }
 

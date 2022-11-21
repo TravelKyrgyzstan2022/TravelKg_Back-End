@@ -113,6 +113,7 @@ public class UserServiceImpl implements UserService {
         if (user.getPlaces().contains(place)) throw new ContentIsAlreadyInFavoritesException(ContentNotFoundEnum.PLACE);
         user.getPlaces().add(place);
         userRepository.save(user);
+        //second idea is just deleting a place from user's favorites if place already exists , or add
         return userMapper.entityToDto(user);
     }
 

@@ -26,7 +26,6 @@ public class PlaceMapper {
                 .name(placeDTO.getName())
                 .region(placeDTO.getRegion())
                 .placeType(placeDTO.getPlaceType())
-                .placeCategory(placeDTO.getPlaceCategory())
                 .description(placeDTO.getDescription())
                 .imageUrl(placeDTO.getImageUrl())
                 .linkUrl(placeDTO.getLinkUrl())

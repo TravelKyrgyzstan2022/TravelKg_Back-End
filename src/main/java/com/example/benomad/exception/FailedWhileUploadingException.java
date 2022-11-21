@@ -12,7 +12,6 @@ public class FailedWhileUploadingException  extends CustomException{
     private final String messageFormat = "Something went wrong while uploading";
     private final Integer statusCode = 400;
     private String message;
-
     public FailedWhileUploadingException(String message) {
         this.message = message;
     }

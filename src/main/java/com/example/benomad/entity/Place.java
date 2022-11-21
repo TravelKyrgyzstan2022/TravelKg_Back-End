@@ -29,9 +29,11 @@ public class Place {
     private Region region;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "place_type")
     private PlaceType placeType;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "place_category")
     private PlaceCategory placeCategory;
 
     @Column(nullable = false, length = 2000)
