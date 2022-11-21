@@ -11,5 +11,4 @@ public interface PlanService {
     PlanDTO insertPlan(PlanDTO dto);
     PlanDTO updatePlan(PlanDTO dto, Long planId) throws ContentNotFoundException;
     PlanDTO deletePlanById(Long id);
-
 }

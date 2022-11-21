@@ -15,10 +15,14 @@ import java.util.List;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ExceptionResponse {
-    private int statusCode;
-
+    private int status;
+    private String message;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss",timezone="GMT+6")
     private LocalDateTime timestamp;
-    private String message;
-    private List<String> errors;
+
+    public ExceptionResponse(int status, String message){
+        this.status = status;
+        this.message = message;
+        this.timestamp = LocalDateTime.now();
+    }
 }

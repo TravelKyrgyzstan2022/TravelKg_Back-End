@@ -1,12 +1,13 @@
 package com.example.benomad.entity;
 
-import com.example.benomad.enums.Status;
+import com.example.benomad.enums.ReviewStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -39,8 +40,23 @@ public class Blog {
     @Column(length = 10000, nullable = false)
     private String body;
 
+    @Column(name = "creation_date")
+    private LocalDate creationDate;
+
+    @Column(name = "update_date")
+    private LocalDate updateDate;
+
+    private boolean isDeleted;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(
+            columnDefinition = "deleted_content_info_id",
+            referencedColumnName = "id"
+    )
+    private DeletionInfo deletionInfo;
+
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private ReviewStatus reviewStatus;
 
     @OneToMany
     @JoinTable(name = "blog_comments",

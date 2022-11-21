@@ -1,5 +1,6 @@
 package com.example.benomad.service;
 
+import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.dto.UserDTO;
 
 import com.example.benomad.exception.UserAttributeTakenException;
@@ -10,10 +11,23 @@ import com.example.benomad.security.domain.UserDetailsImpl;
 import com.example.benomad.security.response.JwtResponse;
 import com.example.benomad.security.response.TokenRefreshResponse;
 
+import java.util.List;
+
 
 public interface UserService {
     String getUserAuthenticationToken(UserDetailsImpl userDetails);
     String getUserAuthenticationToken(User user);
+    UserDTO insertUser(UserDTO userDTO);
+    UserDTO getUserById(Long id) throws ContentNotFoundException;
+    List<UserDTO> getUsersByAttributes(String firstName, String lastName,
+                                       String email, String phoneNumber, boolean MATCH_ALL);
+    UserDTO getUserByEmail(String email) throws ContentNotFoundException;
+    UserDTO getUserByPhoneNumber(String phoneNumber) throws ContentNotFoundException;
+    UserDTO updateUserById(Long id, UserDTO userDTO) throws ContentNotFoundException;
+    UserDTO deleteUserById(Long userId, DeletionInfoDTO infoDTO) throws ContentNotFoundException;
+
+
+
 //    boolean isUserExistsByPhoneNumber(String phoneNumber);
 //    void isUserExistByEmailAndPhoneNumber(String email, String phoneNumber);
 //    List<UserDTO> getAllNotDeletedUsers();
@@ -29,15 +43,4 @@ public interface UserService {
 //    void updatePassword(Long id, String oldPassword, String newPassword);
 //    void userRecoveryById(Long id);
 //    User isUserDeletedCheck(Long id);
-    UserDTO insertUser(UserDTO userDTO);
-    List<UserDTO> getAllUsers();
-    UserDTO getUserById(Long id) throws UserNotFoundException;
-    UserDTO getUserByLogin(String login) throws UserNotFoundException;
-    List<UserDTO> getUsersByFirstName(String firstName) throws UserNotFoundException;
-    List<UserDTO> getUsersByLastName(String lastName) throws UserNotFoundException;
-    List<UserDTO> getUsersByFirstNameAndLastName(String firstName, String lastName) throws UserNotFoundException;
-    UserDTO getUserByEmail(String email) throws UserNotFoundException;
-    UserDTO getUserByPhoneNumber(String phoneNumber) throws UserNotFoundException;
-    UserDTO updateUserById(Long id, UserDTO userDTO) throws UserNotFoundException;
-    UserDTO deleteUserById(Long id) throws UserNotFoundException;
 }

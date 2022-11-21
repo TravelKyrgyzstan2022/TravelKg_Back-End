@@ -1,5 +1,6 @@
 package com.example.benomad.security.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,5 +10,6 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class TokenRefreshRequest {
     @NotBlank(message = "Refresh token can't be empty")
+    @JsonProperty("refreshtoken")
     private String refreshToken;
 }

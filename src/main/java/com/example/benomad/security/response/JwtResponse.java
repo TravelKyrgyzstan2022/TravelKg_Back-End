@@ -1,5 +1,7 @@
 package com.example.benomad.security.response;
 
+import com.example.benomad.dto.UserDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,18 +17,9 @@ public class JwtResponse {
 
     private String token;
 
+    @JsonProperty("refresh_token")
     private String refreshToken;
 
-    private Long id;
-
-    private String firstName;
-
-    private String lastName;
-
-    private String phoneNumber;
-
-    private String email;
-
-
-    private List<String> roles;
+    @JsonProperty("user_info")
+    private UserDTO userDTO;
 }

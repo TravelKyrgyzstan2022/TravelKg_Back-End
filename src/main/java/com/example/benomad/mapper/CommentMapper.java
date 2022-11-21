@@ -6,6 +6,7 @@ import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.repository.CommentRepository;
 import com.example.benomad.repository.UserRepository;
+import com.example.benomad.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class CommentMapper {
 
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final AuthServiceImpl authService;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public Comment dtoToEntity(CommentDTO commentDTO) {
@@ -27,25 +29,28 @@ public class CommentMapper {
                 .id(commentDTO.getId())
                 .user(userRepository.findById(commentDTO.getUserId()).orElseThrow(
                         () -> {
-                            throw new ContentNotFoundException(ContentNotFoundEnum.USER, commentDTO.getUserId());
+                            throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(commentDTO.getUserId()));
                         }
                 ))
                 .body(commentDTO.getBody())
                 .build();
     }
 
-    public CommentDTO entityToDto(Comment comment, Long userId) {
+    public CommentDTO entityToDto(Comment comment) {
+        Long userId = authService.getCurrentUserId();
         return CommentDTO.builder()
                 .id(comment.getId())
                 .creationDate(formatter.format(comment.getCreationDate()))
                 .userId(comment.getUser().getId())
                 .body(comment.getBody())
                 .likeCount(commentRepository.getLikesNumberById(comment.getId()))
-                .isLikedByCurrentUser(commentRepository.isCommentLikedByUser(comment.getId(), userId))
+                .isLikedByCurrentUser(
+                        userId != null ?
+                                commentRepository.isCommentLikedByUser(comment.getId(), userId) : null)
                 .build();
     }
 
-    public List<CommentDTO> entityListToDtoList(List<Comment> entities, Long userId){
-        return entities.stream().map(entity -> entityToDto(entity, userId)).collect(Collectors.toList());
+    public List<CommentDTO> entityListToDtoList(List<Comment> entities){
+        return entities.stream().map(this::entityToDto).collect(Collectors.toList());
     }
 }

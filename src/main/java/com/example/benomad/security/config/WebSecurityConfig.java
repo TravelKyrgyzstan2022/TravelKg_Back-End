@@ -6,6 +6,7 @@ import com.example.benomad.security.jwt.AuthTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -26,6 +27,37 @@ public class WebSecurityConfig {
 
     private final AuthEntryPointHandler unauthorizedHandler;
     private final AuthAccessDeniedHandler accessDeniedHandler;
+    private final String[] PERMIT_ALL_COMMON = {
+            "/api/auth/**",
+            "/documentation/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/v3/api-docs.yaml",
+            "/error"
+    };
+
+    private final String[] ADMIN_GET = {
+            "/actuator/**",
+            "/api/v1/users",
+            "/api/v1/users/**"
+    };
+
+    private final String[] PERMIT_ALL_GET = {
+            "/api/v1/**"
+    };
+
+    private final String[] ADMIN_POST = {
+            "/api/v1/**"
+    };
+
+    private final String[] ADMIN_PUT = {
+            "/api/v1/**"
+    };
+
+    private final String[] ADMIN_DELETE = {
+            "/api/v1/**"
+    };
+
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -50,8 +82,12 @@ public class WebSecurityConfig {
                 .cors()
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/api/auth/**", "/api/v1/forgot_password",
-                            "/api/v1/reset_password", "/swagger-ui/**").permitAll()
+                    .antMatchers(PERMIT_ALL_COMMON).permitAll()
+                    .antMatchers(HttpMethod.GET, ADMIN_GET).hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, PERMIT_ALL_GET).permitAll()
+                    .antMatchers(HttpMethod.POST, ADMIN_POST).hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, ADMIN_DELETE).hasRole("ADMIN")
+                    .antMatchers(HttpMethod.PUT, ADMIN_PUT).hasRole("ADMIN")
                     .anyRequest().authenticated()
                 .and()
                     .exceptionHandling()

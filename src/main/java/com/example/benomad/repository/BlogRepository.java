@@ -1,8 +1,6 @@
 package com.example.benomad.repository;
 
 import com.example.benomad.entity.Blog;
-import com.example.benomad.entity.User;
-import com.example.benomad.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

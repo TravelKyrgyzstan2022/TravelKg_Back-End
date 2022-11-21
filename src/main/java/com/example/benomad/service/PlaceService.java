@@ -6,6 +6,7 @@ import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.dto.PlaceDTO;
 import org.springframework.data.domain.PageRequest;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface PlaceService {
@@ -14,5 +15,5 @@ public interface PlaceService {
     PlaceDTO insertPlace(PlaceDTO placeDTO);
     PlaceDTO deletePlaceById(Long id) throws ContentNotFoundException;
     PlaceDTO updatePlaceById(Long id, PlaceDTO placeDTO) throws ContentNotFoundException;
-    PlaceDTO ratePlaceById(Long placeId, Long userId, Integer rating, boolean isRemoval) throws ContentNotFoundException;
+    PlaceDTO ratePlaceById(Long placeId, Integer rating, boolean isRemoval) throws ContentNotFoundException;
 }

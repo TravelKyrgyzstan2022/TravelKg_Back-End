@@ -2,6 +2,7 @@
 package com.example.benomad.repository;
 
 import com.example.benomad.entity.User;
+import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,26 +12,20 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository <User, Long> {
-    Optional<User> findByLogin(String login);
     
     List<User> findByFirstName(String firstName);
+
+    List<User> findAllByOrderByIdAsc();
     
     List<User> findByLastName(String lastName);
     
     List<User> findByFirstNameAndLastName(String firstName, String lastName);
     
-    Optional<User> findByEmail(String email);
-    
     Optional<User> findByPhoneNumber(String phoneNumber);
-    
-    @Query(value = "SELECT last_value FROM users_id_seq", nativeQuery = true)
-    Long getLastValueOfSequence();
     
     Boolean existsByEmail(String email);
     
     Boolean existsByPhoneNumber(String phoneNumber);
-    
-    User findByEmail(String email);
-    
-    User findByActivationCode(String code);
+
+    Optional<User> findByEmail(String email);
 }
