@@ -51,9 +51,6 @@ public class UserDTO {
     //fixme
     @NotNull(message = "Role can't be null or empty")
     private Set<Role> roles = new HashSet<>();
-    
-    @JsonProperty("favorite_places")
-    private List<PlaceDTO> placeDTOS;
 
     @JsonProperty("registration_date")
     private LocalDate registrationDate;
@@ -69,5 +66,8 @@ public class UserDTO {
 
     @JsonProperty("deletion_info")
     private DeletionInfoDTO deletionInfoDTO;
+
+    @JsonProperty(value = "favorite_places",access = JsonProperty.Access.READ_ONLY)
+    private Set<PlaceDTO> placeDTOS;
 
 }

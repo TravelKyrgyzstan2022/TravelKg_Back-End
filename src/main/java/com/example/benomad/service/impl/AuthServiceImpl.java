@@ -3,11 +3,8 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.RefreshToken;
-import com.example.benomad.entity.User;
 import com.example.benomad.exception.RefreshTokenException;
 import com.example.benomad.logger.LogWriter;
-import com.example.benomad.mapper.UserMapper;
-import com.example.benomad.repository.UserRepository;
 import com.example.benomad.security.domain.UserDetailsImpl;
 import com.example.benomad.security.jwt.JwtUtils;
 import com.example.benomad.security.request.LoginRequest;
@@ -25,8 +22,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,8 +31,6 @@ import java.util.stream.Collectors;
 public class AuthServiceImpl implements AuthService {
 
     private final UserServiceImpl userService;
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
     private final JwtUtils jwtUtils;
@@ -54,8 +47,7 @@ public class AuthServiceImpl implements AuthService {
 
         String email = ((UserDetailsImpl) authentication.getPrincipal()).getEmail();
 
-        List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+        List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
         String role;
         String jwt;

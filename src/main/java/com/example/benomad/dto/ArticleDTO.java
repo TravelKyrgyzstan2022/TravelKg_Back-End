@@ -21,6 +21,6 @@ public class ArticleDTO {
 
     private String title;
 
-    @JsonProperty("image_url")
+    @JsonProperty(value = "image_url",access = JsonProperty.Access.READ_ONLY)
     private String imageUrl;
 }

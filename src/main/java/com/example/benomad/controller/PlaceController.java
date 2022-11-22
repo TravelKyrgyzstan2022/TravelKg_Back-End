@@ -3,7 +3,9 @@ package com.example.benomad.controller;
 import com.example.benomad.advice.ExceptionResponse;
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.dto.PlaceDTO;
+import com.example.benomad.dto.UserDTO;
 import com.example.benomad.enums.CommentReference;
+import com.example.benomad.enums.PlaceCategory;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
 import com.example.benomad.service.impl.CommentServiceImpl;
@@ -18,9 +20,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -183,7 +188,7 @@ public class PlaceController {
     }
 
     @Operation(summary = "Commenting place by ID")
-    @PostMapping(value = "/{id}/comment", produces = "application/json")
+    @PostMapping(value = "/{placeId}/comment", produces = "application/json")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -342,11 +347,190 @@ public class PlaceController {
     })
     @PutMapping(value = "/rate")
     public ResponseEntity<?> ratePlace(@RequestParam(name = "place_id") Long placeId,
-                                       @RequestParam(name = "user_id") Long userId,
                                        @RequestParam(name = "rating", defaultValue = "1") Integer rating,
                                        @RequestParam(name = "remove", defaultValue = "0") Boolean isRemoval){
         return ResponseEntity.ok(placeService.ratePlaceById(placeId, rating, isRemoval));
     }
+
+    @Operation(summary = "Gets all places by place type and place category",
+            description = "Get all places that refer to specific category and type")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = PlaceDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @GetMapping(produces = "application/json", value = {"/filter", "filter"})
+    public ResponseEntity<?> getAllPlacesByTypesAndCategories(
+            @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
+            @RequestParam(name = "page", required = false) Optional<Integer> page,
+            @RequestParam(name = "size", required = false) Optional<Integer> size,
+            @RequestParam(name = "categories", required = false) Optional<List<PlaceCategory>> categories,
+            @RequestParam(name = "types", required = false) Optional<List<PlaceType>> types)
+    {
+        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(20), Sort.by(sortBy.orElse("id")));
+        return ResponseEntity.ok(placeService.getPlacesByTypesAndCategories(categories.orElse(List.of(PlaceCategory.values())),types.orElse(List.of(PlaceType.values())),pageRequest));
+    }
+
+    @Operation(summary = "Uploads image by place ID",
+            description = "Adds new image to a place by its ID and Image itself.")
+    @ApiResponses(value = {
+        @ApiResponse(
+                responseCode = "200",
+                description = "OK",
+                content = @Content(schema = @Schema(implementation = Long.class))
+        ),
+        @ApiResponse(
+                responseCode = "Any error",
+                description = "Every response starting with 4** or 5** will have this body",
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+        ),
+        @ApiResponse(
+                responseCode = "400",
+                description = "Bad Request",
+                content = @Content
+        ),
+        @ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized",
+                content = @Content
+        ),
+        @ApiResponse(
+                responseCode = "404",
+                description = "Not Found",
+                content = @Content
+        ),
+        @ApiResponse(
+                responseCode = "409",
+                description = "Conflict",
+                content = @Content
+        ),
+        @ApiResponse(
+                responseCode = "500",
+                description = "Internal Server Error",
+                content = @Content
+        )
+    })
+    @PutMapping(path = "/uploadImage/{userId}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> uploadPlaceImage(@PathVariable("userId") Long id, @RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(placeService.insertImageByPlaceId(id,file));
+    }
+
+    @Operation(summary = "Gets image by by place ID",
+            description = "Adds new rating to a place by its ID and users ID.")
+    @ApiResponses(value = {
+        @ApiResponse(
+                responseCode = "200",
+                description = "OK",
+                content = @Content(schema = @Schema(implementation = PlaceDTO.class))
+        ),
+        @ApiResponse(
+                responseCode = "Any error",
+                description = "Every response starting with 4** or 5** will have this body",
+                content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+        ),
+        @ApiResponse(
+                responseCode = "400",
+                description = "Bad Request",
+                content = @Content
+        ),
+        @ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized",
+                content = @Content
+        ),
+        @ApiResponse(
+                responseCode = "404",
+                description = "Not Found",
+                content = @Content
+        ),
+        @ApiResponse(
+                responseCode = "409",
+                description = "Conflict",
+                content = @Content
+        ),
+        @ApiResponse(
+                responseCode = "500",
+                description = "Internal Server Error",
+                content = @Content
+        )
+    })
+    @GetMapping(path = "/getImage/{userId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getPlaceImage(@PathVariable("userId") Long id) {
+        return ResponseEntity.ok(placeService.getImageByPlaceId(id));
+    }
+
+
+    @Operation(summary = "Inserts place to user's favorites",
+            description = "Inserts place to user's favorites using place id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = UserDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @PutMapping(value = "/favorites/{id}", produces = "application/json")
+    public ResponseEntity<?> addPlaceToUser(@PathVariable Long id){
+        return ResponseEntity.ok(placeService.addPlaceToFavorites(id));
+    }
+
 
 
 }

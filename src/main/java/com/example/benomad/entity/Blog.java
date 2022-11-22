@@ -1,13 +1,11 @@
 package com.example.benomad.entity;
 
 import com.example.benomad.enums.ReviewStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -64,4 +62,12 @@ public class Blog {
             inverseJoinColumns = @JoinColumn(name = "comment_id")
     )
     private Set<Comment> comments;
+
+    @Getter(AccessLevel.NONE)
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    public Optional<String> getImageUrl() {
+        return Optional.ofNullable(imageUrl);
+    }
 }
