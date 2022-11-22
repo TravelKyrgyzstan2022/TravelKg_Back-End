@@ -41,6 +41,7 @@ public class BlogMapper {
                 .likes(blogRepository.getLikesNumberById(blog.getId()))
                 .isLikedByCurrentUser(userId != null ?
                         blogRepository.isBlogLikedByUser(blog.getId(), userId) : null)
+                .imageUrl(blog.getImageUrl().orElse(null))
                 .build();
     }
 
@@ -64,6 +65,7 @@ public class BlogMapper {
                 .title(blogDTO.getTitle())
                 .body(blogDTO.getBody())
                 .reviewStatus(blogDTO.getReviewStatus())
+                .imageUrl(blogDTO.getImageUrl())
                 .build();
     }
 

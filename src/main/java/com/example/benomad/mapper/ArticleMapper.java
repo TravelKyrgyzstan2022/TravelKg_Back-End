@@ -22,7 +22,7 @@ public class ArticleMapper {
         return ArticleDTO.builder()
                 .id(article.getId())
                 .body(article.getBody())
-                .imageUrl(article.getImageUrl())
+                .imageUrl(article.getImageUrl().orElse(null))
                 .title(article.getTitle())
                 .userId(article.getUser().getId())
                 .build();
