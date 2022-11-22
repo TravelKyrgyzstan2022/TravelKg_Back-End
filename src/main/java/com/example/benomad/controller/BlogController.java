@@ -4,11 +4,14 @@ import com.example.benomad.advice.ExceptionResponse;
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.dto.DeletionInfoDTO;
+import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.enums.CommentReference;
 import com.example.benomad.enums.ReviewStatus;
 import com.example.benomad.service.impl.BlogServiceImpl;
 import com.example.benomad.service.impl.CommentServiceImpl;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,7 +44,7 @@ public class BlogController {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = BlogDTO.class))
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = BlogDTO.class)))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -59,8 +62,18 @@ public class BlogController {
                     content = @Content
             )
     })
-    @GetMapping(value = {"/", ""}, produces = "application/json")
+    @GetMapping(value = {""}, produces = "application/json")
     public ResponseEntity<?> findBlogs(@RequestParam(name = "author_id", required = false) Long authorId,
+                                       @RequestParam(name = "title", required = false) String title,
+                                       @RequestParam(name = "status", required = false) ReviewStatus reviewStatus,
+                                       @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogsByAttributes(
+                authorId, title, reviewStatus, MATCH_ALL));
+    }
+
+    @Hidden
+    @GetMapping(value = {"/"}, produces = "application/json")
+    public ResponseEntity<?> forwardSlashFix(@RequestParam(name = "author_id", required = false) Long authorId,
                                        @RequestParam(name = "title", required = false) String title,
                                        @RequestParam(name = "status", required = false) ReviewStatus reviewStatus,
                                        @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
@@ -107,7 +120,7 @@ public class BlogController {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentDTO.class)))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -171,8 +184,14 @@ public class BlogController {
                     content = @Content
             )
     })
-    @PostMapping(value = {"/", ""}, produces = "application/json")
+    @PostMapping(value = {""}, produces = "application/json")
     public ResponseEntity<?> insertBlog(@RequestBody BlogDTO dto){
+        return ResponseEntity.ok(blogService.insertBlog(dto));
+    }
+
+    @Hidden
+    @PostMapping(value = {"/"}, produces = "application/json")
+    public ResponseEntity<?> forwardSlashFix2(@RequestBody BlogDTO dto){
         return ResponseEntity.ok(blogService.insertBlog(dto));
     }
 

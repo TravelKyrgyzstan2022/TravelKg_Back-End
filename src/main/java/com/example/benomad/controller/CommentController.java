@@ -5,7 +5,9 @@ import com.example.benomad.advice.ExceptionResponse;
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.service.impl.CommentServiceImpl;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,7 +33,7 @@ public class CommentController {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentDTO.class)))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -49,8 +51,14 @@ public class CommentController {
                     content = @Content
             )
     })
-    @GetMapping(value = {"/", ""}, produces = "application/json")
-    public ResponseEntity<?> getAllComment(){
+    @GetMapping(value = {""}, produces = "application/json")
+    public ResponseEntity<?> getAllComments(){
+        return ResponseEntity.ok(commentService.getAllComments());
+    }
+
+    @Hidden
+    @GetMapping(value = {"/"}, produces = "application/json")
+    public ResponseEntity<?> forwardSlashFix(){
         return ResponseEntity.ok(commentService.getAllComments());
     }
 
@@ -120,8 +128,15 @@ public class CommentController {
                     content = @Content
             )
     })
-    @PostMapping(value = {"/", ""}, consumes = "application/json", produces = "application/json")
+    @PostMapping(value = {""}, consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> insertComment(@RequestBody CommentDTO commentDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                commentService.insertComment(commentDTO.getReference(), commentDTO.getReferenceId(), commentDTO));
+    }
+
+    @Hidden
+    @PostMapping(value = {"/"}, consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> forwardSlashFix2(@RequestBody CommentDTO commentDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 commentService.insertComment(commentDTO.getReference(), commentDTO.getReferenceId(), commentDTO));
     }

@@ -8,7 +8,9 @@ import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
 import com.example.benomad.service.impl.CommentServiceImpl;
 import com.example.benomad.service.impl.PlaceServiceImpl;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -38,7 +41,7 @@ public class PlaceController {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = PlaceDTO.class))
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PlaceDTO.class)))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -56,8 +59,25 @@ public class PlaceController {
                     content = @Content
             )
     })
-    @GetMapping(produces = "application/json", value = {"/", ""})
+    @GetMapping(produces = "application/json", value = {""})
     public ResponseEntity<?> getAllPlacesByAttributes(
+            @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
+            @RequestParam(name = "page", required = false) Optional<Integer> page,
+            @RequestParam(name = "size", required = false) Optional<Integer> size,
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "region", required = false) Region region,
+            @RequestParam(name = "place_type", required = false) PlaceType placeType,
+            @RequestParam(name = "address", required = false) String address,
+            @RequestParam(name = "match_all", required = false,defaultValue = "false") Boolean match) {
+
+        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(20), Sort.by(sortBy.orElse("id")));
+        return ResponseEntity.ok(placeService.getPlacesByAttributes(name, region, placeType,
+                address, match, pageRequest));
+    }
+
+    @Hidden
+    @GetMapping(produces = "application/json", value = {"/"})
+    public ResponseEntity<?> forwardSlashFix(
             @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
             @RequestParam(name = "page", required = false) Optional<Integer> page,
             @RequestParam(name = "size", required = false) Optional<Integer> size,
@@ -110,7 +130,7 @@ public class PlaceController {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentDTO.class)))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -177,8 +197,14 @@ public class PlaceController {
                     content = @Content
             )
     })
-    @PostMapping(value = {"/",""}, produces = "application/json")
+    @PostMapping(value = {""}, produces = "application/json")
     public ResponseEntity<?> savePlace(@RequestBody PlaceDTO placeDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(placeService.insertPlace(placeDTO));
+    }
+
+    @Hidden
+    @PostMapping(value = {"/"}, produces = "application/json")
+    public ResponseEntity<?> forwardSlashFix2(@RequestBody PlaceDTO placeDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(placeService.insertPlace(placeDTO));
     }
 

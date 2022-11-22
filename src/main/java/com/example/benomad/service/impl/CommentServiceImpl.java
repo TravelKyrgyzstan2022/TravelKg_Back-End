@@ -6,7 +6,7 @@ import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.exception.*;
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.entity.Comment;
-import com.example.benomad.logger.LogWriter;
+import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.mapper.CommentMapper;
 import com.example.benomad.mapper.DeletionInfoMapper;
 import com.example.benomad.repository.BlogRepository;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -37,11 +36,12 @@ public class CommentServiceImpl implements CommentService {
     private final BlogRepository blogRepository;
     private final CommentMapper commentMapper;
     private final DeletionInfoMapper deletionInfoMapper;
+    private final LogWriterServiceImpl logWriter;
 
     @Override
     public List<CommentDTO> getAllComments() {
         List<CommentDTO> commentDTOS = commentMapper.entityListToDtoList(commentRepository.findAll());
-        LogWriter.get(String.format("%s - Returned %d comments", authService.getName(), commentDTOS.size()));
+        logWriter.get(String.format("%s - Returned %d comments", authService.getName(), commentDTOS.size()));
         return commentDTOS;
     }
 
@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
             page = commentRepository.getPlaceCommentsById(referenceId, pageRequest);
         }
         List<CommentDTO> commentDTOS = commentMapper.entityListToDtoList(page.stream().collect(Collectors.toList()));
-        LogWriter.get(String.format("%s - Returned %d comments for %s with id = %d", authService.getName(), commentDTOS.size(),
+        logWriter.get(String.format("%s - Returned %d comments for %s with id = %d", authService.getName(), commentDTOS.size(),
                 reference.toString(), referenceId));
         return commentDTOS;
     }
@@ -73,7 +73,7 @@ public class CommentServiceImpl implements CommentService {
                     throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, "id", String.valueOf(commentId));
                 })
         );
-        LogWriter.get(String.format("%s - Returned comment with id = %d", authService.getName(), commentId));
+        logWriter.get(String.format("%s - Returned comment with id = %d", authService.getName(), commentId));
         return commentDTO;
     }
 
@@ -103,7 +103,7 @@ public class CommentServiceImpl implements CommentService {
             }
             commentRepository.likeCommentById(commentId, userId);
         }
-        LogWriter.update(String.format("%s - %s comment with id = %d", authService.getName(),
+        logWriter.update(String.format("%s - %s comment with id = %d", authService.getName(),
                 isDislike ? "Disliked" : "Liked", commentId));
         return commentMapper.entityToDto(
                 commentRepository.findById(commentId).orElseThrow(
@@ -130,7 +130,7 @@ public class CommentServiceImpl implements CommentService {
         }else if(reference == CommentReference.BLOG){
             commentRepository.insertBlogComment(commentDTO.getId(), referenceId);
         }
-        LogWriter.insert(String.format("%s - commented %s with id = %d", authService.getName(), reference.toString(),
+        logWriter.insert(String.format("%s - commented %s with id = %d", authService.getName(), reference.toString(),
                 referenceId));
         return commentDTO;
     }
@@ -144,7 +144,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setDeleted(true);
         infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         comment.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
-        LogWriter.delete(String.format("%s - Deleted comment with id = %d", authService.getName(), commentId));
+        logWriter.delete(String.format("%s - Deleted comment with id = %d", authService.getName(), commentId));
         return commentMapper.entityToDto(comment);
     }
 
@@ -158,7 +158,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setUpdateDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         comment.setCreationDate(null);
         commentRepository.save(comment);
-        LogWriter.update(String.format("%s - Updated comment with id = %d", authService.getName(), commentId));
+        logWriter.update(String.format("%s - Updated comment with id = %d", authService.getName(), commentId));
         return commentDTO;
     }
 }

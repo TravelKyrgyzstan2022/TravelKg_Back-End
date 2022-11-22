@@ -55,7 +55,7 @@ public class UserDTO {
     @JsonProperty("favorite_places")
     private List<PlaceDTO> placeDTOS;
 
-    @JsonProperty("registration_date")
+    @JsonProperty(value = "registration_date", access = JsonProperty.Access.READ_ONLY)
     private LocalDate registrationDate;
 
     @JsonProperty(value = "last_visit_date", access = JsonProperty.Access.READ_ONLY)
@@ -67,7 +67,7 @@ public class UserDTO {
     @JsonProperty(value = "is_deleted", access = JsonProperty.Access.READ_ONLY)
     private boolean deleted;
 
-    @JsonProperty("deletion_info")
+    @JsonProperty(value = "deletion_info", access = JsonProperty.Access.READ_ONLY)
     private DeletionInfoDTO deletionInfoDTO;
 
 }

@@ -1,11 +1,13 @@
 package com.example.benomad.controller;
 
 import com.example.benomad.advice.ExceptionResponse;
+import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -55,7 +57,7 @@ public class UserController {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = UserDTO.class))
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -78,12 +80,24 @@ public class UserController {
                     content = @Content
             )
     })
-    @GetMapping(value = {"/", ""}, produces = "application/json")
+    @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<?> findUserByAttributes(@RequestParam(name = "first_name", required = false) String firstName,
                                           @RequestParam(name = "last_name", required = false) String lastName,
                                           @RequestParam(name = "email", required = false) String email,
                                           @RequestParam(name = "phone_number", required = false) String phoneNumber,
                                           @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+        return ResponseEntity.ok(userService.getUsersByAttributes(firstName, lastName, email, phoneNumber,
+                MATCH_ALL));
+    }
+
+    @Hidden
+    @GetMapping(value = "/", produces = "application/json")
+    public ResponseEntity<?> forwardSlashFix(@RequestParam(name = "first_name", required = false) String firstName,
+                                                  @RequestParam(name = "last_name", required = false) String lastName,
+                                                  @RequestParam(name = "email", required = false) String email,
+                                                  @RequestParam(name = "phone_number", required = false) String phoneNumber,
+                                                  @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok(userService.getUsersByAttributes(firstName, lastName, email, phoneNumber,
                 MATCH_ALL));

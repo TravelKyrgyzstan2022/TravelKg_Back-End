@@ -1,7 +1,7 @@
 package com.example.benomad.dto;
 
 
-import com.example.benomad.entity.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +19,9 @@ public class DeletionInfoDTO {
 
     private String reason;
 
+    @JsonProperty("deletion_date")
     private LocalDate deletionDate;
 
+    @JsonProperty("responsible_user_id")
     private Long responsibleUserId;
 }
