@@ -517,8 +517,8 @@ public class PlaceController {
     }
 
 
-    @Operation(summary = "Inserts place to user's favorites",
-            description = "Inserts place to user's favorites using place id")
+    @Operation(summary = "Inserts place to current user's favorites",
+            description = "Inserts place to current user's favorites using place id")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",

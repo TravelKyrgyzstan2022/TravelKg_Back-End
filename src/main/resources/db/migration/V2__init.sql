@@ -1,14 +1,14 @@
 create table articles (id  bigserial not null, body varchar(10000) not null, image_url varchar(255) not null, title varchar(500) not null, user_id int8, primary key (id));
 create table blog_comments (blog_id int8 not null, comment_id int8 not null, primary key (blog_id, comment_id));
 create table blog_likes (blog_id int8 not null, user_id int8 not null, primary key (blog_id, user_id));
-create table blogs (id  bigserial not null, body varchar(10000) not null, creation_date date, is_deleted boolean not null, review_status varchar(255), title varchar(500) not null, update_date date, author_id int8, deletion_info_id int8, primary key (id));
+create table blogs (id  bigserial not null, body varchar(10000) not null, creation_date date, is_deleted boolean not null, review_status varchar(255), title varchar(500) not null, image_url varchar(500), update_date date, author_id int8, deletion_info_id int8, primary key (id));
 create table comment_likes (comment_id int8 not null, liked_users_id int8 not null, primary key (comment_id, liked_users_id));
 create table comments (id  bigserial not null, body varchar(2000) not null, creation_date date, is_deleted boolean not null, update_date date, deletion_info_id int8, user_id int8 not null, primary key (id));
 create table deletion_info (id  bigserial not null, deletion_date date, reason varchar(255), responsible_user_id int8, primary key (id));
 create table favorite_places (user_id int8 not null, place_id int8 not null, primary key (user_id, place_id));
 create table place_comments (place_id int8 not null, comment_id int8 not null, primary key (place_id, comment_id));
 create table place_ratings (id  bigserial not null, rating int4 not null, place_id int8, user_id int8, primary key (id));
-create table places (id  bigserial not null, address varchar(255), description varchar(2000) not null, image_url varchar(255) not null, link_url varchar(255) not null, name varchar(255) not null, place_type varchar(255), region varchar(255), primary key (id));
+create table places (id  bigserial not null, address varchar(255), place_category varchar(255), description varchar(2000) not null, image_url varchar(255) not null, link_url varchar(255) not null, name varchar(255) not null, place_type varchar(255), region varchar(255), primary key (id));
 create table plans (id  bigserial not null, end_date date, note varchar(500), start_date date, place_id int8, user_id int8, primary key (id));
 create table refreshtokens (id  bigserial not null, expiry_date timestamp not null, token varchar(255) not null, user_id int8, primary key (id));
 create table roles (user_id int8 not null, roles varchar(255));

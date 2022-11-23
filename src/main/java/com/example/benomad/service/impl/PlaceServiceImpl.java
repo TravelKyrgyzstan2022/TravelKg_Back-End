@@ -101,38 +101,14 @@ public class PlaceServiceImpl implements PlaceService {
         Long userId = authService.getCurrentUserId();
         if(isRemoval){
             rating = 1;
-            Rating neededRating = ratingRepository.findByPlaceAndUser(
-                    placeRepository.findById(placeId).orElseThrow(
-                            () -> {
-                                throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
-                            }),
-                    userRepository.findById(userId).orElseThrow(
-                            () -> {
-                                throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
-                            })
-            ).orElseThrow(
-                    () -> {
-                        throw new ContentIsNotRatedException(ContentNotFoundEnum.PLACE);
-                    });
+            Rating neededRating = getRating(placeId, userId);
             ratingRepository.delete(neededRating);
         }
         if(rating < 1 || rating > 5){
             throw new InvalidRatingException();
         }
         try{
-            Rating neededRating = ratingRepository.findByPlaceAndUser(
-                    placeRepository.findById(placeId).orElseThrow(
-                            () -> {
-                                throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
-                            }),
-                    userRepository.findById(userId).orElseThrow(
-                            () -> {
-                                throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
-                            }
-                    )).orElseThrow(
-                            () -> {
-                                throw new ContentIsNotRatedException(ContentNotFoundEnum.PLACE);
-                            });
+            Rating neededRating = getRating(placeId, userId);
             neededRating.setRating(rating);
             ratingRepository.save(neededRating);
         }catch (Exception e){
@@ -155,6 +131,22 @@ public class PlaceServiceImpl implements PlaceService {
         return placeMapper.entityToDto(placeRepository.findById(placeId).orElseThrow(() -> {
             throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
         }));
+    }
+
+    private Rating getRating(Long placeId, Long userId) {
+        return ratingRepository.findByPlaceAndUser(
+                placeRepository.findById(placeId).orElseThrow(
+                        () -> {
+                            throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
+                        }),
+                userRepository.findById(userId).orElseThrow(
+                        () -> {
+                            throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
+                        })
+        ).orElseThrow(
+                () -> {
+                    throw new ContentIsNotRatedException(ContentNotFoundEnum.PLACE);
+                });
     }
 
     @Override
@@ -207,7 +199,6 @@ public class PlaceServiceImpl implements PlaceService {
         user.getPlaces().add(place);
         userRepository.save(user);
         return placeMapper.entityToDto(place);
-
     }
 
     private ExampleMatcher getExampleMatcher(Boolean match) {
