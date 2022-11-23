@@ -29,7 +29,7 @@ public class UserController {
 
     private final UserServiceImpl userService;
 
-    @Operation(summary = "Gets all users / Finds users by attributes",
+    @Operation(summary = "Gets all users / Finds users by attributes (ADMIN)",
     description = """
             If none of the parameters are passed, it will get all users from database.
             
@@ -103,7 +103,7 @@ public class UserController {
                 MATCH_ALL));
     }
 
-    @Operation(summary = "Finds user by ID",
+    @Operation(summary = "Finds user by ID (ADMIN)",
     description = "Just finds user by ID :)")
     @ApiResponses(value = {
             @ApiResponse(
@@ -140,6 +140,18 @@ public class UserController {
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> getUserById(@PathVariable("id") Long userId){
         return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
+    @Operation(summary = "Gets current user (TESTING)")
+    @GetMapping(value = "/me")
+    public ResponseEntity<?> getCurrentUser(){
+        return ResponseEntity.ok(userService.getCurrentUser());
+    }
+
+    @Operation(summary = "Updates current user (TESTING)")
+    @PutMapping(value = "/me")
+    public ResponseEntity<?> updateCurrentUser(@RequestBody UserDTO userDTO){
+        return ResponseEntity.ok(userService.updateCurrentUser(userDTO));
     }
 
     //fixme
@@ -200,7 +212,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.updateUserById(userId, userDTO));
     }
 
-    @Operation(summary = "Deletes user by ID")
+    @Operation(summary = "Deletes user by ID (ADMIN)")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",

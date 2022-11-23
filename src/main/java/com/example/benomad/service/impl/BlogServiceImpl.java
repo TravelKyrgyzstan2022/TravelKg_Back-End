@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -51,7 +50,7 @@ public class BlogServiceImpl implements BlogService {
         blogDTO.setId(null);
         blogDTO.setAuthorId(authService.getCurrentUserId());
         blogDTO.setId(blogRepository.save(blogMapper.dtoToEntity(blogDTO)).getId());
-        logWriter.insert(String.format("%s - Inserted blog with id = %d", authService.getName(), blogDTO.getId()));
+        logWriter.insert(String.format("%s - Inserted blog with id = %d", authService.getCurrentEmail(), blogDTO.getId()));
         return blogDTO;
     }
 
@@ -63,7 +62,7 @@ public class BlogServiceImpl implements BlogService {
                             throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id", String.valueOf(blogId));
                         })
         );
-        logWriter.get(String.format("%s - Returned blog with id = %d", authService.getName(), blogId));
+        logWriter.get(String.format("%s - Returned blog with id = %d", authService.getCurrentEmail(), blogId));
         return blogDTO;
     }
 
@@ -90,7 +89,7 @@ public class BlogServiceImpl implements BlogService {
 
         List<Blog> blogs = blogRepository.findAll(example);
 
-        logWriter.get(String.format("%s - Returned %d blogs", authService.getName(), blogs.size()));
+        logWriter.get(String.format("%s - Returned %d blogs", authService.getCurrentEmail(), blogs.size()));
 
         //fixme
         System.out.println(LocalDate.now(ZoneId.of("Asia/Bishkek")));
@@ -118,7 +117,7 @@ public class BlogServiceImpl implements BlogService {
             }
             blogRepository.likeBlogById(blogId, userId);
         }
-        logWriter.update(String.format("%s - %s blog with id = %d", authService.getName(),
+        logWriter.update(String.format("%s - %s blog with id = %d", authService.getCurrentEmail(),
                 isDislike ? "Disliked" : "Liked", blogId));
         return blogMapper.entityToDto(blog);
     }
@@ -134,7 +133,7 @@ public class BlogServiceImpl implements BlogService {
         blog.setUpdateDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blogRepository.save(blog);
         addIsLikedAndLikesCount(blogDTO, authService.getCurrentUserId());
-        logWriter.update(String.format("%s - Updated blog with id = %d", authService.getName(), blogId));
+        logWriter.update(String.format("%s - Updated blog with id = %d", authService.getCurrentEmail(), blogId));
         return blogDTO;
     }
 
@@ -147,7 +146,7 @@ public class BlogServiceImpl implements BlogService {
         infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blog.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
         blogRepository.save(blog);
-        logWriter.delete(String.format("%s - Deleted blog with id = %d", authService.getName(), blogId));
+        logWriter.delete(String.format("%s - Deleted blog with id = %d", authService.getCurrentEmail(), blogId));
         return blogMapper.entityToDto(blog);
     }
 

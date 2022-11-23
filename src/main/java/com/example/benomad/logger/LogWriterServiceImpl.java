@@ -1,5 +1,6 @@
 package com.example.benomad.logger;
 
+import com.example.benomad.exception.LogException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -66,5 +68,17 @@ public class LogWriterServiceImpl {
         logEntity.setBody(String.format(logFormat, log != null ? log : "", time, marker, message));
 
         logRepository.save(logEntity);
+    }
+
+    public LogDTO getLog(){
+        return formatLog(logRepository.findById(1L).orElseThrow(LogException::new));
+    }
+
+    private LogDTO formatLog(LogEntity logEntity){
+        return LogDTO.builder()
+                .body(
+                        logEntity.getBody().replaceAll("\n", "  |||  ")
+                )
+                .build();
     }
 }

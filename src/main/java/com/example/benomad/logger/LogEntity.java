@@ -16,6 +16,6 @@ public class LogEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = Integer.MAX_VALUE)
+    @Column(length = 10485750)
     private String body;
 }

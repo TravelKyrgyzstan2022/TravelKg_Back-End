@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDTO> getAllComments() {
         List<CommentDTO> commentDTOS = commentMapper.entityListToDtoList(commentRepository.findAll());
-        logWriter.get(String.format("%s - Returned %d comments", authService.getName(), commentDTOS.size()));
+        logWriter.get(String.format("%s - Returned %d comments", authService.getCurrentEmail(), commentDTOS.size()));
         return commentDTOS;
     }
 
@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
             page = commentRepository.getPlaceCommentsById(referenceId, pageRequest);
         }
         List<CommentDTO> commentDTOS = commentMapper.entityListToDtoList(page.stream().collect(Collectors.toList()));
-        logWriter.get(String.format("%s - Returned %d comments for %s with id = %d", authService.getName(), commentDTOS.size(),
+        logWriter.get(String.format("%s - Returned %d comments for %s with id = %d", authService.getCurrentEmail(), commentDTOS.size(),
                 reference.toString(), referenceId));
         return commentDTOS;
     }
@@ -73,7 +73,7 @@ public class CommentServiceImpl implements CommentService {
                     throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, "id", String.valueOf(commentId));
                 })
         );
-        logWriter.get(String.format("%s - Returned comment with id = %d", authService.getName(), commentId));
+        logWriter.get(String.format("%s - Returned comment with id = %d", authService.getCurrentEmail(), commentId));
         return commentDTO;
     }
 
@@ -103,7 +103,7 @@ public class CommentServiceImpl implements CommentService {
             }
             commentRepository.likeCommentById(commentId, userId);
         }
-        logWriter.update(String.format("%s - %s comment with id = %d", authService.getName(),
+        logWriter.update(String.format("%s - %s comment with id = %d", authService.getCurrentEmail(),
                 isDislike ? "Disliked" : "Liked", commentId));
         return commentMapper.entityToDto(
                 commentRepository.findById(commentId).orElseThrow(
@@ -130,7 +130,7 @@ public class CommentServiceImpl implements CommentService {
         }else if(reference == CommentReference.BLOG){
             commentRepository.insertBlogComment(commentDTO.getId(), referenceId);
         }
-        logWriter.insert(String.format("%s - commented %s with id = %d", authService.getName(), reference.toString(),
+        logWriter.insert(String.format("%s - commented %s with id = %d", authService.getCurrentEmail(), reference.toString(),
                 referenceId));
         return commentDTO;
     }
@@ -144,7 +144,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setDeleted(true);
         infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         comment.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
-        logWriter.delete(String.format("%s - Deleted comment with id = %d", authService.getName(), commentId));
+        logWriter.delete(String.format("%s - Deleted comment with id = %d", authService.getCurrentEmail(), commentId));
         return commentMapper.entityToDto(comment);
     }
 
@@ -158,7 +158,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setUpdateDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         comment.setCreationDate(null);
         commentRepository.save(comment);
-        logWriter.update(String.format("%s - Updated comment with id = %d", authService.getName(), commentId));
+        logWriter.update(String.format("%s - Updated comment with id = %d", authService.getCurrentEmail(), commentId));
         return commentDTO;
     }
 }

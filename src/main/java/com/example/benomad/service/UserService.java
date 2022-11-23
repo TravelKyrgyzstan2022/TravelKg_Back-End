@@ -15,14 +15,14 @@ import java.util.List;
 
 
 public interface UserService {
-    String getUserAuthenticationToken(UserDetailsImpl userDetails);
     String getUserAuthenticationToken(User user);
     UserDTO insertUser(UserDTO userDTO);
     UserDTO getUserById(Long id) throws ContentNotFoundException;
     List<UserDTO> getUsersByAttributes(String firstName, String lastName,
                                        String email, String phoneNumber, boolean MATCH_ALL);
     UserDTO getUserByEmail(String email) throws ContentNotFoundException;
-    UserDTO getUserByPhoneNumber(String phoneNumber) throws ContentNotFoundException;
+    UserDTO getCurrentUser();
+    UserDTO updateCurrentUser(UserDTO userDTO);
     UserDTO updateUserById(Long id, UserDTO userDTO) throws ContentNotFoundException;
     UserDTO deleteUserById(Long userId, DeletionInfoDTO infoDTO) throws ContentNotFoundException;
 

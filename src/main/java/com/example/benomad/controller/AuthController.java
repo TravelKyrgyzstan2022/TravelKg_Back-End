@@ -1,10 +1,9 @@
 package com.example.benomad.controller;
 
 import com.example.benomad.advice.ExceptionResponse;
+import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.dto.UserDTO;
-import com.example.benomad.security.request.LogOutRequest;
-import com.example.benomad.security.request.LoginRequest;
-import com.example.benomad.security.request.TokenRefreshRequest;
+import com.example.benomad.security.request.*;
 import com.example.benomad.security.response.JwtResponse;
 import com.example.benomad.security.response.TokenRefreshResponse;
 import com.example.benomad.service.impl.AuthServiceImpl;
@@ -17,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -146,20 +146,49 @@ public class AuthController {
             )
     })
     @PostMapping("/register")
-    public ResponseEntity<?> addUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.addUser(userDTO));
     }
 
-    //fixme
-//    @PostMapping("/activate/{code}")
-//    public ResponseEntity<?> activate(@PathVariable String code) {
-//        boolean isActivated = userService.activateUser(code);
-//
-//        if (isActivated) {
-//            return ResponseEntity.ok(new MessageResponse("Account has been successfully activated!", 200));
-//        }
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(
-//                "Activation code is not valid.", 400
-//        ));
-//    }
+    @Operation(summary = "Sends 'forgot password' verification code to the given email")
+    @PostMapping(value = "/forgot-password", produces = "application/json")
+    public ResponseEntity<MessageResponse> sendVerificationCode(@RequestParam(name = "email") String email){
+        return ResponseEntity.ok(authService.sendForgotPasswordCode(email));
+    }
+
+    @Operation(summary = "Validates both code and email")
+    @PostMapping(value = {"/validate-code", "/verify-email"}, produces = "application/json")
+    public ResponseEntity<MessageResponse> forgotPassword(@Valid @RequestBody EmailVerificationRequest emailVerificationRequest){
+        return ResponseEntity.ok(authService.validateVerificationCode(emailVerificationRequest));
+    }
+
+    @Operation(summary = "Resets the password for given email")
+    @PutMapping(value = "/reset-password", produces = "application/json")
+    public ResponseEntity<MessageResponse> setNewPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest){
+        return ResponseEntity.ok(authService.resetPassword(resetPasswordRequest));
+    }
+
+    @Operation(summary = "Sends activation code to current authorized email")
+    @PostMapping(value = "/acc/activation", produces = "application/json")
+    public ResponseEntity<MessageResponse> sendActivationCode(){
+        return ResponseEntity.ok(authService.sendActivationCode());
+    }
+
+    @Operation(summary = "Activates current account")
+    @PostMapping(value = "/acc/activate", produces = "application/json")
+    public ResponseEntity<MessageResponse> activateUser(@RequestParam("code") String code){
+        return ResponseEntity.ok(authService.activateUser(code));
+    }
+
+    @Operation(summary = "Gets current user (TESTING)")
+    @GetMapping(value = "/acc")
+    public ResponseEntity<?> getCurrentUser(){
+        return ResponseEntity.ok(userService.getCurrentUser());
+    }
+
+    @Operation(summary = "Updates current user (TESTING)")
+    @PutMapping(value = "/acc")
+    public ResponseEntity<?> updateCurrentUser(@RequestBody UserDTO userDTO){
+        return ResponseEntity.ok(userService.updateCurrentUser(userDTO));
+    }
 }

@@ -25,6 +25,7 @@ public class UserDetailsImpl implements UserDetails {
     private String lastName;
     private String email;
     private String phoneNumber;
+    private boolean isActivated;
 
     @JsonIgnore
     private String password;
@@ -39,6 +40,7 @@ public class UserDetailsImpl implements UserDetails {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
+                .isActivated(user.isActivated())
                 .phoneNumber(user.getPhoneNumber())
                 .password(user.getPassword())
                 .authorities(user.getRoles())

@@ -37,13 +37,13 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<ArticleDTO> getAllArticles() {
         List<ArticleDTO> dtos = articleMapper.entityListToDtoList(articleRepository.findAll());
-        logWriter.get(String.format("%s - Returned %d articles", authService.getName(), dtos.size()));
+        logWriter.get(String.format("%s - Returned %d articles", authService.getCurrentEmail(), dtos.size()));
         return dtos;
     }
 
     @Override
     public ArticleDTO getArticleById(Long articleId) throws ContentNotFoundException {
-        logWriter.get(String.format("%s - Returned article with id = %d", authService.getName(), articleId));
+        logWriter.get(String.format("%s - Returned article with id = %d", authService.getCurrentEmail(), articleId));
         return articleMapper.entityToDto(articleRepository.findById(articleId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
@@ -61,7 +61,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
         articleDTO.setId(articleId);
         articleRepository.save(articleMapper.dtoToEntity(articleDTO));
-        logWriter.update(String.format("%s - Updated article with id = %d", authService.getName(), articleId));
+        logWriter.update(String.format("%s - Updated article with id = %d", authService.getCurrentEmail(), articleId));
         return articleDTO;
     }
 
@@ -70,7 +70,7 @@ public class ArticleServiceImpl implements ArticleService {
         articleDTO.setId(null);
         articleDTO.setUserId(authService.getCurrentUserId());
         articleDTO.setId(articleRepository.save(articleMapper.dtoToEntity(articleDTO)).getId());
-        logWriter.insert(String.format("%s - Inserted article with id = %d", authService.getName(), articleDTO.getId()));
+        logWriter.insert(String.format("%s - Inserted article with id = %d", authService.getCurrentEmail(), articleDTO.getId()));
         return articleDTO;
     }
 
@@ -81,7 +81,7 @@ public class ArticleServiceImpl implements ArticleService {
                     throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
                 });
         articleRepository.delete(article);
-        logWriter.delete(String.format("%s - Deleted article with id = %d", authService.getName(), articleId));
+        logWriter.delete(String.format("%s - Deleted article with id = %d", authService.getCurrentEmail(), articleId));
         return articleMapper.entityToDto(article);
     }
 

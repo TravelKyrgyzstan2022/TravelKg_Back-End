@@ -2,7 +2,7 @@ package com.example.benomad.security.handler;
 
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.repository.UserRepository;
-import com.example.benomad.security.jwt.JwtUtils;
+import com.example.benomad.util.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;

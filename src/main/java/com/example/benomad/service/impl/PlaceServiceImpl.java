@@ -49,7 +49,7 @@ public class PlaceServiceImpl implements PlaceService {
         Example<Place> exampleOfPlace = Example.of(builtPlace,getExampleMatcher(match));
         Page<Place> pages = placeRepository.findAll(exampleOfPlace,pageRequest);
         List<PlaceDTO> placeDTOS = placeMapper.entityListToDtoList(pages.stream().collect(Collectors.toList()));
-        logWriter.get(String.format("%s - Returned %d places", authService.getName(), placeDTOS.size()));
+        logWriter.get(String.format("%s - Returned %d places", authService.getCurrentEmail(), placeDTOS.size()));
         return placeDTOS;
     }
 
@@ -61,7 +61,7 @@ public class PlaceServiceImpl implements PlaceService {
                     throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
                 })
         );
-        logWriter.get(String.format("%s - Returned place with id = %d", authService.getName(), placeId));
+        logWriter.get(String.format("%s - Returned place with id = %d", authService.getCurrentEmail(), placeId));
         return placeDTO;
     }
 
@@ -69,7 +69,7 @@ public class PlaceServiceImpl implements PlaceService {
     public PlaceDTO insertPlace(PlaceDTO placeDTO) {
         placeDTO.setId(null);
         placeDTO.setId(placeRepository.save(placeMapper.dtoToEntity(placeDTO)).getId());
-        logWriter.insert(String.format("%s - Inserted place with id = %d", authService.getName(), placeDTO.getId()));
+        logWriter.insert(String.format("%s - Inserted place with id = %d", authService.getCurrentEmail(), placeDTO.getId()));
         return placeDTO;
     }
 
@@ -81,7 +81,7 @@ public class PlaceServiceImpl implements PlaceService {
                 }
         );
         placeRepository.delete(place);
-        logWriter.delete(String.format("%s - Deleted place with id = %d", authService.getName(), placeId));
+        logWriter.delete(String.format("%s - Deleted place with id = %d", authService.getCurrentEmail(), placeId));
         return placeMapper.entityToDto(place);
     }
 
@@ -91,7 +91,7 @@ public class PlaceServiceImpl implements PlaceService {
             throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
         }
         placeRepository.save(placeMapper.dtoToEntity(placeDTO));
-        logWriter.update(String.format("%s - Deleted place with id = %d", authService.getName(), placeId));
+        logWriter.update(String.format("%s - Deleted place with id = %d", authService.getCurrentEmail(), placeId));
         return placeDTO;
     }
 
@@ -126,7 +126,7 @@ public class PlaceServiceImpl implements PlaceService {
                     .rating(rating)
                     .build());
         }
-        logWriter.update(String.format("%s - %s place with id = %d", authService.getName(),
+        logWriter.update(String.format("%s - %s place with id = %d", authService.getCurrentEmail(),
                 isRemoval ? "Removed rated for" : "Rated", placeId));
         return placeMapper.entityToDto(placeRepository.findById(placeId).orElseThrow(() -> {
             throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));

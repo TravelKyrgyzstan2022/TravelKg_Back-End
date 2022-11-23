@@ -1,8 +1,8 @@
 package com.example.benomad.security.config;
 
+import com.example.benomad.security.filter.JwtTokenFilter;
 import com.example.benomad.security.handler.AuthAccessDeniedHandler;
 import com.example.benomad.security.handler.AuthEntryPointHandler;
-import com.example.benomad.security.jwt.AuthTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -27,7 +26,7 @@ public class WebSecurityConfig {
 
     private final AuthEntryPointHandler unauthorizedHandler;
     private final AuthAccessDeniedHandler accessDeniedHandler;
-    private final String[] PERMIT_ALL_COMMON = {
+    private final String[] PERMIT_ALL = {
             "/api/auth/**",
             "/documentation/**",
             "/v3/api-docs/**",
@@ -36,37 +35,56 @@ public class WebSecurityConfig {
             "/error"
     };
 
+    private final String[] USER = {
+            "/api/auth/acc/**",
+            "/api/auth/acc"
+    };
+
+    private final String[] ADMIN_COMMON = {
+            "/api/v1/admin/**",
+            "/api/auth/acc",
+            "/api/auth/acc/**"
+    };
+
     private final String[] ADMIN_GET = {
             "/actuator/**",
+            "/api/dev/**",
             "/api/v1/users",
-            "/api/v1/users/**"
+            "/api/v1/users/**",
+            "/api/auth/acc",
+            "/api/auth/acc/**"
     };
 
     private final String[] PERMIT_ALL_GET = {
-            "/api/v1/**"
+            "/api/v1/**",
+            "/api/auth/acc",
+            "/api/auth/acc/**"
     };
 
     private final String[] ADMIN_POST = {
-            "/api/v1/**"
+            "/api/v1/**",
+            "/api/auth/acc",
+            "/api/auth/acc/**"
     };
 
     private final String[] ADMIN_PUT = {
-            "/api/v1/**"
+            "/api/v1/**",
+            "/api/auth/**",
+            "/api/auth/acc",
+            "/api/auth/acc/**"
     };
 
     private final String[] ADMIN_DELETE = {
-            "/api/v1/**"
+            "/api/v1/**",
+            "/api/auth/**",
+            "/api/auth/acc",
+            "/api/auth/acc/**"
     };
 
 
     @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
-    }
-
-    @Bean
-    public static BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+    public JwtTokenFilter authenticationJwtTokenFilter() {
+        return new JwtTokenFilter();
     }
 
     @Bean
@@ -82,12 +100,15 @@ public class WebSecurityConfig {
                 .cors()
                 .and()
                     .authorizeRequests()
-                    .antMatchers(PERMIT_ALL_COMMON).permitAll()
-                    .antMatchers(HttpMethod.GET, ADMIN_GET).hasRole("ADMIN")
+                    .antMatchers(USER).hasRole("USER")
+                    .antMatchers(ADMIN_COMMON).hasAnyRole("ADMIN", "SUPERADMIN")
+                    .antMatchers(PERMIT_ALL).permitAll()
+                    .antMatchers(HttpMethod.GET, ADMIN_GET).hasAnyRole("ADMIN", "SUPERADMIN")
                     .antMatchers(HttpMethod.GET, PERMIT_ALL_GET).permitAll()
-                    .antMatchers(HttpMethod.POST, ADMIN_POST).hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE, ADMIN_DELETE).hasRole("ADMIN")
-                    .antMatchers(HttpMethod.PUT, ADMIN_PUT).hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, ADMIN_POST).hasAnyRole("ADMIN", "SUPERADMIN")
+                    .antMatchers(HttpMethod.DELETE, ADMIN_DELETE).hasAnyRole("ADMIN", "SUPERADMIN")
+                    .antMatchers(HttpMethod.PUT, ADMIN_PUT).hasAnyRole("ADMIN", "SUPERADMIN")
+                    .antMatchers("/api/v1/**").hasAnyRole("USER")
                     .anyRequest().authenticated()
                 .and()
                     .exceptionHandling()

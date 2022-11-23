@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @NoArgsConstructor
 @Getter
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class ContentIsNotImageException  extends CustomException{
+public class ContentIsNotImageException extends CustomException{
     private final String messageFormat = "Content type %s is not appropriate";
     private final Integer statusCode = 400;
     private String message;
