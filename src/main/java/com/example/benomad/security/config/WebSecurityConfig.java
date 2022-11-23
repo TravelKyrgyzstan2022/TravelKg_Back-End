@@ -34,6 +34,7 @@ public class WebSecurityConfig {
             "/v3/api-docs.yaml",
             "/error"
     };
+    private final String[] REGISTERED_COMMON = {};
 
     private final String[] USER = {
             "/api/auth/acc/**",
@@ -42,8 +43,6 @@ public class WebSecurityConfig {
 
     private final String[] ADMIN_COMMON = {
             "/api/v1/admin/**",
-            "/api/auth/acc",
-            "/api/auth/acc/**"
     };
 
     private final String[] ADMIN_GET = {
@@ -100,7 +99,7 @@ public class WebSecurityConfig {
                 .cors()
                 .and()
                     .authorizeRequests()
-                    .antMatchers(USER).hasRole("USER")
+                    .antMatchers(USER).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
                     .antMatchers(ADMIN_COMMON).hasAnyRole("ADMIN", "SUPERADMIN")
                     .antMatchers(PERMIT_ALL).permitAll()
                     .antMatchers(HttpMethod.GET, ADMIN_GET).hasAnyRole("ADMIN", "SUPERADMIN")
