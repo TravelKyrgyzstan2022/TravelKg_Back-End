@@ -53,7 +53,7 @@ public class UserDTO {
     private Set<Role> roles = new HashSet<>();
 
     @JsonProperty(value = "registration_date", access = JsonProperty.Access.READ_ONLY)
-    private LocalDate registrationDate;
+    private String registrationDate;
 
     @JsonProperty(value = "last_visit_date", access = JsonProperty.Access.READ_ONLY)
     private String lastVisitDate;
