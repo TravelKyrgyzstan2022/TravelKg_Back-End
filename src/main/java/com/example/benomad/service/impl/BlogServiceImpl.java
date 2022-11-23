@@ -11,7 +11,7 @@ import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.exception.ContentIsAlreadyLikedException;
 import com.example.benomad.exception.ContentIsNotLikedException;
 import com.example.benomad.exception.FailedWhileUploadingException;
-import com.example.benomad.logger.LogWriter;
+import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.mapper.BlogMapper;
 import com.example.benomad.mapper.DeletionInfoMapper;
 import com.example.benomad.repository.BlogRepository;
@@ -44,13 +44,14 @@ public class BlogServiceImpl implements BlogService {
     private final BlogMapper blogMapper;
     private final DeletionInfoMapper deletionInfoMapper;
     private final ImageServiceImpl imageService;
+    private final LogWriterServiceImpl logWriter;
 
     @Override
     public BlogDTO insertBlog(BlogDTO blogDTO) throws ContentNotFoundException {
         blogDTO.setId(null);
         blogDTO.setAuthorId(authService.getCurrentUserId());
         blogDTO.setId(blogRepository.save(blogMapper.dtoToEntity(blogDTO)).getId());
-        LogWriter.insert(String.format("%s - Inserted blog with id = %d", authService.getName(), blogDTO.getId()));
+        logWriter.insert(String.format("%s - Inserted blog with id = %d", authService.getName(), blogDTO.getId()));
         return blogDTO;
     }
 
@@ -62,7 +63,7 @@ public class BlogServiceImpl implements BlogService {
                             throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id", String.valueOf(blogId));
                         })
         );
-        LogWriter.get(String.format("%s - Returned blog with id = %d", authService.getName(), blogId));
+        logWriter.get(String.format("%s - Returned blog with id = %d", authService.getName(), blogId));
         return blogDTO;
     }
 
@@ -89,7 +90,7 @@ public class BlogServiceImpl implements BlogService {
 
         List<Blog> blogs = blogRepository.findAll(example);
 
-        LogWriter.get(String.format("%s - Returned %d blogs", authService.getName(), blogs.size()));
+        logWriter.get(String.format("%s - Returned %d blogs", authService.getName(), blogs.size()));
 
         //fixme
         System.out.println(LocalDate.now(ZoneId.of("Asia/Bishkek")));
@@ -117,7 +118,7 @@ public class BlogServiceImpl implements BlogService {
             }
             blogRepository.likeBlogById(blogId, userId);
         }
-        LogWriter.update(String.format("%s - %s blog with id = %d", authService.getName(),
+        logWriter.update(String.format("%s - %s blog with id = %d", authService.getName(),
                 isDislike ? "Disliked" : "Liked", blogId));
         return blogMapper.entityToDto(blog);
     }
@@ -133,7 +134,7 @@ public class BlogServiceImpl implements BlogService {
         blog.setUpdateDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blogRepository.save(blog);
         addIsLikedAndLikesCount(blogDTO, authService.getCurrentUserId());
-        LogWriter.update(String.format("%s - Updated blog with id = %d", authService.getName(), blogId));
+        logWriter.update(String.format("%s - Updated blog with id = %d", authService.getName(), blogId));
         return blogDTO;
     }
 
@@ -146,7 +147,7 @@ public class BlogServiceImpl implements BlogService {
         infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blog.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
         blogRepository.save(blog);
-        LogWriter.delete(String.format("%s - Deleted blog with id = %d", authService.getName(), blogId));
+        logWriter.delete(String.format("%s - Deleted blog with id = %d", authService.getName(), blogId));
         return blogMapper.entityToDto(blog);
     }
 

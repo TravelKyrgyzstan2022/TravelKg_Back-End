@@ -31,11 +31,14 @@ public class CommentDTO {
     @JsonProperty(value = "update_date", access = JsonProperty.Access.READ_ONLY)
     private String updateDate;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "like_count", access = JsonProperty.Access.READ_ONLY)
     private Long likeCount;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "is_liked_by_current_user", access = JsonProperty.Access.READ_ONLY)
     private Boolean isLikedByCurrentUser;
+
+    @JsonProperty(value = "deletion_info", access = JsonProperty.Access.READ_ONLY)
+    private DeletionInfoDTO deletionInfo;
 
     private CommentReference reference;
 }

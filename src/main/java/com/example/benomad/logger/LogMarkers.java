@@ -9,11 +9,21 @@ public enum LogMarkers {
         public Marker get(){
             return MarkerFactory.getMarker("READ");
         }
+
+        @Override
+        public String toString() {
+            return "READ";
+        }
     },
     UPDATE{
         @Override
         public Marker get(){
             return MarkerFactory.getMarker("UPDATE");
+        }
+
+        @Override
+        public String toString() {
+            return "UPDATE";
         }
     },
     CREATE{
@@ -21,11 +31,21 @@ public enum LogMarkers {
         public Marker get(){
             return MarkerFactory.getMarker("CREATE");
         }
+
+        @Override
+        public String toString() {
+            return "CREATE";
+        }
     },
     DELETE{
         @Override
         public Marker get(){
             return MarkerFactory.getMarker("DELETE");
+        }
+
+        @Override
+        public String toString() {
+            return "DELETE";
         }
     },
     AUTH{
@@ -33,15 +53,30 @@ public enum LogMarkers {
         public Marker get(){
             return MarkerFactory.getMarker("AUTH");
         }
+
+        @Override
+        public String toString() {
+            return "AUTH";
+        }
     },
     OTHER{
         @Override
         public Marker get(){
             return MarkerFactory.getMarker("OTHER");
         }
+
+        @Override
+        public String toString() {
+            return "OTHER";
+        }
     };
 
     public Marker get(){
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

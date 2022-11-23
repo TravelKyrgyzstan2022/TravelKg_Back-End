@@ -4,7 +4,9 @@ import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.RefreshToken;
 import com.example.benomad.exception.RefreshTokenException;
-import com.example.benomad.logger.LogWriter;
+import com.example.benomad.logger.LogWriterServiceImpl;
+import com.example.benomad.mapper.UserMapper;
+import com.example.benomad.repository.UserRepository;
 import com.example.benomad.security.domain.UserDetailsImpl;
 import com.example.benomad.security.jwt.JwtUtils;
 import com.example.benomad.security.request.LoginRequest;
@@ -34,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
     private final JwtUtils jwtUtils;
+    private final LogWriterServiceImpl logWriter;
 
     @Override
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
@@ -62,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
 
         RefreshToken refreshToken = refreshTokenService.createToken(userDetails.getId());
         UserDTO userDTO = userService.getUserById(userDetails.getId());
-        LogWriter.auth(String.format("%s - Authenticated", loginRequest.getEmail()));
+        logWriter.auth(String.format("%s - Authenticated", loginRequest.getEmail()));
         return JwtResponse.builder()
                 .token(jwt)
                 .refreshToken(refreshToken.getToken())
@@ -91,7 +94,7 @@ public class AuthServiceImpl implements AuthService {
     public MessageResponse logoutUser(Long id) {
         UserDTO userDTO = userService.getUserById(id);
         refreshTokenService.deleteByUserId(userDTO.getId());
-        LogWriter.auth(String.format("%s - Logged out", userDTO.getEmail()));
+        logWriter.auth(String.format("%s - Logged out", userDTO.getEmail()));
         return new MessageResponse("User has been successfully logged out!", 200);
     }
 

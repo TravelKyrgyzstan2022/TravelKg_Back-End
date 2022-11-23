@@ -3,9 +3,12 @@ package com.example.benomad.controller;
 
 import com.example.benomad.advice.ExceptionResponse;
 import com.example.benomad.dto.ArticleDTO;
+import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.service.impl.ArticleServiceImpl;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -124,8 +127,14 @@ public class ArticleController {
                     content = @Content
             )
     })
-    @PostMapping(value = {"/", ""}, consumes = "application/json", produces = "application/json")
+    @PostMapping(value = {""}, consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> insertArticle(@RequestBody ArticleDTO articleDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(articleServiceImpl.insertArticle(articleDTO));
+    }
+
+    @Hidden
+    @PostMapping(value = {"/"}, consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> forwardSlashFix(@RequestBody ArticleDTO articleDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(articleServiceImpl.insertArticle(articleDTO));
     }
 

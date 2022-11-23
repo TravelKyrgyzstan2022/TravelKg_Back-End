@@ -117,7 +117,7 @@ public class AuthController {
             Adds user to the database with given attributes.
 
             Note:This operation doesn't sign-in user, meaning that after registration user will need to sign-in in order to get access token.""")
-    @PostMapping("/register")
+
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -145,6 +145,7 @@ public class AuthController {
                     content = @Content
             )
     })
+    @PostMapping("/register")
     public ResponseEntity<?> addUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.addUser(userDTO));
     }

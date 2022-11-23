@@ -8,7 +8,9 @@ import com.example.benomad.enums.CommentReference;
 import com.example.benomad.enums.ReviewStatus;
 import com.example.benomad.service.impl.BlogServiceImpl;
 import com.example.benomad.service.impl.CommentServiceImpl;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,7 +45,7 @@ public class BlogController {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = BlogDTO.class))
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = BlogDTO.class)))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -61,8 +63,18 @@ public class BlogController {
                     content = @Content
             )
     })
-    @GetMapping(value = {"/", ""}, produces = "application/json")
+    @GetMapping(value = {""}, produces = "application/json")
     public ResponseEntity<?> findBlogs(@RequestParam(name = "author_id", required = false) Long authorId,
+                                       @RequestParam(name = "title", required = false) String title,
+                                       @RequestParam(name = "status", required = false) ReviewStatus reviewStatus,
+                                       @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
+        return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogsByAttributes(
+                authorId, title, reviewStatus, MATCH_ALL));
+    }
+
+    @Hidden
+    @GetMapping(value = {"/"}, produces = "application/json")
+    public ResponseEntity<?> forwardSlashFix(@RequestParam(name = "author_id", required = false) Long authorId,
                                        @RequestParam(name = "title", required = false) String title,
                                        @RequestParam(name = "status", required = false) ReviewStatus reviewStatus,
                                        @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
@@ -99,7 +111,7 @@ public class BlogController {
                     content = @Content
             )
     })
-    @GetMapping(value = "/{id}", produces = "application/json")
+    @GetMapping(value = "/{blogId}", produces = "application/json")
     public ResponseEntity<?> findBlogById(@PathVariable Long blogId){
         return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogById(blogId));
     }
@@ -109,7 +121,7 @@ public class BlogController {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentDTO.class)))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -132,7 +144,7 @@ public class BlogController {
                     content = @Content
             )
     })
-    @GetMapping(value = "/{id}/comments", produces = "application/json")
+    @GetMapping(value = "/{blogId}/comments", produces = "application/json")
     public ResponseEntity<?> getBlogCommentsById(
             @PathVariable Long blogId,
             @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
@@ -173,8 +185,14 @@ public class BlogController {
                     content = @Content
             )
     })
-    @PostMapping(value = {"/", ""}, produces = "application/json")
+    @PostMapping(value = {""}, produces = "application/json")
     public ResponseEntity<?> insertBlog(@RequestBody BlogDTO dto){
+        return ResponseEntity.ok(blogService.insertBlog(dto));
+    }
+
+    @Hidden
+    @PostMapping(value = {"/"}, produces = "application/json")
+    public ResponseEntity<?> forwardSlashFix2(@RequestBody BlogDTO dto){
         return ResponseEntity.ok(blogService.insertBlog(dto));
     }
 
@@ -211,7 +229,7 @@ public class BlogController {
                     content = @Content
             )
     })
-    @PostMapping(value = "/{id}/comment", produces = "application/json")
+    @PostMapping(value = "/{blogId}/comment", produces = "application/json")
     public ResponseEntity<?> commentBlog(@PathVariable Long blogId, @RequestBody CommentDTO commentDTO){
         return ResponseEntity.ok(commentService.insertComment(CommentReference.BLOG, blogId, commentDTO));
     }
@@ -299,7 +317,7 @@ public class BlogController {
                     content = @Content
             )
     })
-    @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
+    @PutMapping(value = "/{blogId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> updateBlog(@PathVariable Long blogId, @RequestBody BlogDTO blogDTO){
         blogDTO.setId(blogId);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.updateBlogById(blogId, blogDTO));
@@ -338,7 +356,7 @@ public class BlogController {
                     content = @Content
             )
     })
-    @DeleteMapping(value = "/{id}", produces = "application/json")
+    @DeleteMapping(value = "/{blogId}", produces = "application/json")
     public ResponseEntity<?> deleteBlogById(@PathVariable Long blogId, @RequestBody DeletionInfoDTO infoDTO){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.deleteBlogById(blogId, infoDTO));
     }

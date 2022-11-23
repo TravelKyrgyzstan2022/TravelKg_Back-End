@@ -3,10 +3,16 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.entity.Place;
 import com.example.benomad.entity.Rating;
+import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.enums.PlaceType;
+import com.example.benomad.enums.Region;
+import com.example.benomad.exception.ContentIsNotRatedException;
+import com.example.benomad.exception.InvalidRatingException;
+import com.example.benomad.exception.ContentNotFoundException;
+import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.entity.User;
 import com.example.benomad.enums.*;
 import com.example.benomad.exception.*;
-import com.example.benomad.logger.LogWriter;
 import com.example.benomad.mapper.PlaceMapper;
 import com.example.benomad.repository.PlaceRepository;
 import com.example.benomad.repository.RatingRepository;
@@ -33,6 +39,7 @@ public class PlaceServiceImpl implements PlaceService {
     private final UserRepository userRepository;
     private final PlaceMapper placeMapper;
     private final AuthServiceImpl authService;
+    private final LogWriterServiceImpl logWriter;
     private final ImageServiceImpl imageService;
 
     @Override
@@ -42,7 +49,7 @@ public class PlaceServiceImpl implements PlaceService {
         Example<Place> exampleOfPlace = Example.of(builtPlace,getExampleMatcher(match));
         Page<Place> pages = placeRepository.findAll(exampleOfPlace,pageRequest);
         List<PlaceDTO> placeDTOS = placeMapper.entityListToDtoList(pages.stream().collect(Collectors.toList()));
-        LogWriter.get(String.format("%s - Returned %d places", authService.getName(), placeDTOS.size()));
+        logWriter.get(String.format("%s - Returned %d places", authService.getName(), placeDTOS.size()));
         return placeDTOS;
     }
 
@@ -54,7 +61,7 @@ public class PlaceServiceImpl implements PlaceService {
                     throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
                 })
         );
-        LogWriter.get(String.format("%s - Returned place with id = %d", authService.getName(), placeId));
+        logWriter.get(String.format("%s - Returned place with id = %d", authService.getName(), placeId));
         return placeDTO;
     }
 
@@ -62,7 +69,7 @@ public class PlaceServiceImpl implements PlaceService {
     public PlaceDTO insertPlace(PlaceDTO placeDTO) {
         placeDTO.setId(null);
         placeDTO.setId(placeRepository.save(placeMapper.dtoToEntity(placeDTO)).getId());
-        LogWriter.insert(String.format("%s - Inserted place with id = %d", authService.getName(), placeDTO.getId()));
+        logWriter.insert(String.format("%s - Inserted place with id = %d", authService.getName(), placeDTO.getId()));
         return placeDTO;
     }
 
@@ -74,7 +81,7 @@ public class PlaceServiceImpl implements PlaceService {
                 }
         );
         placeRepository.delete(place);
-        LogWriter.delete(String.format("%s - Deleted place with id = %d", authService.getName(), placeId));
+        logWriter.delete(String.format("%s - Deleted place with id = %d", authService.getName(), placeId));
         return placeMapper.entityToDto(place);
     }
 
@@ -84,7 +91,7 @@ public class PlaceServiceImpl implements PlaceService {
             throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
         }
         placeRepository.save(placeMapper.dtoToEntity(placeDTO));
-        LogWriter.update(String.format("%s - Updated place with id = %d", authService.getName(), placeId));
+        logWriter.update(String.format("%s - Deleted place with id = %d", authService.getName(), placeId));
         return placeDTO;
     }
 
@@ -143,7 +150,7 @@ public class PlaceServiceImpl implements PlaceService {
                     .rating(rating)
                     .build());
         }
-        LogWriter.update(String.format("%s - %s place with id = %d", authService.getName(),
+        logWriter.update(String.format("%s - %s place with id = %d", authService.getName(),
                 isRemoval ? "Removed rated for" : "Rated", placeId));
         return placeMapper.entityToDto(placeRepository.findById(placeId).orElseThrow(() -> {
             throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(placeId));
