@@ -180,8 +180,8 @@ public class AccountController {
 
     @Operation(summary = "Activates current account")
     @PostMapping(value = "/activate", produces = "application/json")
-    public ResponseEntity<MessageResponse> activateUser(@RequestParam("code") String code){
-        return ResponseEntity.ok(authService.activateUser(code));
+    public ResponseEntity<MessageResponse> activateUser(@RequestBody EmailVerificationRequest emailVerificationRequest){
+        return ResponseEntity.ok(authService.activateUser(emailVerificationRequest));
     }
 
     @Operation(summary = "Gets current user (TESTING)")

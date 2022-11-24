@@ -153,8 +153,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public MessageResponse activateUser(String code) {
-        String email = getCurrentEmail();
+    public MessageResponse activateUser(EmailVerificationRequest request) {
+        String email = request.getEmail();
+        String code = request.getVerificationCode();
         if(userService.getUserEntityByEmail(email).isActivated()){
             throw new UserAlreadyActivatedException();
         }
