@@ -38,9 +38,16 @@ public class PlaceServiceImpl implements PlaceService {
     private final RatingRepository ratingRepository;
     private final UserRepository userRepository;
     private final PlaceMapper placeMapper;
+    private final UserServiceImpl userService;
     private final AuthServiceImpl authService;
     private final LogWriterServiceImpl logWriter;
     private final ImageServiceImpl imageService;
+
+    @Override
+    public List<PlaceDTO> getMyFavorites() {
+        Long userId = authService.getCurrentUserId();
+        return placeMapper.entityListToDtoList(userService.getUserEntityById(userId).getPlaces());
+    }
 
     @Override
     public List<PlaceDTO> getPlacesByAttributes(String name, Region region, PlaceType placeType,
@@ -151,10 +158,10 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories, List<PlaceType> types, Pageable pageable) {
-        List<String> sCategories = categories.stream().map(Enum::name).toList();
-        List<String> sTypes = types.stream().map(Enum::name).toList();
+        List<String> sCategories = categories.stream().map(Enum::name).collect(Collectors.toList());
+        List<String> sTypes = types.stream().map(Enum::name).collect(Collectors.toList());
         Page<Place> placePage = placeRepository.findPlacesByPlaceCategoriesAndPlaceTypes(sCategories,sTypes,pageable);
-        return placeMapper.entityListToDtoList(placePage.stream().toList());
+        return placeMapper.entityListToDtoList(placePage.stream().collect(Collectors.toList()));
     }
 
     @Override

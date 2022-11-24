@@ -26,7 +26,7 @@ INSERT INTO users (id, password, first_name, last_name, email, phone_number, is_
 VALUES (nextval('users_id_seq'), '$2a$12$tzp.n0FfFjWMoh6ojeiQPOQDSw.IUdGUJGxVJ0f8uNeSMWUux2X3K', 'Adelina', 'Adelina', 'Adelina@admin.a', '+42424124213321', true, false);
 INSERT INTO users (id, password, first_name, last_name, email, phone_number, is_activated, is_deleted)
 VALUES (nextval('users_id_seq'), '$2a$12$tzp.n0FfFjWMoh6ojeiQPOQDSw.IUdGUJGxVJ0f8uNeSMWUux2X3K', 'Kanay', 'Kanay', 'Kanay@admin.a', '+42142142142133', true, false);
-INSERT INTO roles (user_id, roles) VALUES (1, 'ROLE_ADMIN');
+INSERT INTO roles (user_id, roles) VALUES (1, 'ROLE_SUPERADMIN');
 INSERT INTO roles (user_id, roles) VALUES (2, 'ROLE_ADMIN');
 INSERT INTO roles (user_id, roles) VALUES (3, 'ROLE_ADMIN');
 INSERT INTO roles (user_id, roles) VALUES (4, 'ROLE_ADMIN');

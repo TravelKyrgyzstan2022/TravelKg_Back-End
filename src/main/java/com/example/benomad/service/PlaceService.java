@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface PlaceService {
+    List<PlaceDTO> getMyFavorites();
     List<PlaceDTO> getPlacesByAttributes(String name, Region region, PlaceType placeType, String address,Boolean match,PageRequest pageRequest) throws ContentNotFoundException;
     PlaceDTO getPlaceById(Long id) throws ContentNotFoundException;
     PlaceDTO insertPlace(PlaceDTO placeDTO);

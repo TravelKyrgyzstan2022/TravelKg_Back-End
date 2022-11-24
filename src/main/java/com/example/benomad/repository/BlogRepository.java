@@ -1,6 +1,8 @@
 package com.example.benomad.repository;
 
+import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
+import com.example.benomad.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,5 +31,7 @@ public interface BlogRepository extends JpaRepository <Blog, Long> {
 
     @Query(value = "SELECT last_value FROM blogs_id_seq", nativeQuery = true)
     Long getLastValueOfSequence();
+
+    List<Blog> findByAuthor(User author);
 
 }

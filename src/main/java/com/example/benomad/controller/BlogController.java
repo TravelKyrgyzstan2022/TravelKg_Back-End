@@ -156,46 +156,6 @@ public class BlogController {
         return ResponseEntity.ok(commentService.getReferenceCommentsById(blogId, CommentReference.BLOG, pageRequest));
     }
 
-    @Operation(summary = "Inserts a blog to the database",
-    description = "")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(schema = @Schema(implementation = BlogDTO.class))
-            ),
-            @ApiResponse(
-                    responseCode = "Any error",
-                    description = "Every response starting with 4** or 5** will have this body",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad Request",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content
-            )
-    })
-    @PostMapping(value = {""}, produces = "application/json")
-    public ResponseEntity<?> insertBlog(@RequestBody BlogDTO dto){
-        return ResponseEntity.ok(blogService.insertBlog(dto));
-    }
-
-    @Hidden
-    @PostMapping(value = {"/"}, produces = "application/json")
-    public ResponseEntity<?> forwardSlashFix2(@RequestBody BlogDTO dto){
-        return ResponseEntity.ok(blogService.insertBlog(dto));
-    }
-
     @Operation(summary = "Commenting blog by ID")
     @ApiResponses(value = {
             @ApiResponse(
@@ -234,8 +194,52 @@ public class BlogController {
         return ResponseEntity.ok(commentService.insertComment(CommentReference.BLOG, blogId, commentDTO));
     }
 
-    @Operation(summary = "Likes or dislikes the blog",
-            description = "Dislike is just a removal of a like, not an actual dislike :)")
+    @Operation(summary = "Likes comment by ID")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @PutMapping(value = "/{blogId}/comments/{commentId}/like", produces = "application/json")
+    public ResponseEntity<?> likeComment(@PathVariable("commentId") Long commentId,
+                                                @PathVariable("blogId") Long blogId){
+        //fixme : need to check if comment belongs to blog
+        return ResponseEntity.ok(commentService.likeDislikeComment(commentId, false));
+    }
+
+    @Operation(summary = "Likes the blog")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -273,13 +277,58 @@ public class BlogController {
                     content = @Content
             )
     })
-    @PutMapping("/like")
-    public ResponseEntity<?> likeDislikeBlog(@RequestParam(name = "blog_id") Long blogId,
-                                             @RequestParam(name = "is_dislike") boolean isDislike){
-        return ResponseEntity.ok(blogService.likeDislikeBlogById(blogId, isDislike));
+    @PutMapping("/{blogId}/like")
+    public ResponseEntity<?> likeBlog(@PathVariable("blogId") Long blogId){
+        return ResponseEntity.ok(blogService.likeDislikeBlogById(blogId, false));
     }
 
-    @Operation(summary = "Updates a blog by ID")
+    @Operation(summary = "Likes comment by ID")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @PutMapping(value = "/{blogId}/comments/{commentId}/removelike", produces = "application/json")
+    public ResponseEntity<?> removeLikeComment(@PathVariable("commentId") Long commentId,
+                                         @PathVariable("blogId") Long blogId){
+        //fixme : need to check if comment belongs to blog
+        return ResponseEntity.ok(commentService.likeDislikeComment(commentId, true));
+    }
+
+    @Operation(summary = "Removes the like from blog",
+            description = "Removes the like from blog by ID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -317,125 +366,8 @@ public class BlogController {
                     content = @Content
             )
     })
-    @PutMapping(value = "/{blogId}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> updateBlog(@PathVariable Long blogId, @RequestBody BlogDTO blogDTO){
-        blogDTO.setId(blogId);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.updateBlogById(blogId, blogDTO));
-    }
-
-    @Operation(summary = "Deletes blog by ID")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(schema = @Schema(implementation = BlogDTO.class))
-            ),
-            @ApiResponse(
-                    responseCode = "Any error",
-                    description = "Every response starting with 4** or 5** will have this body",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad Request",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not Found",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content
-            )
-    })
-    @DeleteMapping(value = "/{blogId}", produces = "application/json")
-    public ResponseEntity<?> deleteBlogById(@PathVariable Long blogId, @RequestBody DeletionInfoDTO infoDTO){
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.deleteBlogById(blogId, infoDTO));
-    }
-
-    @Operation(summary = "Uploads image by blog ID",
-            description = "Adds new image to a blog by its ID and image itself.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(schema = @Schema(implementation = Long.class))
-            ),
-            @ApiResponse(
-                    responseCode = "Any error",
-                    description = "Every response starting with 4** or 5** will have this body",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad Request",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not Found",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content
-            )
-    })
-    @PutMapping(path = "/uploadImage/{userId}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> uploadUserProfileImage(@PathVariable("userId") Long id, @RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(blogService.insertImageByBlogId(id,file));
-    }
-
-    @Operation(summary = "Gets image by by blog ID",
-            description = "Gets image using blog id")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(schema = @Schema(implementation = byte[].class))
-            ),
-            @ApiResponse(
-                    responseCode = "Any error",
-                    description = "Every response starting with 4** or 5** will have this body",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad Request",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not Found",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content
-            )
-    })
-    @GetMapping(path = "/getImage/{userId}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getUserProfileImage(@PathVariable("userId") Long id) {
-        return ResponseEntity.ok(blogService.getImageByBlogId(id));
+    @PutMapping("/{blogId}/removelike")
+    public ResponseEntity<?> removeLikeBlog(@PathVariable("blogId") Long blogId){
+        return ResponseEntity.ok(blogService.likeDislikeBlogById(blogId, true));
     }
 }

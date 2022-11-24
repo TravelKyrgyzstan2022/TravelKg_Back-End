@@ -3,17 +3,19 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.RefreshToken;
+import com.example.benomad.entity.User;
 import com.example.benomad.exception.RefreshTokenException;
 import com.example.benomad.exception.UserAlreadyActivatedException;
+import com.example.benomad.exception.UserAttributeTakenException;
 import com.example.benomad.logger.LogWriterServiceImpl;
+import com.example.benomad.mapper.UserMapper;
+import com.example.benomad.repository.UserRepository;
 import com.example.benomad.security.domain.Claims;
+import com.example.benomad.security.domain.Role;
 import com.example.benomad.security.domain.UserDetailsImpl;
-import com.example.benomad.security.request.EmailVerificationRequest;
-import com.example.benomad.security.request.ResetPasswordRequest;
+import com.example.benomad.security.request.*;
 import com.example.benomad.util.CodeGenerator;
 import com.example.benomad.util.JwtUtils;
-import com.example.benomad.security.request.LoginRequest;
-import com.example.benomad.security.request.TokenRefreshRequest;
 import com.example.benomad.security.response.JwtResponse;
 import com.example.benomad.security.response.TokenRefreshResponse;
 import com.example.benomad.service.AuthService;
@@ -26,9 +28,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,6 +44,9 @@ import java.util.List;
 public class AuthServiceImpl implements AuthService {
 
     private final UserServiceImpl userService;
+    private final UserMapper userMapper;
+    private final UserRepository userRepository;
+    private final PasswordEncoder encoder;
     private final VerificationCodeServiceImpl codeService;
     private final AuthenticationManager authenticationManager;
     private final EmailSender emailSender;
@@ -55,29 +66,33 @@ public class AuthServiceImpl implements AuthService {
 
         String email = ((UserDetailsImpl) authentication.getPrincipal()).getEmail();
 
-        List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
-        String role;
+        Role role;
         String jwt;
         Claims claims = new Claims();
 
         if(roles.contains("ROLE_SUPERADMIN")){
-            role = "SUPERADMIN";
+            role = Role.ROLE_SUPERADMIN;
             jwt = jwtUtils.generateAdminTokenFromEmail(email);
 //            claims = getClaims(Role.ROLE_SUPERADMIN);
         }else if(roles.contains("ROLE_ADMIN")){
-            role = "ADMIN";
+            role = Role.ROLE_ADMIN;
             jwt = jwtUtils.generateAdminTokenFromEmail(email);
 //            claims = getClaims(Role.ROLE_ADMIN);
         }else{
-            role = "USER";
+            role = Role.ROLE_USER;
             jwt = jwtUtils.generateTokenFromEmail(email);
 //            claims = getClaims(Role.ROLE_USER);
         }
         UserDTO userDTO = userService.getUserById(userDetails.getId());
+        User user = userService.getUserEntityById(userDetails.getId());
+        user.setLastVisitDate(LocalDateTime.now(ZoneId.of("Asia/Bishkek")));
+        userRepository.save(user);
         RefreshToken refreshToken = refreshTokenService.createToken(userDetails.getId());
         logWriter.auth(String.format("%s - Authenticated", loginRequest.getEmail()));
         return JwtResponse.builder()
+                .role(role)
                 .claims(claims)
                 .token(jwt)
                 .refreshToken(refreshToken.getToken())
@@ -95,19 +110,46 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     //fixme maybe need to move code related to mail sending to verification code service
-    public MessageResponse sendActivationCode() {
-        if(userService.getUserEntityByEmail(getCurrentEmail()).isActivated()){
+    public MessageResponse sendActivationCode(String email) {
+        if(userService.getUserEntityByEmail(email).isActivated()){
             throw new UserAlreadyActivatedException();
         }
         String code = CodeGenerator.generateActivationCode();
-        codeService.newCode(getCurrentEmail(), code);
+        codeService.newCode(email, code);
         String mailMessage = String.format("""
                 Your activation code for Benomad account is <%s>.
 
                 Expiration time - 10 minutes.""", code);
-        emailSender.send(getCurrentEmail(), "Activation code", mailMessage);
-        return new MessageResponse("Activation code has been sent to email - " + getCurrentEmail(),
+        emailSender.send(email, "Activation code", mailMessage);
+        return new MessageResponse("Activation code has been sent to email - " + email,
                 200);
+    }
+
+    public UserDTO registerUser(RegistrationRequest request) {
+
+        UserDTO userDTO = UserDTO.builder()
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .build();
+        User user = userMapper.dtoToEntity(userDTO);
+
+        if(userRepository.existsByEmail(userDTO.getEmail())){
+            throw new UserAttributeTakenException("email: ('" + user.getEmail() + "')");
+        }
+
+        user.setId(null);
+        user.setActivated(false);
+        user.setRegistrationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        user.setLastVisitDate(LocalDateTime.now(ZoneId.of("Asia/Bishkek")));
+        user.setRoles(Collections.singleton(Role.ROLE_USER));
+        user.setPassword(encoder.encode(user.getPassword()));
+
+        userRepository.save(user);
+        sendActivationCode(userDTO.getEmail());
+        logWriter.auth(String.format("%s - Registration completed", userDTO.getEmail()));
+        return userMapper.entityToDto(user);
     }
 
     @Override
