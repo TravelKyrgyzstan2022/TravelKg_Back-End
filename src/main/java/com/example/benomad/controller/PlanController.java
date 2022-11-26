@@ -9,16 +9,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/users/{userId}/plans")
-@Hidden
-//@Tag(name = "Planner resource", description = "Not finished")
+@RequestMapping("api/v1/user/plans")
+@Tag(name = "Planner resource", description = "The planner API")
 public class PlanController {
 
     private final PlanServiceImpl planService;
 
-    @GetMapping(value = {"", "/"})
+    @GetMapping(value = "/byUser/{userId}")
     public ResponseEntity<?> getPlansByUserId(@PathVariable("userId") Long userId){
         return ResponseEntity.ok(planService.getPlansByUserId(userId));
     }

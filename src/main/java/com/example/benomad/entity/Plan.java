@@ -27,11 +27,8 @@ public class Plan {
             referencedColumnName = "id")
     private Place place;
 
-    @Column(name = "start_date")
-    private LocalDate startDate;
-
-    @Column(name = "end_date")
-    private LocalDate endDate;
+    @Column(name = "date")
+    private LocalDate date;
 
     @Column(length = 500)
     private String note;

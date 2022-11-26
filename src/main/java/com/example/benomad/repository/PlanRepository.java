@@ -6,11 +6,11 @@ import com.example.benomad.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 public interface PlanRepository extends JpaRepository <Plan, Long> {
     List<Plan> findByUser(User user);
     List<Plan> findByPlace(Place place);
-
 }

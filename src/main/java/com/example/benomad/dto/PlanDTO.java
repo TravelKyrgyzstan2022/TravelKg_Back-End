@@ -16,11 +16,8 @@ public class PlanDTO {
 
     private Long id;
 
-    @JsonProperty("start_date")
-    private LocalDate startDate;
-
-    @JsonProperty("end_date")
-    private LocalDate endDate;
+    @JsonProperty("date")
+    private LocalDate date;
 
     @JsonProperty("user_id")
     private Long userId;
