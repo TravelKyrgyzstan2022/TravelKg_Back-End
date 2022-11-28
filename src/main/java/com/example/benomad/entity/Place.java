@@ -7,7 +7,8 @@ import com.example.benomad.enums.Region;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -38,9 +39,9 @@ public class Place {
     @Column(nullable = false, length = 2000)
     private String description;
 
-    @Getter(AccessLevel.NONE)
-    @Column(nullable = false, name = "image_url")
-    private String imageUrl;
+    @Column(name = "image_urls")
+    @ElementCollection(targetClass=String.class)
+    private List<String> imageUrls = new ArrayList<>();
 
     @Column(nullable = false, name = "link_url")
     private String linkUrl;
@@ -55,7 +56,5 @@ public class Place {
     )
     private Set<Comment> comments;
 
-    public Optional<String> getImageUrl() {
-        return Optional.ofNullable(imageUrl);
-    }
+
 }

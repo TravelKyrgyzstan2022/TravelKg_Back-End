@@ -1,16 +1,15 @@
 package com.example.benomad.service;
 
+import com.example.benomad.enums.ImagePath;
+import com.example.benomad.exception.ContentIsEmptyException;
+import com.example.benomad.exception.ContentIsNotImageException;
 import com.example.benomad.exception.ContentNotFoundException;
-import com.example.benomad.exception.FailedWhileAccessingImageException;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStream;
-import java.util.Map;
-import java.util.Optional;
+import java.util.List;
 
 public interface ImageService {
-    byte[] getAwsImageByPathAndKey(String path, String key)  throws FailedWhileAccessingImageException;
-    void saveImageAws(String dataPath,
-                         String dataName,
-                         Optional<Map<String, String>> optionalMetaData,
-                         InputStream inputStream) throws ContentNotFoundException;
+    List<String> uploadImages(MultipartFile[] files, ImagePath path) throws ContentNotFoundException, ContentIsEmptyException, ContentIsNotImageException;
+    void checkImage(MultipartFile file);
+    String getRandomUUID();
 }

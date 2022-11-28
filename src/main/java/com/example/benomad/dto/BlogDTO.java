@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,7 +24,7 @@ public class BlogDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @JsonProperty("author_id")
+    @JsonProperty(value = "author_id", access = JsonProperty.Access.READ_ONLY)
     private Long authorId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -32,6 +33,10 @@ public class BlogDTO {
     private String title;
 
     private String body;
+
+    @Schema(required = true)
+    @JsonProperty(value = "image_urls",access = JsonProperty.Access.READ_ONLY)
+    private List<String> imageUrls;
 
     @Column(name = "creation_date")
     private LocalDate creationDate;
@@ -50,7 +55,5 @@ public class BlogDTO {
     @JsonProperty(value = "is_liked_by_current_user", access = JsonProperty.Access.READ_ONLY)
     private Boolean isLikedByCurrentUser;
 
-    @Schema(required = true)
-    @JsonProperty(value = "image_url", access = JsonProperty.Access.READ_ONLY)
-    private String imageUrl;
+
 }

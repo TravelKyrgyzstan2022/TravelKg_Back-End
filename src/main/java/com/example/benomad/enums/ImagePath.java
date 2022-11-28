@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum ImagePath {
     BLOG("blogs"),
     ARTICLE("articles"),
-    PLACE("places");
+    PLACE("places"),
+    USER("users");
 
     private final String pathToImage;
     ImagePath(String pathToImage) {

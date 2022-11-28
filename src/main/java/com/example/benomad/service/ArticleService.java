@@ -12,6 +12,7 @@ public interface ArticleService {
     ArticleDTO updateArticleById(Long id, ArticleDTO articleDTO) throws ContentNotFoundException;
     ArticleDTO insertArticle(ArticleDTO articleDTO);
     ArticleDTO deleteArticleById(Long id) throws ContentNotFoundException;
-    Long insertImageByArticleId(Long id, MultipartFile file);
-    byte[] getImageByArticleId(Long id);
+    boolean insertImagesByArticleId(Long articleId, MultipartFile[] files) throws ContentNotFoundException;
+
+    List<String> getImagesById(Long id) throws ContentNotFoundException;
 }

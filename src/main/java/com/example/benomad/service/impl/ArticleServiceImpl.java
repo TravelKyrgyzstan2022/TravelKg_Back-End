@@ -2,12 +2,11 @@ package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.ArticleDTO;
 import com.example.benomad.entity.Article;
-import com.example.benomad.enums.AwsBucket;
+import com.example.benomad.entity.Place;
 import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.enums.ImagePath;
 import com.example.benomad.exception.ContentNotFoundException;
-import com.example.benomad.exception.FailedWhileUploadingException;
-import com.example.benomad.logger.LogWriter;
+import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.mapper.ArticleMapper;
 import com.example.benomad.repository.ArticleRepository;
 import com.example.benomad.repository.UserRepository;
@@ -16,11 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
+
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -32,17 +28,18 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleMapper articleMapper;
     private final AuthServiceImpl authService;
     private final ImageServiceImpl imageService;
+    private final LogWriterServiceImpl logWriter;
 
     @Override
     public List<ArticleDTO> getAllArticles() {
         List<ArticleDTO> dtos = articleMapper.entityListToDtoList(articleRepository.findAll());
-        LogWriter.get(String.format("%s - Returned %d articles", authService.getName(), dtos.size()));
+        logWriter.get(String.format("%s - Returned %d articles", authService.getCurrentEmail(), dtos.size()));
         return dtos;
     }
 
     @Override
     public ArticleDTO getArticleById(Long articleId) throws ContentNotFoundException {
-        LogWriter.get(String.format("%s - Returned article with id = %d", authService.getName(), articleId));
+        logWriter.get(String.format("%s - Returned article with id = %d", authService.getCurrentEmail(), articleId));
         return articleMapper.entityToDto(articleRepository.findById(articleId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
@@ -60,7 +57,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
         articleDTO.setId(articleId);
         articleRepository.save(articleMapper.dtoToEntity(articleDTO));
-        LogWriter.update(String.format("%s - Updated article with id = %d", authService.getName(), articleId));
+        logWriter.update(String.format("%s - Updated article with id = %d", authService.getCurrentEmail(), articleId));
         return articleDTO;
     }
 
@@ -69,7 +66,7 @@ public class ArticleServiceImpl implements ArticleService {
         articleDTO.setId(null);
         articleDTO.setUserId(authService.getCurrentUserId());
         articleDTO.setId(articleRepository.save(articleMapper.dtoToEntity(articleDTO)).getId());
-        LogWriter.insert(String.format("%s - Inserted article with id = %d", authService.getName(), articleDTO.getId()));
+        logWriter.insert(String.format("%s - Inserted article with id = %d", authService.getCurrentEmail(), articleDTO.getId()));
         return articleDTO;
     }
 
@@ -80,34 +77,30 @@ public class ArticleServiceImpl implements ArticleService {
                     throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
                 });
         articleRepository.delete(article);
-        LogWriter.delete(String.format("%s - Deleted article with id = %d", authService.getName(), articleId));
+        logWriter.delete(String.format("%s - Deleted article with id = %d", authService.getCurrentEmail(), articleId));
         return articleMapper.entityToDto(article);
     }
 
     @Override
-    public Long insertImageByArticleId(Long id, MultipartFile file) {
-        Article article = articleRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFoundException(ContentNotFoundEnum.ARTICLE,"id",String.valueOf(id)));
-        imageService.checkIsNotEmpty(file);
-        imageService.checkIsImage(file);
-        Map<String, String> metadata = imageService.getMetaData(file);
-        String pathToFile = String.format("%s/%s", AwsBucket.MAIN_BUCKET.getBucketName(), ImagePath.ARTICLE.getPathToImage());
-        String uniqueFileName = String.format("%s-%s",file.getOriginalFilename(), UUID.randomUUID());
-        try {
-            imageService.saveImageAws(pathToFile,uniqueFileName, Optional.of(metadata),file.getInputStream());
-            article.setImageUrl(uniqueFileName);
-            articleRepository.save(article);
-            return article.getId();
-        } catch (IOException e) {
-            throw new FailedWhileUploadingException();
-        }
+    public boolean insertImagesByArticleId(Long articleId, MultipartFile[] files) throws ContentNotFoundException {
+        Article article = articleRepository
+                .findById(articleId).orElseThrow(
+                        () -> new ContentNotFoundException(ContentNotFoundEnum.ARTICLE,"id",String.valueOf(articleId))
+                );
+        List<String> placeImageUrls = article.getImageUrls();
+        placeImageUrls.addAll(imageService.uploadImages(files, ImagePath.ARTICLE));
+        articleRepository.save(article);
+        return true;
     }
 
     @Override
-    public byte[] getImageByArticleId(Long id) {
+    public List<String> getImagesById(Long id) throws ContentNotFoundException {
         Article article = articleRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFoundException(ContentNotFoundEnum.ARTICLE,"id",String.valueOf(id)));
-        String pathToFile = String.format("%s/%s", AwsBucket.MAIN_BUCKET.getBucketName(), ImagePath.ARTICLE.getPathToImage());
-        return article.getImageUrl().map(x -> imageService.getAwsImageByPathAndKey(pathToFile,x)).orElse(new byte[0]);
+                .orElseThrow(
+                        () -> new ContentNotFoundException(ContentNotFoundEnum.ARTICLE,"id",String.valueOf(id))
+                );
+        return article.getImageUrls();
     }
+
+
 }

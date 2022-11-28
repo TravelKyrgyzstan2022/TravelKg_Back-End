@@ -10,8 +10,6 @@ import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +28,7 @@ public class PlaceMapper {
                 .region(placeDTO.getRegion())
                 .placeType(placeDTO.getPlaceType())
                 .description(placeDTO.getDescription())
-                .imageUrl(placeDTO.getImageUrl())
+                .imageUrls(placeDTO.getImageUrls())
                 .linkUrl(placeDTO.getLinkUrl())
                 .address(placeDTO.getAddress())
                 .build();
@@ -45,7 +43,7 @@ public class PlaceMapper {
                 .placeCategory(place.getPlaceCategory())
                 .placeType(place.getPlaceType())
                 .description(place.getDescription())
-                .imageUrl(place.getImageUrl().orElse(null))
+                .imageUrls(place.getImageUrls())
                 .linkUrl(place.getLinkUrl())
                 .address(place.getAddress())
                 .averageRating(ratingRepository.findAverageRatingByPlaceId(place.getId()))
