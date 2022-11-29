@@ -1,6 +1,7 @@
 package com.example.benomad.controller;
 
 import com.example.benomad.dto.PlanDTO;
+import com.example.benomad.request.GetPlanRequest;
 import com.example.benomad.service.impl.PlanServiceImpl;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,6 +28,11 @@ public class PlanController {
     @GetMapping(value = "/{planId}")
     public ResponseEntity<?> getPlanById(@PathVariable("planId") Long planId){
         return ResponseEntity.ok(planService.getPlanById(planId));
+    }
+
+    @PostMapping(value = {"/byDate/"})
+    public ResponseEntity<?> getPlansByDate(@RequestBody GetPlanRequest request){
+        return ResponseEntity.ok(planService.getPlansByDate(request));
     }
 
     @PostMapping(value = {"/", ""})

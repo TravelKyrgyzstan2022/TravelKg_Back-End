@@ -10,6 +10,7 @@ import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.mapper.PlanMapper;
 import com.example.benomad.repository.PlanRepository;
 import com.example.benomad.repository.UserRepository;
+import com.example.benomad.request.GetPlanRequest;
 import com.example.benomad.service.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,18 @@ public class PlanServiceImpl implements PlanService {
         );
     }
 
+
+    @Override
+    public List<PlanDTO> getPlansByDate(GetPlanRequest request){
+        User user = userRepository.findById(request.getUserId()).orElseThrow(
+                () -> {
+                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(request.getUserId()));
+                }
+        );
+        List<PlanDTO> dtos = planMapper.entityListToDtoList(planRepository.findByDate(request.getUserId(), request.getDate()));
+        logWriter.get(String.format("%s - Returned %d plans", authService.getCurrentEmail(), dtos.size()));
+        return dtos;
+    }
 
     @Override
     public PlanDTO insertPlan(PlanDTO planDTO) {
