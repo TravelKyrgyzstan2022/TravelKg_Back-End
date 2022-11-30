@@ -1,6 +1,5 @@
 package com.example.benomad.service.impl;
 
-import com.example.benomad.dto.ArticleDTO;
 import com.example.benomad.dto.PlanDTO;
 import com.example.benomad.entity.Plan;
 import com.example.benomad.entity.User;
@@ -10,13 +9,11 @@ import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.mapper.PlanMapper;
 import com.example.benomad.repository.PlanRepository;
 import com.example.benomad.repository.UserRepository;
-import com.example.benomad.request.GetPlanRequest;
+import com.example.benomad.security.request.GetPlanRequest;
 import com.example.benomad.service.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service

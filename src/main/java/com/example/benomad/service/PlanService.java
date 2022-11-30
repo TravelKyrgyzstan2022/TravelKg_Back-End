@@ -2,9 +2,8 @@ package com.example.benomad.service;
 
 import com.example.benomad.dto.PlanDTO;
 import com.example.benomad.exception.ContentNotFoundException;
-import com.example.benomad.request.GetPlanRequest;
+import com.example.benomad.security.request.GetPlanRequest;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface PlanService {

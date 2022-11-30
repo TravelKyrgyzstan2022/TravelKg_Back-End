@@ -22,10 +22,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-public class WebSecurityConfig {
+public class WebSecurityConfig{
 
     private final AuthEntryPointHandler unauthorizedHandler;
     private final AuthAccessDeniedHandler accessDeniedHandler;
+    private final AuthenticationConfiguration authenticationConfiguration;
+
     private final String[] PERMIT_ALL = {
             "/api/account/**",
             "/documentation/**",
@@ -83,17 +85,15 @@ public class WebSecurityConfig {
             "/api/auth/acc/**"
     };
 
-
-    @Bean
-    public JwtTokenFilter authenticationJwtTokenFilter() {
-        return new JwtTokenFilter();
-    }
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @Bean
+    public JwtTokenFilter authenticationJwtTokenFilter() throws Exception {
+        return new JwtTokenFilter(authenticationManager(authenticationConfiguration));
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

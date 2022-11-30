@@ -17,7 +17,7 @@ import java.util.List;
 public class ExceptionResponse {
     private int status;
     private String message;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss",timezone="GMT+6")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss",timezone="GMT+6")
     private LocalDateTime timestamp;
 
     public ExceptionResponse(int status, String message){
