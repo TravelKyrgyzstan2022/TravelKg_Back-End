@@ -26,6 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -369,5 +370,49 @@ public class BlogController {
     @PutMapping("/{blogId}/removelike")
     public ResponseEntity<?> removeLikeBlog(@PathVariable("blogId") Long blogId){
         return ResponseEntity.ok(blogService.likeDislikeBlogById(blogId, true));
+    }
+
+    @Operation(summary = "Gets all images by blog id",
+            description = "Get all images by id that refers to specific blog")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = List.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @GetMapping(value = {"/{blogId}/images"})
+    public ResponseEntity<?> getImagesById(@PathVariable("blogId") Long id) {
+        return ResponseEntity.ok(blogService.getImagesById(id));
     }
 }

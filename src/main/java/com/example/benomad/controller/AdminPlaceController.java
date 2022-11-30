@@ -153,13 +153,12 @@ public class AdminPlaceController {
         return ResponseEntity.ok(placeService.updatePlaceById(id,placeDTO));
     }
 
-    @Operation(summary = "Uploads image by place ID",
-            description = "Adds new image to a place by its ID and Image itself.")
+    @Operation(summary = "Inserts images by place id")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = Long.class))
+                    content = @Content(schema = @Schema(implementation = boolean.class))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -192,9 +191,52 @@ public class AdminPlaceController {
                     content = @Content
             )
     })
-    @PutMapping(path = "/{blogId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> uploadPlaceImage(@PathVariable("userId") Long id, @RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(placeService.insertImageByPlaceId(id,file));
+    @PutMapping(value = "/{placeId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = "application/json")
+    public ResponseEntity<?> insertImagesByPlaceId(@PathVariable("placeId") Long placeId, @RequestParam("files") MultipartFile[] files){
+        return ResponseEntity.ok(placeService.insertImagesByPlaceId(placeId,files));
+    }
+
+    @Operation(summary = "Inserts new place with along the images")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = boolean.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @PostMapping(value = {"","/"},consumes = { "multipart/form-data","application/json" })
+    public ResponseEntity<?> insertPlaceWithImages(@RequestPart("placeDTO") PlaceDTO placeDTO, @RequestPart("files") MultipartFile[] files){
+        return ResponseEntity.ok(placeService.insertPlaceWithImages(placeDTO,files));
     }
 
 

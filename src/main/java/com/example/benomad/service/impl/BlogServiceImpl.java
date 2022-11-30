@@ -4,7 +4,6 @@ import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.entity.Blog;
 import com.example.benomad.entity.User;
-import com.example.benomad.enums.AwsBucket;
 import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.enums.ImagePath;
 import com.example.benomad.enums.ReviewStatus;
@@ -19,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -183,30 +183,35 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public Long insertImageByBlogId(Long id, MultipartFile file) {
-        Blog blog = blogRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFoundException(ContentNotFoundEnum.BLOG,"id",String.valueOf(id)));
-        imageService.checkIsNotEmpty(file);
-        imageService.checkIsImage(file);
-        Map<String, String> metadata = imageService.getMetaData(file);
-        String pathToFile = String.format("%s/%s", AwsBucket.MAIN_BUCKET.getBucketName(), ImagePath.BLOG.getPathToImage());
-        String uniqueFileName = String.format("%s-%s",file.getOriginalFilename(), UUID.randomUUID());
-        try {
-            imageService.saveImageAws(pathToFile,uniqueFileName, Optional.of(metadata),file.getInputStream());
-            blog.setImageUrl(uniqueFileName);
-            blogRepository.save(blog);
-            return blog.getId();
-        } catch (IOException e) {
-            throw new FailedWhileUploadingException();
-        }
+    public boolean insertImagesByBlogId(Long blogId, MultipartFile[] files) throws ContentNotFoundException {
+        Blog blog = blogRepository
+                .findById(blogId).orElseThrow(
+                        () -> new ContentNotFoundException(ContentNotFoundEnum.BLOG,"id",String.valueOf(blogId))
+                );
+        blog.setImageUrls(imageService.uploadImages(files, ImagePath.BLOG));
+        blogRepository.save(blog);
+        return true;
     }
 
     @Override
-    public byte[] getImageByBlogId(Long id) {
+    public List<String> getImagesById(Long id) throws ContentNotFoundException {
         Blog blog = blogRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFoundException(ContentNotFoundEnum.PLACE,"id",String.valueOf(id)));
-        String pathToFile = String.format("%s/%s", AwsBucket.MAIN_BUCKET.getBucketName(), ImagePath.BLOG.getPathToImage());
-        return blog.getImageUrl().map(x -> imageService.getAwsImageByPathAndKey(pathToFile,x)).orElse(new byte[0]);
+                .orElseThrow(
+                        () -> new ContentNotFoundException(ContentNotFoundEnum.BLOG,"id",String.valueOf(id))
+                );
+        return blog.getImageUrls();
+    }
+
+    @Override
+    @Transactional
+    public boolean insertMyBlogWithImages(BlogDTO blogDTO, MultipartFile[] files) {
+        checkUserActivation();
+        blogDTO.setId(null);
+        blogDTO.setAuthorId(authService.getCurrentUserId());
+        blogDTO.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        blogDTO.setImageUrls(imageService.uploadImages(files, ImagePath.BLOG));
+        blogRepository.save(blogMapper.dtoToEntity(blogDTO));
+        return true;
     }
 
     public Blog getBlogEntityById(Long blogId){

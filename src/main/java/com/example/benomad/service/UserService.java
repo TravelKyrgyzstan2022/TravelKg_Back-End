@@ -10,6 +10,7 @@ import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.security.domain.UserDetailsImpl;
 import com.example.benomad.security.response.JwtResponse;
 import com.example.benomad.security.response.TokenRefreshResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface UserService {
     UserDTO updateCurrentUser(UserDTO userDTO);
     UserDTO updateUserById(Long id, UserDTO userDTO) throws ContentNotFoundException;
     UserDTO deleteUserById(Long userId, DeletionInfoDTO infoDTO) throws ContentNotFoundException;
-
+    boolean insertMyImage(MultipartFile file);
 
 
 //    boolean isUserExistsByPhoneNumber(String phoneNumber);

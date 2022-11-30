@@ -30,7 +30,7 @@ public class PlaceMapper {
                 .region(placeDTO.getRegion())
                 .placeType(placeDTO.getPlaceType())
                 .description(placeDTO.getDescription())
-                .imageUrl(placeDTO.getImageUrl())
+                .imageUrls(placeDTO.getImageUrls())
                 .linkUrl(placeDTO.getLinkUrl())
                 .address(placeDTO.getAddress())
                 .build();
@@ -45,7 +45,7 @@ public class PlaceMapper {
                 .placeCategory(place.getPlaceCategory())
                 .placeType(place.getPlaceType())
                 .description(place.getDescription())
-                .imageUrl(place.getImageUrl().orElse(null))
+                .imageUrls(place.getImageUrls())
                 .linkUrl(place.getLinkUrl())
                 .address(place.getAddress())
                 .averageRating(ratingRepository.findAverageRatingByPlaceId(place.getId()))

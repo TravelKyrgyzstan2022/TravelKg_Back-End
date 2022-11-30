@@ -4,6 +4,7 @@ import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.entity.User;
 
 import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.enums.ImagePath;
 import com.example.benomad.exception.UserAttributeTakenException;
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.logger.LogWriterServiceImpl;
@@ -18,6 +19,8 @@ import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Sort;
@@ -32,8 +35,7 @@ import java.util.List;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import java.util.Collections;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.Objects;
 
 @Service
@@ -41,12 +43,14 @@ import java.util.Objects;
 @Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
-    private final DeletionInfoMapper deletionInfoMapper;
-    private final JwtUtils jwtUtils;
-    private final LogWriterServiceImpl logWriter;
-    private final PasswordEncoder encoder;
+    private  UserRepository userRepository;
+    private  UserMapper userMapper;
+    private  DeletionInfoMapper deletionInfoMapper;
+    private  JwtUtils jwtUtils;
+    private  LogWriterServiceImpl logWriter;
+    private  PasswordEncoder encoder;
+    private  AuthServiceImpl authService;
+    private  ImageServiceImpl imageService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -169,6 +173,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userMapper.entityToDto(user);
     }
 
+    @Override
+    public boolean insertMyImage(MultipartFile file) {
+        //Fixme throw not authorized exception
+        if (authService.getCurrentUserId() != null  && userRepository.findById(authService.getCurrentUserId()).isPresent()) {
+            User user = userRepository.findById(authService.getCurrentUserId()).get();
+            user.setImageUrl(imageService.uploadImage(file, ImagePath.USER));
+            userRepository.save(user);
+        }
+        return true;
+    }
+
     public User getUserEntityByEmail(String email){
         return userRepository.findByEmail(email).orElseThrow(
                 () -> new ContentNotFoundException(ContentNotFoundEnum.USER, "email", email)
@@ -219,5 +234,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .withIgnorePaths("id", "password", "roles", "places", "blogs", "firstName", "lastName",
                         "active", "activationCode", "email");
     }
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, DeletionInfoMapper deletionInfoMapper, JwtUtils jwtUtils, LogWriterServiceImpl logWriter, PasswordEncoder encoder, @Lazy AuthServiceImpl authService, ImageServiceImpl imageService) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.deletionInfoMapper = deletionInfoMapper;
+        this.jwtUtils = jwtUtils;
+        this.logWriter = logWriter;
+        this.encoder = encoder;
+        this.authService = authService;
+        this.imageService = imageService;
+    }
+
 
 }
