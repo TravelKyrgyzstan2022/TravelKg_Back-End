@@ -1,4 +1,4 @@
-package com.example.benomad.request;
+package com.example.benomad.security.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

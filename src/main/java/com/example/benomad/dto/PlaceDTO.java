@@ -58,5 +58,5 @@ public class PlaceDTO {
     private String address;
 
     @JsonProperty(value = "is_favorite_of_current_user",access = JsonProperty.Access.READ_ONLY)
-    private boolean isFavoriteOfCurrentUser;
+    private boolean favoriteOfCurrentUser;
 }

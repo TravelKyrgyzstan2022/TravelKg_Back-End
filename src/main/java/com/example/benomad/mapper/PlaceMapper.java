@@ -50,7 +50,7 @@ public class PlaceMapper {
                 .address(place.getAddress())
                 .averageRating(ratingRepository.findAverageRatingByPlaceId(place.getId()))
                 .ratingCount(ratingRepository.findRatingCountByPlaceId(place.getId()))
-                .isFavoriteOfCurrentUser(userId != null && userRepository.findById(userId).orElseThrow(
+                .favoriteOfCurrentUser(userId != null && userRepository.findById(userId).orElseThrow(
                         () -> new ContentNotFoundException(ContentNotFoundEnum.USER, "userId", String.valueOf(userId))
                 ).getPlaces().contains(place))
                 .build();
