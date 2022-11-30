@@ -1,0 +1,434 @@
+[2m2022-11-29 21:22:09.065[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.example.benomad.BenomadApplication  [0;39m [2m:[0;39m Starting BenomadApplication using Java 17.0.4.1 on LAPTOP-L3QHD6TM with PID 704 (D:\travelAlibek3\TravelKg_Back-End\target\classes started by hh in D:\travelAlibek3\TravelKg_Back-End)
+[2m2022-11-29 21:22:09.073[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.example.benomad.BenomadApplication  [0;39m [2m:[0;39m No active profile set, falling back to 1 default profile: "default"
+[2m2022-11-29 21:22:10.524[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2m2022-11-29 21:22:10.616[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Finished Spring Data repository scanning in 82 ms. Found 10 JPA repository interfaces.
+[2m2022-11-29 21:22:11.223[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat initialized with port(s): 8080 (http)
+[2m2022-11-29 21:22:11.231[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.apache.catalina.core.StandardService  [0;39m [2m:[0;39m Starting service [Tomcat]
+[2m2022-11-29 21:22:11.231[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.apache.catalina.core.StandardEngine [0;39m [2m:[0;39m Starting Servlet engine: [Apache Tomcat/9.0.65]
+[2m2022-11-29 21:22:11.337[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring embedded WebApplicationContext
+[2m2022-11-29 21:22:11.337[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mw.s.c.ServletWebServerApplicationContext[0;39m [2m:[0;39m Root WebApplicationContext: initialization completed in 2225 ms
+[2m2022-11-29 21:22:11.628[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.internal.license.VersionPrinter   [0;39m [2m:[0;39m Flyway Community Edition 8.5.13 by Redgate
+[2m2022-11-29 21:22:11.628[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.internal.license.VersionPrinter   [0;39m [2m:[0;39m See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#8.5.13
+[2m2022-11-29 21:22:11.628[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.internal.license.VersionPrinter   [0;39m [2m:[0;39m 
+[2m2022-11-29 21:22:11.674[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Starting...
+[2m2022-11-29 21:22:11.959[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Start completed.
+[2m2022-11-29 21:22:11.975[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.i.database.base.BaseDatabaseType  [0;39m [2m:[0;39m Database: jdbc:postgresql://localhost:5432/benomad (PostgreSQL 14.5)
+[2m2022-11-29 21:22:12.061[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.core.internal.command.DbValidate    [0;39m [2m:[0;39m Successfully validated 4 migrations (execution time 00:00.061s)
+[2m2022-11-29 21:22:12.070[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.core.internal.command.DbMigrate     [0;39m [2m:[0;39m Current version of schema "public": 5
+[2m2022-11-29 21:22:12.071[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.core.internal.command.DbMigrate     [0;39m [2m:[0;39m Schema "public" is up to date. No migration necessary.
+[2m2022-11-29 21:22:12.136[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.hibernate.jpa.internal.util.LogHelper [0;39m [2m:[0;39m HHH000204: Processing PersistenceUnitInfo [name: default]
+[2m2022-11-29 21:22:12.209[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.hibernate.Version                   [0;39m [2m:[0;39m HHH000412: Hibernate ORM core version 5.6.11.Final
+[2m2022-11-29 21:22:12.360[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.hibernate.annotations.common.Version  [0;39m [2m:[0;39m HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2m2022-11-29 21:22:12.457[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.hibernate.dialect.Dialect           [0;39m [2m:[0;39m HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+[2m2022-11-29 21:22:13.499[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.h.e.t.j.p.i.JtaPlatformInitiator      [0;39m [2m:[0;39m HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2m2022-11-29 21:22:13.499[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mj.LocalContainerEntityManagerFactoryBean[0;39m [2m:[0;39m Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2m2022-11-29 21:22:14.899[0;39m [33m WARN[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mConfigServletWebServerApplicationContext[0;39m [2m:[0;39m Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration': Unsatisfied dependency expressed through method 'setFilterChains' parameter 0; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'filterChain' defined in class path resource [com/example/benomad/security/config/WebSecurityConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.security.web.SecurityFilterChain]: Factory method 'filterChain' threw exception; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mvcHandlerMappingIntrospector' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'requestMappingHandlerMapping' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is java.lang.IllegalStateException: Ambiguous mapping. Cannot map 'planController' method 
+com.example.benomad.controller.PlanController#getPlansByDate(GetPlanRequest)
+to {POST [/api/v1/user/plans/ || /api/v1/user/plans]}: There is already 'planController' bean method
+com.example.benomad.controller.PlanController#insertPlan(PlanDTO) mapped.
+[2m2022-11-29 21:22:14.899[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mj.LocalContainerEntityManagerFactoryBean[0;39m [2m:[0;39m Closing JPA EntityManagerFactory for persistence unit 'default'
+[2m2022-11-29 21:22:14.899[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Shutdown initiated...
+[2m2022-11-29 21:22:14.909[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Shutdown completed.
+[2m2022-11-29 21:22:14.911[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.apache.catalina.core.StandardService  [0;39m [2m:[0;39m Stopping service [Tomcat]
+[2m2022-11-29 21:22:14.929[0;39m [32m INFO[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mConditionEvaluationReportLoggingListener[0;39m [2m:[0;39m 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+[2m2022-11-29 21:22:14.945[0;39m [31mERROR[0;39m [32m[0;39m [35m704[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.boot.SpringApplication              [0;39m [2m:[0;39m Application run failed
+
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration': Unsatisfied dependency expressed through method 'setFilterChains' parameter 0; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'filterChain' defined in class path resource [com/example/benomad/security/config/WebSecurityConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.security.web.SecurityFilterChain]: Factory method 'filterChain' threw exception; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mvcHandlerMappingIntrospector' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'requestMappingHandlerMapping' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is java.lang.IllegalStateException: Ambiguous mapping. Cannot map 'planController' method 
+com.example.benomad.controller.PlanController#getPlansByDate(GetPlanRequest)
+to {POST [/api/v1/user/plans/ || /api/v1/user/plans]}: There is already 'planController' bean method
+com.example.benomad.controller.PlanController#insertPlan(PlanDTO) mapped.
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.resolveMethodArguments(AutowiredAnnotationBeanPostProcessor.java:767) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:719) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:119) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:399) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1431) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:619) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918) ~[spring-context-5.3.23.jar:5.3.23]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.23.jar:5.3.23]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147) ~[spring-boot-2.7.4.jar:2.7.4]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:734) ~[spring-boot-2.7.4.jar:2.7.4]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.4.jar:2.7.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:308) ~[spring-boot-2.7.4.jar:2.7.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1306) ~[spring-boot-2.7.4.jar:2.7.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1295) ~[spring-boot-2.7.4.jar:2.7.4]
+	at com.example.benomad.BenomadApplication.main(BenomadApplication.java:10) ~[classes/:na]
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'filterChain' defined in class path resource [com/example/benomad/security/config/WebSecurityConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.security.web.SecurityFilterChain]: Factory method 'filterChain' threw exception; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mvcHandlerMappingIntrospector' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'requestMappingHandlerMapping' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is java.lang.IllegalStateException: Ambiguous mapping. Cannot map 'planController' method 
+com.example.benomad.controller.PlanController#getPlansByDate(GetPlanRequest)
+to {POST [/api/v1/user/plans/ || /api/v1/user/plans]}: There is already 'planController' bean method
+com.example.benomad.controller.PlanController#insertPlan(PlanDTO) mapped.
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:658) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:638) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:276) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.addCandidateEntry(DefaultListableBeanFactory.java:1609) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:1573) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveMultipleBeans(DefaultListableBeanFactory.java:1462) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1349) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1311) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.resolveMethodArguments(AutowiredAnnotationBeanPostProcessor.java:759) ~[spring-beans-5.3.23.jar:5.3.23]
+	... 20 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.security.web.SecurityFilterChain]: Factory method 'filterChain' threw exception; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mvcHandlerMappingIntrospector' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'requestMappingHandlerMapping' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is java.lang.IllegalStateException: Ambiguous mapping. Cannot map 'planController' method 
+com.example.benomad.controller.PlanController#getPlansByDate(GetPlanRequest)
+to {POST [/api/v1/user/plans/ || /api/v1/user/plans]}: There is already 'planController' bean method
+com.example.benomad.controller.PlanController#insertPlan(PlanDTO) mapped.
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:185) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653) ~[spring-beans-5.3.23.jar:5.3.23]
+	... 36 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mvcHandlerMappingIntrospector' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'requestMappingHandlerMapping' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is java.lang.IllegalStateException: Ambiguous mapping. Cannot map 'planController' method 
+com.example.benomad.controller.PlanController#getPlansByDate(GetPlanRequest)
+to {POST [/api/v1/user/plans/ || /api/v1/user/plans]}: There is already 'planController' bean method
+com.example.benomad.controller.PlanController#insertPlan(PlanDTO) mapped.
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:213) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1160) ~[spring-context-5.3.23.jar:5.3.23]
+	at org.springframework.security.config.annotation.web.configurers.CorsConfigurer$MvcCorsFilter.getMvcCorsFilter(CorsConfigurer.java:111) ~[spring-security-config-5.7.3.jar:5.7.3]
+	at org.springframework.security.config.annotation.web.configurers.CorsConfigurer$MvcCorsFilter.access$000(CorsConfigurer.java:94) ~[spring-security-config-5.7.3.jar:5.7.3]
+	at org.springframework.security.config.annotation.web.configurers.CorsConfigurer.getCorsFilter(CorsConfigurer.java:89) ~[spring-security-config-5.7.3.jar:5.7.3]
+	at org.springframework.security.config.annotation.web.configurers.CorsConfigurer.configure(CorsConfigurer.java:67) ~[spring-security-config-5.7.3.jar:5.7.3]
+	at org.springframework.security.config.annotation.web.configurers.CorsConfigurer.configure(CorsConfigurer.java:41) ~[spring-security-config-5.7.3.jar:5.7.3]
+	at org.springframework.security.config.annotation.AbstractConfiguredSecurityBuilder.configure(AbstractConfiguredSecurityBuilder.java:349) ~[spring-security-config-5.7.3.jar:5.7.3]
+	at org.springframework.security.config.annotation.AbstractConfiguredSecurityBuilder.doBuild(AbstractConfiguredSecurityBuilder.java:303) ~[spring-security-config-5.7.3.jar:5.7.3]
+	at org.springframework.security.config.annotation.AbstractSecurityBuilder.build(AbstractSecurityBuilder.java:38) ~[spring-security-config-5.7.3.jar:5.7.3]
+	at com.example.benomad.security.config.WebSecurityConfig.filterChain(WebSecurityConfig.java:126) ~[classes/:na]
+	at com.example.benomad.security.config.WebSecurityConfig$$EnhancerBySpringCGLIB$$69922696.CGLIB$filterChain$1(<generated>) ~[classes/:na]
+	at com.example.benomad.security.config.WebSecurityConfig$$EnhancerBySpringCGLIB$$69922696$$FastClassBySpringCGLIB$$a980d0b1.invoke(<generated>) ~[classes/:na]
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:244) ~[spring-core-5.3.23.jar:5.3.23]
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:331) ~[spring-context-5.3.23.jar:5.3.23]
+	at com.example.benomad.security.config.WebSecurityConfig$$EnhancerBySpringCGLIB$$69922696.filterChain(<generated>) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154) ~[spring-beans-5.3.23.jar:5.3.23]
+	... 37 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'requestMappingHandlerMapping' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is java.lang.IllegalStateException: Ambiguous mapping. Cannot map 'planController' method 
+com.example.benomad.controller.PlanController#getPlansByDate(GetPlanRequest)
+to {POST [/api/v1/user/plans/ || /api/v1/user/plans]}: There is already 'planController' bean method
+com.example.benomad.controller.PlanController#insertPlan(PlanDTO) mapped.
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeansOfType(DefaultListableBeanFactory.java:673) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.context.support.AbstractApplicationContext.getBeansOfType(AbstractApplicationContext.java:1308) ~[spring-context-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.BeanFactoryUtils.beansOfTypeIncludingAncestors(BeanFactoryUtils.java:378) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.initHandlerMappings(HandlerMappingIntrospector.java:226) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.afterPropertiesSet(HandlerMappingIntrospector.java:115) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.23.jar:5.3.23]
+	... 63 common frames omitted
+Caused by: java.lang.IllegalStateException: Ambiguous mapping. Cannot map 'planController' method 
+com.example.benomad.controller.PlanController#getPlansByDate(GetPlanRequest)
+to {POST [/api/v1/user/plans/ || /api/v1/user/plans]}: There is already 'planController' bean method
+com.example.benomad.controller.PlanController#insertPlan(PlanDTO) mapped.
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry.validateMethodMapping(AbstractHandlerMethodMapping.java:669) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping$MappingRegistry.register(AbstractHandlerMethodMapping.java:635) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.registerHandlerMethod(AbstractHandlerMethodMapping.java:332) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping.registerHandlerMethod(RequestMappingHandlerMapping.java:420) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping.registerHandlerMethod(RequestMappingHandlerMapping.java:76) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.lambda$detectHandlerMethods$2(AbstractHandlerMethodMapping.java:299) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:721) ~[na:na]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.detectHandlerMethods(AbstractHandlerMethodMapping.java:297) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.processCandidateBean(AbstractHandlerMethodMapping.java:266) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.initHandlerMethods(AbstractHandlerMethodMapping.java:225) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.afterPropertiesSet(AbstractHandlerMethodMapping.java:213) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping.afterPropertiesSet(RequestMappingHandlerMapping.java:205) ~[spring-webmvc-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.23.jar:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.23.jar:5.3.23]
+	... 76 common frames omitted
+
+[2m2022-11-29 21:25:16.242[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.example.benomad.BenomadApplication  [0;39m [2m:[0;39m Starting BenomadApplication using Java 17.0.4.1 on LAPTOP-L3QHD6TM with PID 13872 (D:\travelAlibek3\TravelKg_Back-End\target\classes started by hh in D:\travelAlibek3\TravelKg_Back-End)
+[2m2022-11-29 21:25:16.242[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.example.benomad.BenomadApplication  [0;39m [2m:[0;39m No active profile set, falling back to 1 default profile: "default"
+[2m2022-11-29 21:25:17.205[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2m2022-11-29 21:25:17.366[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Finished Spring Data repository scanning in 145 ms. Found 10 JPA repository interfaces.
+[2m2022-11-29 21:25:17.843[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat initialized with port(s): 8080 (http)
+[2m2022-11-29 21:25:17.843[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.apache.catalina.core.StandardService  [0;39m [2m:[0;39m Starting service [Tomcat]
+[2m2022-11-29 21:25:17.843[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.apache.catalina.core.StandardEngine [0;39m [2m:[0;39m Starting Servlet engine: [Apache Tomcat/9.0.65]
+[2m2022-11-29 21:25:17.932[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring embedded WebApplicationContext
+[2m2022-11-29 21:25:17.932[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mw.s.c.ServletWebServerApplicationContext[0;39m [2m:[0;39m Root WebApplicationContext: initialization completed in 1650 ms
+[2m2022-11-29 21:25:18.151[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.internal.license.VersionPrinter   [0;39m [2m:[0;39m Flyway Community Edition 8.5.13 by Redgate
+[2m2022-11-29 21:25:18.151[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.internal.license.VersionPrinter   [0;39m [2m:[0;39m See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#8.5.13
+[2m2022-11-29 21:25:18.151[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.internal.license.VersionPrinter   [0;39m [2m:[0;39m 
+[2m2022-11-29 21:25:18.151[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Starting...
+[2m2022-11-29 21:25:18.290[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Start completed.
+[2m2022-11-29 21:25:18.290[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.i.database.base.BaseDatabaseType  [0;39m [2m:[0;39m Database: jdbc:postgresql://localhost:5432/benomad (PostgreSQL 14.5)
+[2m2022-11-29 21:25:18.320[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.core.internal.command.DbValidate    [0;39m [2m:[0;39m Successfully validated 4 migrations (execution time 00:00.016s)
+[2m2022-11-29 21:25:18.336[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.core.internal.command.DbMigrate     [0;39m [2m:[0;39m Current version of schema "public": 5
+[2m2022-11-29 21:25:18.337[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.core.internal.command.DbMigrate     [0;39m [2m:[0;39m Schema "public" is up to date. No migration necessary.
+[2m2022-11-29 21:25:18.372[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.hibernate.jpa.internal.util.LogHelper [0;39m [2m:[0;39m HHH000204: Processing PersistenceUnitInfo [name: default]
+[2m2022-11-29 21:25:18.433[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.hibernate.Version                   [0;39m [2m:[0;39m HHH000412: Hibernate ORM core version 5.6.11.Final
+[2m2022-11-29 21:25:18.515[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.hibernate.annotations.common.Version  [0;39m [2m:[0;39m HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2m2022-11-29 21:25:18.572[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.hibernate.dialect.Dialect           [0;39m [2m:[0;39m HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+[2m2022-11-29 21:25:19.633[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.h.e.t.j.p.i.JtaPlatformInitiator      [0;39m [2m:[0;39m HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2m2022-11-29 21:25:19.633[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mj.LocalContainerEntityManagerFactoryBean[0;39m [2m:[0;39m Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2m2022-11-29 21:25:21.511[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.a.e.web.EndpointLinksResolver     [0;39m [2m:[0;39m Exposing 1 endpoint(s) beneath base path '/actuator'
+[2m2022-11-29 21:25:21.542[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.s.web.DefaultSecurityFilterChain    [0;39m [2m:[0;39m Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4578d654, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@25865fca, org.springframework.security.web.context.SecurityContextPersistenceFilter@4fe4b8b6, org.springframework.security.web.header.HeaderWriterFilter@2cc82c83, org.springframework.web.filter.CorsFilter@4c32aa7e, org.springframework.security.web.authentication.logout.LogoutFilter@34128fed, com.example.benomad.security.filter.JwtTokenFilter@47b494ce, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4fa3bebe, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@63767d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@c11ec9b, org.springframework.security.web.session.SessionManagementFilter@79f82fc4, org.springframework.security.web.access.ExceptionTranslationFilter@3763aafd, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@39336f5]
+[2m2022-11-29 21:25:21.933[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat started on port(s): 8080 (http) with context path ''
+[2m2022-11-29 21:25:21.948[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.example.benomad.BenomadApplication  [0;39m [2m:[0;39m Started BenomadApplication in 5.99 seconds (JVM running for 6.507)
+[2m2022-11-29 21:25:22.488[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[on(1)-127.0.0.1][0;39m [36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2m2022-11-29 21:25:22.488[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[on(1)-127.0.0.1][0;39m [36mo.s.web.servlet.DispatcherServlet       [0;39m [2m:[0;39m Initializing Servlet 'dispatcherServlet'
+[2m2022-11-29 21:25:22.503[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[on(1)-127.0.0.1][0;39m [36mo.s.web.servlet.DispatcherServlet       [0;39m [2m:[0;39m Completed initialization in 15 ms
+[2m2022-11-29 21:25:22.547[0;39m [33m WARN[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[on(2)-127.0.0.1][0;39m [36mo.s.b.actuate.mail.MailHealthIndicator  [0;39m [2m:[0;39m Mail health check failed
+
+com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 465; timeout -1
+	at com.sun.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2210) ~[jakarta.mail-1.6.7.jar:1.6.7]
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:722) ~[jakarta.mail-1.6.7.jar:1.6.7]
+	at javax.mail.Service.connect(Service.java:342) ~[jakarta.mail-1.6.7.jar:1.6.7]
+	at org.springframework.mail.javamail.JavaMailSenderImpl.connectTransport(JavaMailSenderImpl.java:518) ~[spring-context-support-5.3.23.jar:5.3.23]
+	at org.springframework.mail.javamail.JavaMailSenderImpl.testConnection(JavaMailSenderImpl.java:398) ~[spring-context-support-5.3.23.jar:5.3.23]
+	at org.springframework.boot.actuate.mail.MailHealthIndicator.doHealthCheck(MailHealthIndicator.java:42) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.AbstractHealthIndicator.health(AbstractHealthIndicator.java:82) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthIndicator.getHealth(HealthIndicator.java:37) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpoint.getHealth(HealthEndpoint.java:94) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpoint.getHealth(HealthEndpoint.java:41) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getLoggedHealth(HealthEndpointSupport.java:172) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getContribution(HealthEndpointSupport.java:145) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getAggregateContribution(HealthEndpointSupport.java:156) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getContribution(HealthEndpointSupport.java:141) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getHealth(HealthEndpointSupport.java:110) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getHealth(HealthEndpointSupport.java:81) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpoint.health(HealthEndpoint.java:88) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpoint.health(HealthEndpoint.java:78) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:282) ~[spring-core-5.3.23.jar:5.3.23]
+	at org.springframework.boot.actuate.endpoint.invoke.reflect.ReflectiveOperationInvoker.invoke(ReflectiveOperationInvoker.java:74) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.endpoint.annotation.AbstractDiscoveredOperation.invoke(AbstractDiscoveredOperation.java:60) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.endpoint.jmx.EndpointMBean.invoke(EndpointMBean.java:122) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.endpoint.jmx.EndpointMBean.invoke(EndpointMBean.java:97) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at java.management/com.sun.jmx.interceptor.DefaultMBeanServerInterceptor.invoke(DefaultMBeanServerInterceptor.java:814) ~[na:na]
+	at java.management/com.sun.jmx.mbeanserver.JmxMBeanServer.invoke(JmxMBeanServer.java:802) ~[na:na]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.doOperation(RMIConnectionImpl.java:1472) ~[na:na]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl$PrivilegedOperation.run(RMIConnectionImpl.java:1310) ~[na:na]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.doPrivilegedOperation(RMIConnectionImpl.java:1405) ~[na:na]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.invoke(RMIConnectionImpl.java:829) ~[na:na]
+	at java.base/jdk.internal.reflect.GeneratedMethodAccessor155.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(UnicastServerRef.java:360) ~[na:na]
+	at java.rmi/sun.rmi.transport.Transport$1.run(Transport.java:200) ~[na:na]
+	at java.rmi/sun.rmi.transport.Transport$1.run(Transport.java:197) ~[na:na]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:712) ~[na:na]
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Transport.java:196) ~[na:na]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:587) ~[na:na]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:828) ~[na:na]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(TCPTransport.java:705) ~[na:na]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399) ~[na:na]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:704) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[na:na]
+	at java.base/java.lang.Thread.run(Thread.java:833) ~[na:na]
+Caused by: java.net.UnknownHostException: smtp.gmail.com
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:567) ~[na:na]
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327) ~[na:na]
+	at java.base/java.net.Socket.connect(Socket.java:633) ~[na:na]
+	at java.base/java.net.Socket.connect(Socket.java:583) ~[na:na]
+	at com.sun.mail.util.SocketFetcher.createSocket(SocketFetcher.java:335) ~[jakarta.mail-1.6.7.jar:1.6.7]
+	at com.sun.mail.util.SocketFetcher.getSocket(SocketFetcher.java:214) ~[jakarta.mail-1.6.7.jar:1.6.7]
+	at com.sun.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2160) ~[jakarta.mail-1.6.7.jar:1.6.7]
+	... 48 common frames omitted
+
+[2m2022-11-29 21:38:52.622[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[ionShutdownHook][0;39m [36mj.LocalContainerEntityManagerFactoryBean[0;39m [2m:[0;39m Closing JPA EntityManagerFactory for persistence unit 'default'
+[2m2022-11-29 21:38:52.622[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[ionShutdownHook][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Shutdown initiated...
+[2m2022-11-29 21:38:52.634[0;39m [32m INFO[0;39m [32m[0;39m [35m13872[0;39m [2m---[0;39m [2m[ionShutdownHook][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Shutdown completed.
+[2m2022-11-29 21:38:57.136[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.example.benomad.BenomadApplication  [0;39m [2m:[0;39m Starting BenomadApplication using Java 17.0.4.1 on LAPTOP-L3QHD6TM with PID 12272 (D:\travelAlibek3\TravelKg_Back-End\target\classes started by hh in D:\travelAlibek3\TravelKg_Back-End)
+[2m2022-11-29 21:38:57.143[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.example.benomad.BenomadApplication  [0;39m [2m:[0;39m No active profile set, falling back to 1 default profile: "default"
+[2m2022-11-29 21:38:58.145[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2m2022-11-29 21:38:58.264[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Finished Spring Data repository scanning in 103 ms. Found 10 JPA repository interfaces.
+[2m2022-11-29 21:38:58.871[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat initialized with port(s): 8080 (http)
+[2m2022-11-29 21:38:58.871[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.apache.catalina.core.StandardService  [0;39m [2m:[0;39m Starting service [Tomcat]
+[2m2022-11-29 21:38:58.871[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.apache.catalina.core.StandardEngine [0;39m [2m:[0;39m Starting Servlet engine: [Apache Tomcat/9.0.65]
+[2m2022-11-29 21:38:58.973[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring embedded WebApplicationContext
+[2m2022-11-29 21:38:58.973[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mw.s.c.ServletWebServerApplicationContext[0;39m [2m:[0;39m Root WebApplicationContext: initialization completed in 1788 ms
+[2m2022-11-29 21:38:59.339[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.internal.license.VersionPrinter   [0;39m [2m:[0;39m Flyway Community Edition 8.5.13 by Redgate
+[2m2022-11-29 21:38:59.339[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.internal.license.VersionPrinter   [0;39m [2m:[0;39m See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#8.5.13
+[2m2022-11-29 21:38:59.339[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.internal.license.VersionPrinter   [0;39m [2m:[0;39m 
+[2m2022-11-29 21:38:59.355[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Starting...
+[2m2022-11-29 21:38:59.544[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Start completed.
+[2m2022-11-29 21:38:59.563[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.i.database.base.BaseDatabaseType  [0;39m [2m:[0;39m Database: jdbc:postgresql://localhost:5432/benomad (PostgreSQL 14.5)
+[2m2022-11-29 21:38:59.620[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.core.internal.command.DbValidate    [0;39m [2m:[0;39m Successfully validated 4 migrations (execution time 00:00.035s)
+[2m2022-11-29 21:38:59.636[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.core.internal.command.DbMigrate     [0;39m [2m:[0;39m Current version of schema "public": 5
+[2m2022-11-29 21:38:59.644[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.core.internal.command.DbMigrate     [0;39m [2m:[0;39m Schema "public" is up to date. No migration necessary.
+[2m2022-11-29 21:38:59.701[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.hibernate.jpa.internal.util.LogHelper [0;39m [2m:[0;39m HHH000204: Processing PersistenceUnitInfo [name: default]
+[2m2022-11-29 21:38:59.751[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.hibernate.Version                   [0;39m [2m:[0;39m HHH000412: Hibernate ORM core version 5.6.11.Final
+[2m2022-11-29 21:38:59.838[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.hibernate.annotations.common.Version  [0;39m [2m:[0;39m HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2m2022-11-29 21:38:59.910[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.hibernate.dialect.Dialect           [0;39m [2m:[0;39m HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+[2m2022-11-29 21:39:01.080[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.h.e.t.j.p.i.JtaPlatformInitiator      [0;39m [2m:[0;39m HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2m2022-11-29 21:39:01.096[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mj.LocalContainerEntityManagerFactoryBean[0;39m [2m:[0;39m Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2m2022-11-29 21:39:03.664[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.a.e.web.EndpointLinksResolver     [0;39m [2m:[0;39m Exposing 1 endpoint(s) beneath base path '/actuator'
+[2m2022-11-29 21:39:03.696[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.s.web.DefaultSecurityFilterChain    [0;39m [2m:[0;39m Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@31c17fd4, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@60052518, org.springframework.security.web.context.SecurityContextPersistenceFilter@4c90fc3b, org.springframework.security.web.header.HeaderWriterFilter@2e68bd3d, org.springframework.web.filter.CorsFilter@39336f5, org.springframework.security.web.authentication.logout.LogoutFilter@67fda9fb, com.example.benomad.security.filter.JwtTokenFilter@78c23ade, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5dfb078, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2d21d12b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@36b86248, org.springframework.security.web.session.SessionManagementFilter@4fa3bebe, org.springframework.security.web.access.ExceptionTranslationFilter@1b9cfc19, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@68312b85]
+[2m2022-11-29 21:39:04.067[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat started on port(s): 8080 (http) with context path ''
+[2m2022-11-29 21:39:04.084[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.example.benomad.BenomadApplication  [0;39m [2m:[0;39m Started BenomadApplication in 7.3 seconds (JVM running for 7.919)
+[2m2022-11-29 21:39:04.465[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[)-192.168.43.99][0;39m [36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2m2022-11-29 21:39:04.465[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[)-192.168.43.99][0;39m [36mo.s.web.servlet.DispatcherServlet       [0;39m [2m:[0;39m Initializing Servlet 'dispatcherServlet'
+[2m2022-11-29 21:39:04.468[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[)-192.168.43.99][0;39m [36mo.s.web.servlet.DispatcherServlet       [0;39m [2m:[0;39m Completed initialization in 2 ms
+[2m2022-11-29 21:39:14.896[0;39m [33m WARN[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[)-192.168.43.99][0;39m [36mo.s.b.actuate.mail.MailHealthIndicator  [0;39m [2m:[0;39m Mail health check failed
+
+javax.mail.MessagingException: Got bad greeting from SMTP host: smtp.gmail.com, port: 465, response: [EOF]
+	at com.sun.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2198) ~[jakarta.mail-1.6.7.jar:1.6.7]
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:722) ~[jakarta.mail-1.6.7.jar:1.6.7]
+	at javax.mail.Service.connect(Service.java:342) ~[jakarta.mail-1.6.7.jar:1.6.7]
+	at org.springframework.mail.javamail.JavaMailSenderImpl.connectTransport(JavaMailSenderImpl.java:518) ~[spring-context-support-5.3.23.jar:5.3.23]
+	at org.springframework.mail.javamail.JavaMailSenderImpl.testConnection(JavaMailSenderImpl.java:398) ~[spring-context-support-5.3.23.jar:5.3.23]
+	at org.springframework.boot.actuate.mail.MailHealthIndicator.doHealthCheck(MailHealthIndicator.java:42) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.AbstractHealthIndicator.health(AbstractHealthIndicator.java:82) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthIndicator.getHealth(HealthIndicator.java:37) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpoint.getHealth(HealthEndpoint.java:94) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpoint.getHealth(HealthEndpoint.java:41) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getLoggedHealth(HealthEndpointSupport.java:172) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getContribution(HealthEndpointSupport.java:145) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getAggregateContribution(HealthEndpointSupport.java:156) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getContribution(HealthEndpointSupport.java:141) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getHealth(HealthEndpointSupport.java:110) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getHealth(HealthEndpointSupport.java:81) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpoint.health(HealthEndpoint.java:88) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpoint.health(HealthEndpoint.java:78) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:282) ~[spring-core-5.3.23.jar:5.3.23]
+	at org.springframework.boot.actuate.endpoint.invoke.reflect.ReflectiveOperationInvoker.invoke(ReflectiveOperationInvoker.java:74) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.endpoint.annotation.AbstractDiscoveredOperation.invoke(AbstractDiscoveredOperation.java:60) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.endpoint.jmx.EndpointMBean.invoke(EndpointMBean.java:122) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.endpoint.jmx.EndpointMBean.invoke(EndpointMBean.java:97) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at java.management/com.sun.jmx.interceptor.DefaultMBeanServerInterceptor.invoke(DefaultMBeanServerInterceptor.java:814) ~[na:na]
+	at java.management/com.sun.jmx.mbeanserver.JmxMBeanServer.invoke(JmxMBeanServer.java:802) ~[na:na]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.doOperation(RMIConnectionImpl.java:1472) ~[na:na]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl$PrivilegedOperation.run(RMIConnectionImpl.java:1310) ~[na:na]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.doPrivilegedOperation(RMIConnectionImpl.java:1405) ~[na:na]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.invoke(RMIConnectionImpl.java:829) ~[na:na]
+	at java.base/jdk.internal.reflect.GeneratedMethodAccessor156.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(UnicastServerRef.java:360) ~[na:na]
+	at java.rmi/sun.rmi.transport.Transport$1.run(Transport.java:200) ~[na:na]
+	at java.rmi/sun.rmi.transport.Transport$1.run(Transport.java:197) ~[na:na]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:712) ~[na:na]
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Transport.java:196) ~[na:na]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:587) ~[na:na]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:828) ~[na:na]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(TCPTransport.java:705) ~[na:na]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399) ~[na:na]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:704) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[na:na]
+	at java.base/java.lang.Thread.run(Thread.java:833) ~[na:na]
+
+[2m2022-11-29 21:39:14.911[0;39m [33m WARN[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[)-192.168.43.99][0;39m [36mo.s.b.a.health.HealthEndpointSupport    [0;39m [2m:[0;39m Health contributor org.springframework.boot.actuate.mail.MailHealthIndicator (mail) took 10424ms to respond
+[2m2022-11-29 21:40:07.615[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[ionShutdownHook][0;39m [36mj.LocalContainerEntityManagerFactoryBean[0;39m [2m:[0;39m Closing JPA EntityManagerFactory for persistence unit 'default'
+[2m2022-11-29 21:40:07.615[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[ionShutdownHook][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Shutdown initiated...
+[2m2022-11-29 21:40:07.628[0;39m [32m INFO[0;39m [32m[0;39m [35m12272[0;39m [2m---[0;39m [2m[ionShutdownHook][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Shutdown completed.
+[2m2022-11-29 21:40:36.630[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.example.benomad.BenomadApplication  [0;39m [2m:[0;39m Starting BenomadApplication using Java 17.0.4.1 on LAPTOP-L3QHD6TM with PID 5876 (D:\travelAlibek3\TravelKg_Back-End\target\classes started by hh in D:\travelAlibek3\TravelKg_Back-End)
+[2m2022-11-29 21:40:36.630[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.example.benomad.BenomadApplication  [0;39m [2m:[0;39m No active profile set, falling back to 1 default profile: "default"
+[2m2022-11-29 21:40:37.943[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2m2022-11-29 21:40:38.099[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36m.s.d.r.c.RepositoryConfigurationDelegate[0;39m [2m:[0;39m Finished Spring Data repository scanning in 146 ms. Found 10 JPA repository interfaces.
+[2m2022-11-29 21:40:38.751[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat initialized with port(s): 8080 (http)
+[2m2022-11-29 21:40:38.769[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.apache.catalina.core.StandardService  [0;39m [2m:[0;39m Starting service [Tomcat]
+[2m2022-11-29 21:40:38.769[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.apache.catalina.core.StandardEngine [0;39m [2m:[0;39m Starting Servlet engine: [Apache Tomcat/9.0.65]
+[2m2022-11-29 21:40:38.884[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring embedded WebApplicationContext
+[2m2022-11-29 21:40:38.884[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mw.s.c.ServletWebServerApplicationContext[0;39m [2m:[0;39m Root WebApplicationContext: initialization completed in 2208 ms
+[2m2022-11-29 21:40:39.196[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.internal.license.VersionPrinter   [0;39m [2m:[0;39m Flyway Community Edition 8.5.13 by Redgate
+[2m2022-11-29 21:40:39.196[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.internal.license.VersionPrinter   [0;39m [2m:[0;39m See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#8.5.13
+[2m2022-11-29 21:40:39.196[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.internal.license.VersionPrinter   [0;39m [2m:[0;39m 
+[2m2022-11-29 21:40:39.196[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Starting...
+[2m2022-11-29 21:40:39.385[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Start completed.
+[2m2022-11-29 21:40:39.401[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.c.i.database.base.BaseDatabaseType  [0;39m [2m:[0;39m Database: jdbc:postgresql://localhost:5432/benomad (PostgreSQL 14.5)
+[2m2022-11-29 21:40:39.432[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.core.internal.command.DbValidate    [0;39m [2m:[0;39m Successfully validated 4 migrations (execution time 00:00.028s)
+[2m2022-11-29 21:40:39.450[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.core.internal.command.DbMigrate     [0;39m [2m:[0;39m Current version of schema "public": 5
+[2m2022-11-29 21:40:39.450[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.f.core.internal.command.DbMigrate     [0;39m [2m:[0;39m Schema "public" is up to date. No migration necessary.
+[2m2022-11-29 21:40:39.541[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.hibernate.jpa.internal.util.LogHelper [0;39m [2m:[0;39m HHH000204: Processing PersistenceUnitInfo [name: default]
+[2m2022-11-29 21:40:39.603[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.hibernate.Version                   [0;39m [2m:[0;39m HHH000412: Hibernate ORM core version 5.6.11.Final
+[2m2022-11-29 21:40:39.725[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.hibernate.annotations.common.Version  [0;39m [2m:[0;39m HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2m2022-11-29 21:40:39.789[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36morg.hibernate.dialect.Dialect           [0;39m [2m:[0;39m HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+[2m2022-11-29 21:40:41.183[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.h.e.t.j.p.i.JtaPlatformInitiator      [0;39m [2m:[0;39m HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2m2022-11-29 21:40:41.199[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mj.LocalContainerEntityManagerFactoryBean[0;39m [2m:[0;39m Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2m2022-11-29 21:40:43.642[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.a.e.web.EndpointLinksResolver     [0;39m [2m:[0;39m Exposing 1 endpoint(s) beneath base path '/actuator'
+[2m2022-11-29 21:40:43.702[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.s.web.DefaultSecurityFilterChain    [0;39m [2m:[0;39m Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@3095c449, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@236bb278, org.springframework.security.web.context.SecurityContextPersistenceFilter@765d67dd, org.springframework.security.web.header.HeaderWriterFilter@66297b63, org.springframework.web.filter.CorsFilter@7200702, org.springframework.security.web.authentication.logout.LogoutFilter@1d6ed085, com.example.benomad.security.filter.JwtTokenFilter@78c23ade, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2fda92e0, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@535adf36, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3eb29382, org.springframework.security.web.session.SessionManagementFilter@75a5a912, org.springframework.security.web.access.ExceptionTranslationFilter@2a1be9f8, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5d414943]
+[2m2022-11-29 21:40:44.086[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.w.embedded.tomcat.TomcatWebServer [0;39m [2m:[0;39m Tomcat started on port(s): 8080 (http) with context path ''
+[2m2022-11-29 21:40:44.109[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[           main][0;39m [36mcom.example.benomad.BenomadApplication  [0;39m [2m:[0;39m Started BenomadApplication in 7.827 seconds (JVM running for 8.417)
+[2m2022-11-29 21:40:44.232[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[)-192.168.43.99][0;39m [36mo.a.c.c.C.[Tomcat].[localhost].[/]      [0;39m [2m:[0;39m Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2m2022-11-29 21:40:44.232[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[)-192.168.43.99][0;39m [36mo.s.web.servlet.DispatcherServlet       [0;39m [2m:[0;39m Initializing Servlet 'dispatcherServlet'
+[2m2022-11-29 21:40:44.232[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[)-192.168.43.99][0;39m [36mo.s.web.servlet.DispatcherServlet       [0;39m [2m:[0;39m Completed initialization in 0 ms
+[2m2022-11-29 21:40:54.631[0;39m [33m WARN[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[)-192.168.43.99][0;39m [36mo.s.b.actuate.mail.MailHealthIndicator  [0;39m [2m:[0;39m Mail health check failed
+
+javax.mail.MessagingException: Got bad greeting from SMTP host: smtp.gmail.com, port: 465, response: [EOF]
+	at com.sun.mail.smtp.SMTPTransport.openServer(SMTPTransport.java:2198) ~[jakarta.mail-1.6.7.jar:1.6.7]
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:722) ~[jakarta.mail-1.6.7.jar:1.6.7]
+	at javax.mail.Service.connect(Service.java:342) ~[jakarta.mail-1.6.7.jar:1.6.7]
+	at org.springframework.mail.javamail.JavaMailSenderImpl.connectTransport(JavaMailSenderImpl.java:518) ~[spring-context-support-5.3.23.jar:5.3.23]
+	at org.springframework.mail.javamail.JavaMailSenderImpl.testConnection(JavaMailSenderImpl.java:398) ~[spring-context-support-5.3.23.jar:5.3.23]
+	at org.springframework.boot.actuate.mail.MailHealthIndicator.doHealthCheck(MailHealthIndicator.java:42) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.AbstractHealthIndicator.health(AbstractHealthIndicator.java:82) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthIndicator.getHealth(HealthIndicator.java:37) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpoint.getHealth(HealthEndpoint.java:94) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpoint.getHealth(HealthEndpoint.java:41) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getLoggedHealth(HealthEndpointSupport.java:172) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getContribution(HealthEndpointSupport.java:145) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getAggregateContribution(HealthEndpointSupport.java:156) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getContribution(HealthEndpointSupport.java:141) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getHealth(HealthEndpointSupport.java:110) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getHealth(HealthEndpointSupport.java:81) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpoint.health(HealthEndpoint.java:88) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.health.HealthEndpoint.health(HealthEndpoint.java:78) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:282) ~[spring-core-5.3.23.jar:5.3.23]
+	at org.springframework.boot.actuate.endpoint.invoke.reflect.ReflectiveOperationInvoker.invoke(ReflectiveOperationInvoker.java:74) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.endpoint.annotation.AbstractDiscoveredOperation.invoke(AbstractDiscoveredOperation.java:60) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.endpoint.jmx.EndpointMBean.invoke(EndpointMBean.java:122) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at org.springframework.boot.actuate.endpoint.jmx.EndpointMBean.invoke(EndpointMBean.java:97) ~[spring-boot-actuator-2.7.4.jar:2.7.4]
+	at java.management/com.sun.jmx.interceptor.DefaultMBeanServerInterceptor.invoke(DefaultMBeanServerInterceptor.java:814) ~[na:na]
+	at java.management/com.sun.jmx.mbeanserver.JmxMBeanServer.invoke(JmxMBeanServer.java:802) ~[na:na]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.doOperation(RMIConnectionImpl.java:1472) ~[na:na]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl$PrivilegedOperation.run(RMIConnectionImpl.java:1310) ~[na:na]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.doPrivilegedOperation(RMIConnectionImpl.java:1405) ~[na:na]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.invoke(RMIConnectionImpl.java:829) ~[na:na]
+	at java.base/jdk.internal.reflect.GeneratedMethodAccessor157.invoke(Unknown Source) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(UnicastServerRef.java:360) ~[na:na]
+	at java.rmi/sun.rmi.transport.Transport$1.run(Transport.java:200) ~[na:na]
+	at java.rmi/sun.rmi.transport.Transport$1.run(Transport.java:197) ~[na:na]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:712) ~[na:na]
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Transport.java:196) ~[na:na]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:587) ~[na:na]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:828) ~[na:na]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(TCPTransport.java:705) ~[na:na]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399) ~[na:na]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:704) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[na:na]
+	at java.base/java.lang.Thread.run(Thread.java:833) ~[na:na]
+
+[2m2022-11-29 21:40:54.631[0;39m [33m WARN[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[)-192.168.43.99][0;39m [36mo.s.b.a.health.HealthEndpointSupport    [0;39m [2m:[0;39m Health contributor org.springframework.boot.actuate.mail.MailHealthIndicator (mail) took 10398ms to respond
+[2m2022-11-29 21:43:23.289[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[ionShutdownHook][0;39m [36mj.LocalContainerEntityManagerFactoryBean[0;39m [2m:[0;39m Closing JPA EntityManagerFactory for persistence unit 'default'
+[2m2022-11-29 21:43:23.305[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[ionShutdownHook][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Shutdown initiated...
+[2m2022-11-29 21:43:23.310[0;39m [32m INFO[0;39m [32m[0;39m [35m5876[0;39m [2m---[0;39m [2m[ionShutdownHook][0;39m [36mcom.zaxxer.hikari.HikariDataSource      [0;39m [2m:[0;39m HikariPool-1 - Shutdown completed.
