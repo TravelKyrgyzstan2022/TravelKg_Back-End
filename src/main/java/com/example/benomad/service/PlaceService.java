@@ -12,13 +12,13 @@ import java.util.List;
 
 public interface PlaceService {
     List<PlaceDTO> getMyFavorites();
-    List<PlaceDTO> getPlacesByAttributes(String name, Region region, PlaceType placeType, String address,Boolean match,PageRequest pageRequest) throws ContentNotFoundException;
+    List<PlaceDTO> getPlacesByAttributes(String name, String address,Boolean match,PageRequest pageRequest) throws ContentNotFoundException;
     PlaceDTO getPlaceById(Long id) throws ContentNotFoundException;
     PlaceDTO insertPlace(PlaceDTO placeDTO);
     PlaceDTO deletePlaceById(Long id) throws ContentNotFoundException;
     PlaceDTO updatePlaceById(Long id, PlaceDTO placeDTO) throws ContentNotFoundException;
     PlaceDTO ratePlaceById(Long placeId, Integer rating, boolean isRemoval) throws ContentNotFoundException;
-    List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories, List<PlaceType> types, Pageable pageable);
+    List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories, List<PlaceType> types, List<Region> regions,Pageable pageable);
 
     PlaceDTO addPlaceToFavorites(Long id) throws ContentNotFoundException;
     boolean insertImagesByPlaceId(Long placeId, MultipartFile[] files) throws ContentNotFoundException;

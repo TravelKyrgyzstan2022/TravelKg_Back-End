@@ -50,9 +50,9 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<PlaceDTO> getPlacesByAttributes(String name, Region region, PlaceType placeType,
+    public List<PlaceDTO> getPlacesByAttributes(String name,
                                                    String address,Boolean match,PageRequest pageRequest) {
-        Place builtPlace = Place.builder().name(name).address(address).region(region).placeType(placeType).build();
+        Place builtPlace = Place.builder().name(name).address(address).build();
         Example<Place> exampleOfPlace = Example.of(builtPlace,getExampleMatcher(match));
         Page<Place> pages = placeRepository.findAll(exampleOfPlace,pageRequest);
         List<PlaceDTO> placeDTOS = placeMapper.entityListToDtoList(pages.stream().collect(Collectors.toList()));
@@ -157,10 +157,11 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories, List<PlaceType> types, Pageable pageable) {
+    public List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories, List<PlaceType> types,List<Region> regions, Pageable pageable) {
         List<String> sCategories = categories.stream().map(Enum::name).collect(Collectors.toList());
         List<String> sTypes = types.stream().map(Enum::name).collect(Collectors.toList());
-        Page<Place> placePage = placeRepository.findPlacesByPlaceCategoriesAndPlaceTypes(sCategories,sTypes,pageable);
+        List<String> sRegions = regions.stream().map(Enum::name).collect(Collectors.toList());
+        Page<Place> placePage = placeRepository.findPlacesByPlaceCategoriesAndPlaceTypes(sCategories,sTypes,sRegions,pageable);
         return placeMapper.entityListToDtoList(placePage.stream().collect(Collectors.toList()));
     }
 
@@ -216,13 +217,13 @@ public class PlaceServiceImpl implements PlaceService {
                 .withMatcher("region",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("placeType",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("address",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
-                .withIgnorePaths("id","description","imageUrl","linkUrl");
+                .withIgnorePaths("id","description","imageUrl","linkUrl","placeCategory","region");
         ExampleMatcher notMatches = ExampleMatcher.matchingAny()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("region",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("placeType",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("address",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
-                .withIgnorePaths("id","description","imageUrl","linkUrl");
+                .withIgnorePaths("id","description","imageUrl","linkUrl","placeCategory","region");
         return match ? matches : notMatches;
     }
 }

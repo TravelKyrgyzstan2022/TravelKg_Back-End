@@ -3,7 +3,6 @@ package com.example.benomad.controller;
 import com.example.benomad.advice.ExceptionResponse;
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.dto.PlaceDTO;
-import com.example.benomad.dto.UserDTO;
 import com.example.benomad.enums.CommentReference;
 import com.example.benomad.enums.PlaceCategory;
 import com.example.benomad.enums.PlaceType;
@@ -21,11 +20,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,14 +65,11 @@ public class PlaceController {
             @RequestParam(name = "page", required = false) Optional<Integer> page,
             @RequestParam(name = "size", required = false) Optional<Integer> size,
             @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "region", required = false) Region region,
-            @RequestParam(name = "place_type", required = false) PlaceType placeType,
             @RequestParam(name = "address", required = false) String address,
             @RequestParam(name = "match_all", required = false,defaultValue = "false") Boolean match) {
 
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(20), Sort.by(sortBy.orElse("id")));
-        return ResponseEntity.ok(placeService.getPlacesByAttributes(name, region, placeType,
-                address, match, pageRequest));
+        return ResponseEntity.ok(placeService.getPlacesByAttributes(name, address, match, pageRequest));
     }
 
     @Hidden
@@ -86,14 +79,11 @@ public class PlaceController {
             @RequestParam(name = "page", required = false) Optional<Integer> page,
             @RequestParam(name = "size", required = false) Optional<Integer> size,
             @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "region", required = false) Region region,
-            @RequestParam(name = "place_type", required = false) PlaceType placeType,
             @RequestParam(name = "address", required = false) String address,
             @RequestParam(name = "match_all", required = false,defaultValue = "false") Boolean match) {
 
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(20), Sort.by(sortBy.orElse("id")));
-        return ResponseEntity.ok(placeService.getPlacesByAttributes(name, region, placeType,
-                address, match, pageRequest));
+        return ResponseEntity.ok(placeService.getPlacesByAttributes(name,address, match, pageRequest));
     }
 
     @Operation(summary = "Gets place by ID")
@@ -299,10 +289,11 @@ public class PlaceController {
             @RequestParam(name = "page", required = false) Optional<Integer> page,
             @RequestParam(name = "size", required = false) Optional<Integer> size,
             @RequestParam(name = "categories", required = false) Optional<List<PlaceCategory>> categories,
-            @RequestParam(name = "types", required = false) Optional<List<PlaceType>> types)
+            @RequestParam(name = "types", required = false) Optional<List<PlaceType>> types,
+            @RequestParam(name = "regions", required = false) Optional<List<Region>> regions)
     {
         PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(20), Sort.by(sortBy.orElse("id")));
-        return ResponseEntity.ok(placeService.getPlacesByTypesAndCategories(categories.orElse(List.of(PlaceCategory.values())),types.orElse(List.of(PlaceType.values())),pageRequest));
+        return ResponseEntity.ok(placeService.getPlacesByTypesAndCategories(categories.orElse(List.of(PlaceCategory.values())),types.orElse(List.of(PlaceType.values())),regions.orElse(List.of(Region.values())),pageRequest));
     }
 
     @Operation(summary = "Gets all images by place id",
