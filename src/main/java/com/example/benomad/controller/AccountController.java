@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -194,5 +195,11 @@ public class AccountController {
     @PutMapping(value = "/my-account")
     public ResponseEntity<?> updateCurrentUser(@RequestBody UserDTO userDTO){
         return ResponseEntity.ok(userService.updateCurrentUser(userDTO));
+    }
+
+    @Operation(summary = "Inserts current user image")
+    @PutMapping(value = "/my-account/image")
+    public ResponseEntity<?> insertUserImage(@RequestPart("file") MultipartFile file){
+        return ResponseEntity.ok(userService.insertMyImage(file));
     }
 }

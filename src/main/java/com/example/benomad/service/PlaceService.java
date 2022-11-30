@@ -19,8 +19,9 @@ public interface PlaceService {
     PlaceDTO updatePlaceById(Long id, PlaceDTO placeDTO) throws ContentNotFoundException;
     PlaceDTO ratePlaceById(Long placeId, Integer rating, boolean isRemoval) throws ContentNotFoundException;
     List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories, List<PlaceType> types, Pageable pageable);
-    Long insertImageByPlaceId(Long id, MultipartFile file) throws ContentNotFoundException;
-    byte[] getImageByPlaceId(Long id);
 
     PlaceDTO addPlaceToFavorites(Long id) throws ContentNotFoundException;
+    boolean insertImagesByPlaceId(Long placeId, MultipartFile[] files) throws ContentNotFoundException;
+    List<String> getImagesById(Long id) throws ContentNotFoundException;
+    boolean insertPlaceWithImages(PlaceDTO placeDTO, MultipartFile[] files);
 }

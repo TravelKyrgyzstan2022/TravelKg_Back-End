@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,6 +33,10 @@ public class BlogDTO {
     private String title;
 
     private String body;
+
+    @Schema(required = true)
+    @JsonProperty(value = "image_urls",access = JsonProperty.Access.READ_ONLY)
+    private List<String> imageUrls;
 
     @Column(name = "creation_date")
     private LocalDate creationDate;

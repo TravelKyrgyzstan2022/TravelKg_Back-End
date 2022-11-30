@@ -70,4 +70,7 @@ public class UserDTO {
     @JsonProperty(value = "favorite_places",access = JsonProperty.Access.READ_ONLY)
     private Set<PlaceDTO> placeDTOS;
 
+    @JsonProperty(value = "image_url",access = JsonProperty.Access.READ_ONLY)
+    private String imageUrl;
+
 }

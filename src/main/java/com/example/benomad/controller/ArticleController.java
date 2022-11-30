@@ -21,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 
 @RestController
 @CrossOrigin
@@ -102,5 +104,49 @@ public class ArticleController {
     public ResponseEntity<?> getArticleById(@PathVariable Long id){
 
         return ResponseEntity.ok(articleServiceImpl.getArticleById(id));
+    }
+
+    @Operation(summary = "Gets all images by article id",
+            description = "Get all images by id that refers to specific article")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = List.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @GetMapping(value = {"/{articleId}/images"})
+    public ResponseEntity<?> getImagesById(@PathVariable("articleId") Long id) {
+        return ResponseEntity.ok(articleServiceImpl.getImagesById(id));
     }
 }

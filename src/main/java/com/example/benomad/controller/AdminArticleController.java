@@ -141,13 +141,12 @@ public class AdminArticleController {
         return ResponseEntity.ok(articleService.updateArticleById(id, articleDTO));
     }
 
-    @Operation(summary = "Uploads image by article ID",
-            description = "Adds new image record to an article by its ID and Image itself.")
+    @Operation(summary = "Inserts images by article id")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = Long.class))
+                    content = @Content(schema = @Schema(implementation = boolean.class))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -170,23 +169,27 @@ public class AdminArticleController {
                     content = @Content
             ),
             @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
                     responseCode = "500",
                     description = "Internal Server Error",
                     content = @Content
             )
     })
-    @PutMapping(path = "/{articleId}/images",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> uploadArticleImage(@PathVariable("articleId") Long id, @RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(articleService.insertImageByArticleId(id,file));
+    @PutMapping(value = "/{articleId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = "application/json")
+    public ResponseEntity<?> insertImagesByBlogId(@PathVariable("articleId") Long articleId, @RequestParam("files") MultipartFile[] files){
+        return ResponseEntity.ok(articleService.insertImagesByArticleId(articleId,files));
     }
 
-    @Operation(summary = "Gets image by by article ID",
-            description = "Gets  article image by article id itself.")
+    @Operation(summary = "Inserts new article with along the images")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = byte[].class))
+                    content = @Content(schema = @Schema(implementation = boolean.class))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -209,13 +212,18 @@ public class AdminArticleController {
                     content = @Content
             ),
             @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
                     responseCode = "500",
                     description = "Internal Server Error",
                     content = @Content
             )
     })
-    @GetMapping(path = "/{articleId}/images",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getArticleImage(@PathVariable("articleId") Long id) {
-        return ResponseEntity.ok(articleService.getImageByArticleId(id));
+    @PostMapping(value = {"","/"},consumes = { "multipart/form-data","application/json" })
+    public ResponseEntity<?> insertArticleWithImages(@RequestPart("articleDTO") ArticleDTO articleDTO, @RequestPart("files") MultipartFile[] files){
+        return ResponseEntity.ok(articleService.insertArticleWithImages(articleDTO,files));
     }
 }
