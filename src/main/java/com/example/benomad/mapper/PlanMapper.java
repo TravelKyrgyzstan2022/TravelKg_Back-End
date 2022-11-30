@@ -22,8 +22,7 @@ public class PlanMapper {
     public PlanDTO entityToDto(Plan entity){
         return PlanDTO.builder()
                 .id(entity.getId())
-                .startDate(entity.getStartDate())
-                .endDate(entity.getEndDate())
+                .date(entity.getDate())
                 .userId(entity.getUser().getId())
                 .placeId(entity.getPlace().getId())
                 .note(entity.getNote())
@@ -43,8 +42,7 @@ public class PlanMapper {
                             throw new ContentNotFoundException(ContentNotFoundEnum.PLACE,  "id", String.valueOf(dto.getPlaceId()));
                         }
                 ))
-                .startDate(dto.getStartDate())
-                .endDate(dto.getEndDate())
+                .date(dto.getDate())
                 .note(dto.getNote())
                 .build();
     }

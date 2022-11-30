@@ -1,6 +1,7 @@
 package com.example.benomad.controller;
 
 import com.example.benomad.dto.PlanDTO;
+import com.example.benomad.request.GetPlanRequest;
 import com.example.benomad.service.impl.PlanServiceImpl;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,16 +10,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/users/{userId}/plans")
-@Hidden
-//@Tag(name = "Planner resource", description = "Not finished")
+@RequestMapping("api/v1/user/plans")
+@Tag(name = "Planner resource", description = "The planner API")
 public class PlanController {
 
     private final PlanServiceImpl planService;
 
-    @GetMapping(value = {"", "/"})
+    @GetMapping(value = "/byUser/{userId}")
     public ResponseEntity<?> getPlansByUserId(@PathVariable("userId") Long userId){
         return ResponseEntity.ok(planService.getPlansByUserId(userId));
     }
@@ -26,6 +28,11 @@ public class PlanController {
     @GetMapping(value = "/{planId}")
     public ResponseEntity<?> getPlanById(@PathVariable("planId") Long planId){
         return ResponseEntity.ok(planService.getPlanById(planId));
+    }
+
+    @PostMapping(value = {"/byDate/"})
+    public ResponseEntity<?> getPlansByDate(@RequestBody GetPlanRequest request){
+        return ResponseEntity.ok(planService.getPlansByDate(request));
     }
 
     @PostMapping(value = {"/", ""})
@@ -44,3 +51,4 @@ public class PlanController {
     }
 
 }
+
