@@ -30,6 +30,7 @@ public class UserMapper {
                 .roles(userDTO.getRoles())
                 .email(userDTO.getEmail())
                 .phoneNumber(userDTO.getPhoneNumber())
+                .imageUrl(userDTO.getImageUrl())
                 .build();
     }
 
@@ -49,6 +50,7 @@ public class UserMapper {
                         deletionInfoMapper.entityToDto(user.getDeletionInfo()) : null)
                 .phoneNumber(user.getPhoneNumber())
                 .roles(user.getRoles())
+                .imageUrl(user.getImageUrl().orElse(null))
                 .build();
     }
 

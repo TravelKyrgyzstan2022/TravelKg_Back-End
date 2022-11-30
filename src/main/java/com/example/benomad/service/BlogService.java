@@ -20,6 +20,7 @@ public interface BlogService {
     BlogDTO likeDislikeBlogById(Long blogId, boolean isDislike) throws ContentNotFoundException;
     BlogDTO updateBlogById(Long blogId, BlogDTO blogDTO) throws ContentNotFoundException;
     BlogDTO deleteBlogById(Long blogId, DeletionInfoDTO infoDTO) throws ContentNotFoundException;
-    Long insertImageByBlogId(Long id, MultipartFile file);
-    byte[] getImageByBlogId(Long id);
+    boolean insertImagesByBlogId(Long blogId, MultipartFile[] files) throws ContentNotFoundException;
+    List<String> getImagesById(Long id) throws ContentNotFoundException;
+    boolean insertMyBlogWithImages(BlogDTO blogDTO, MultipartFile[] files);
 }

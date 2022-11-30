@@ -22,7 +22,7 @@ public class ArticleMapper {
         return ArticleDTO.builder()
                 .id(article.getId())
                 .body(article.getBody())
-                .imageUrl(article.getImageUrl().orElse(null))
+                .imageUrls(article.getImageUrls())
                 .title(article.getTitle())
                 .userId(article.getUser().getId())
                 .build();
@@ -32,7 +32,7 @@ public class ArticleMapper {
         return Article.builder()
                 .id(dto.getId())
                 .body(dto.getBody())
-                .imageUrl(dto.getImageUrl())
+                .imageUrls(dto.getImageUrls())
                 .title(dto.getTitle())
                 .user(
                         userRepository.findById(dto.getUserId()).orElseThrow(

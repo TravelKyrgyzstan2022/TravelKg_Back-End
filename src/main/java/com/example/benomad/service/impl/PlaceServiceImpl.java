@@ -165,35 +165,37 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public Long insertImageByPlaceId(Long id, MultipartFile file) throws ContentNotFoundException {
-        Place place = placeRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFoundException(ContentNotFoundEnum.PLACE,"id",String.valueOf(id)));
-        imageService.checkIsNotEmpty(file);
-        imageService.checkIsImage(file);
-        Map<String, String> metadata = imageService.getMetaData(file);
-        String pathToFile = String.format("%s/%s", AwsBucket.MAIN_BUCKET.getBucketName(),ImagePath.PLACE.getPathToImage());
-        String uniqueFileName = String.format("%s-%s",file.getOriginalFilename(), UUID.randomUUID());
-        try {
-            imageService.saveImageAws(pathToFile,uniqueFileName, Optional.of(metadata),file.getInputStream());
-            place.setImageUrl(uniqueFileName);
-            placeRepository.save(place);
-            return place.getId();
-        } catch (IOException e) {
-            throw new FailedWhileUploadingException();
-        }
+    public boolean insertImagesByPlaceId(Long placeId, MultipartFile[] files) {
+        Place place = placeRepository
+                .findById(placeId).orElseThrow(
+                        () -> new ContentNotFoundException(ContentNotFoundEnum.PLACE,"id",String.valueOf(placeId))
+                );
+        place.setImageUrls(imageService.uploadImages(files, ImagePath.PLACE));
+        placeRepository.save(place);
+        return true;
     }
 
     @Override
-    public byte[] getImageByPlaceId(Long id) {
+    public List<String> getImagesById(Long id) {
         Place place = placeRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFoundException(ContentNotFoundEnum.PLACE,"id",String.valueOf(id)));
-        String pathToFile = String.format("%s/%s", AwsBucket.MAIN_BUCKET.getBucketName(),ImagePath.PLACE.getPathToImage());
-        return place.getImageUrl().map(x -> imageService.getAwsImageByPathAndKey(pathToFile,x)).orElse(new byte[0]);
+                .orElseThrow(
+                        () -> new ContentNotFoundException(ContentNotFoundEnum.PLACE,"id",String.valueOf(id))
+                );
+        return place.getImageUrls();
+    }
+
+    @Override
+    public boolean insertPlaceWithImages(PlaceDTO placeDTO, MultipartFile[] files) {
+        placeDTO.setId(null);
+        placeDTO.setImageUrls(imageService.uploadImages(files, ImagePath.PLACE));
+        placeRepository.save(placeMapper.dtoToEntity(placeDTO));
+        return true;
     }
 
     @Override
     public PlaceDTO addPlaceToFavorites(Long id) throws ContentNotFoundException {
         Long userId = authService.getCurrentUserId();
+        /// FIXME: Throw not authorized exception
         User user = userRepository.findById(userId)
                 .orElseThrow(
                         () -> new ContentNotFoundException(ContentNotFoundEnum.USER,"id",String.valueOf(userId))
@@ -202,8 +204,8 @@ public class PlaceServiceImpl implements PlaceService {
                 .orElseThrow(
                         () -> new ContentNotFoundException(ContentNotFoundEnum.PLACE,"id",String.valueOf(id))
                 );
-        if (user.getPlaces().contains(place)) throw new ContentIsAlreadyInFavoritesException(ContentNotFoundEnum.PLACE);
-        user.getPlaces().add(place);
+        if (user.getPlaces().contains(place))  user.getPlaces().remove(place);
+        else user.getPlaces().add(place);
         userRepository.save(user);
         return placeMapper.entityToDto(place);
     }

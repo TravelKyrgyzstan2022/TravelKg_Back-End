@@ -305,47 +305,47 @@ public class PlaceController {
         return ResponseEntity.ok(placeService.getPlacesByTypesAndCategories(categories.orElse(List.of(PlaceCategory.values())),types.orElse(List.of(PlaceType.values())),pageRequest));
     }
 
-    @Operation(summary = "Gets image by by place ID",
-            description = "Adds new rating to a place by its ID and users ID.")
+    @Operation(summary = "Gets all images by place id",
+            description = "Get all images by id that refers to specific image")
     @ApiResponses(value = {
-        @ApiResponse(
-                responseCode = "200",
-                description = "OK",
-                content = @Content(schema = @Schema(implementation = PlaceDTO.class))
-        ),
-        @ApiResponse(
-                responseCode = "Any error",
-                description = "Every response starting with 4** or 5** will have this body",
-                content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
-        ),
-        @ApiResponse(
-                responseCode = "400",
-                description = "Bad Request",
-                content = @Content
-        ),
-        @ApiResponse(
-                responseCode = "401",
-                description = "Unauthorized",
-                content = @Content
-        ),
-        @ApiResponse(
-                responseCode = "404",
-                description = "Not Found",
-                content = @Content
-        ),
-        @ApiResponse(
-                responseCode = "409",
-                description = "Conflict",
-                content = @Content
-        ),
-        @ApiResponse(
-                responseCode = "500",
-                description = "Internal Server Error",
-                content = @Content
-        )
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = List.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
     })
-    @GetMapping(path = "/{placeId}/images",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getPlaceImages(@PathVariable("placeId") Long placeId) {
-        return ResponseEntity.ok(placeService.getImageByPlaceId(placeId));
+    @GetMapping(value = {"/{placeId}/images"})
+    public ResponseEntity<?> getImagesById(@PathVariable("placeId") Long id) {
+        return ResponseEntity.ok(placeService.getImagesById(id));
     }
 }

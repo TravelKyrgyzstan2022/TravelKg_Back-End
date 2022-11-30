@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
@@ -45,8 +47,8 @@ public class PlaceDTO {
     private String description;
 
     @Schema(required = true)
-    @JsonProperty(value = "image_url",access = JsonProperty.Access.READ_ONLY)
-    private String imageUrl;
+    @JsonProperty(value = "image_urls",access = JsonProperty.Access.READ_ONLY)
+    private List<String> imageUrls;
 
     @Schema(required = true)
     @JsonProperty("link_url")

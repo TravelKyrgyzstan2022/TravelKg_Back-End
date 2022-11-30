@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
@@ -81,11 +82,19 @@ public class User {
     @ManyToMany(mappedBy = "likedUsers")
     private List<Blog> blogs;
 
+    @Getter(AccessLevel.NONE)
+    @Column(name = "image_url")
+    private String imageUrl;
+
     public void addRole(Role role){
         roles.add(role);
     }
 
     public void removeRole(Role role){
         roles.remove(role);
+    }
+
+    public Optional<String> getImageUrl() {
+        return Optional.ofNullable(imageUrl);
     }
 }
