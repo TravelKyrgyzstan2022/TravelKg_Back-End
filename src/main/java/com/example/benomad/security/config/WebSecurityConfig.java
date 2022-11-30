@@ -39,7 +39,9 @@ public class WebSecurityConfig{
     private final String[] REGISTERED_COMMON = {};
 
     private final String[] USER = {
-            "/api/v1/user/**"
+            "/api/v1/user/**",
+            "/api/account/my-account",
+            "/api/account/my-account/**"
     };
 
     private final String[] ADMIN_COMMON = {
@@ -52,37 +54,22 @@ public class WebSecurityConfig{
 
     private final String[] ADMIN_GET = {
             "/actuator/**",
-            "/api/dev/**",
-            "/api/v1/users",
-            "/api/v1/users/**",
-            "/api/auth/acc",
-            "/api/auth/acc/**"
     };
 
     private final String[] PERMIT_ALL_GET = {
-            "/api/v1/**",
-            "/api/auth/acc",
-            "/api/auth/acc/**"
+            "/api/v1/**"
     };
 
     private final String[] ADMIN_POST = {
-            "/api/v1/**",
-            "/api/auth/acc",
-            "/api/auth/acc/**"
+            "/api/v1/**"
     };
 
     private final String[] ADMIN_PUT = {
-            "/api/v1/**",
-            "/api/auth/**",
-            "/api/auth/acc",
-            "/api/auth/acc/**"
+            "/api/v1/**"
     };
 
     private final String[] ADMIN_DELETE = {
-            "/api/v1/**",
-            "/api/auth/**",
-            "/api/auth/acc",
-            "/api/auth/acc/**"
+            "/api/v1/**"
     };
 
     @Bean
