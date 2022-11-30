@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users")
-@Tag(name = "User Resource", description = "The User API ")
-public class UserController {
+@RequestMapping("/api/v1/admin/users")
+@Tag(name = "Admin Resource", description = "The Administrator API")
+public class AdminUserController {
 
     private final UserServiceImpl userService;
 

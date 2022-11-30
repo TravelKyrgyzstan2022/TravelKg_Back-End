@@ -12,9 +12,9 @@ public interface AuthService {
     JwtResponse authenticateUser(LoginRequest loginRequest);
     TokenRefreshResponse refreshToken(TokenRefreshRequest request);
     MessageResponse validateVerificationCode(EmailVerificationRequest request);
-    MessageResponse activateUser(String code);
+    MessageResponse activateUser(EmailVerificationRequest request);
     MessageResponse sendForgotPasswordCode(String email);
-    MessageResponse sendActivationCode();
+    MessageResponse sendActivationCode(String email);
     MessageResponse logoutUser(Long id);
     MessageResponse resetPassword(ResetPasswordRequest request);
     Long getCurrentUserId();

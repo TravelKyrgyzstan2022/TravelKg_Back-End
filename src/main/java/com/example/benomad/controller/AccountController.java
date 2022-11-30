@@ -6,7 +6,10 @@ import com.example.benomad.dto.UserDTO;
 import com.example.benomad.security.request.*;
 import com.example.benomad.security.response.JwtResponse;
 import com.example.benomad.security.response.TokenRefreshResponse;
+import com.example.benomad.service.CommentService;
 import com.example.benomad.service.impl.AuthServiceImpl;
+import com.example.benomad.service.impl.BlogServiceImpl;
+import com.example.benomad.service.impl.CommentServiceImpl;
 import com.example.benomad.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,11 +26,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/auth/")
+@RequestMapping("/api/account/")
 @Validated
+@CrossOrigin
 @RequiredArgsConstructor
-@Tag(name = "Authorization Resource", description = "The Auth API")
-public class AuthController {
+@Tag(name = "Account Resource", description = "The Account API")
+public class AccountController {
 
     private final AuthServiceImpl authService;
     private final UserServiceImpl userService;
@@ -67,7 +71,7 @@ public class AuthController {
                     content = @Content
             )
     })
-    @PostMapping(value = "/signin", produces = "application/json")
+    @PostMapping(value = "/sign-in", produces = "application/json")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.authenticateUser(loginRequest));
     }
@@ -97,8 +101,8 @@ public class AuthController {
                     content = @Content
             )
     })
-    @PostMapping(value = "/refreshtoken", produces = "application/json")
-    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
+    @PostMapping(value = "/refresh-token", produces = "application/json")
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody TokenRefreshRequest request) {
         return ResponseEntity.ok(authService.refreshToken(request));
     }
 
@@ -112,7 +116,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.logoutUser(logOutRequest.getUserId()));
     }
 
-    @Operation(summary = "Registers user to the system",
+    @Operation(summary = "Registers user to the system and sends email verification code",
     description = """
             Adds user to the database with given attributes.
 
@@ -146,8 +150,8 @@ public class AuthController {
             )
     })
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.addUser(userDTO));
+    public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
+        return ResponseEntity.ok(authService.registerUser(request));
     }
 
     @Operation(summary = "Sends 'forgot password' verification code to the given email")
@@ -156,7 +160,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.sendForgotPasswordCode(email));
     }
 
-    @Operation(summary = "Validates both code and email")
+    @Operation(summary = "Validates both code and email (idk why did I add this)")
     @PostMapping(value = {"/validate-code", "/verify-email"}, produces = "application/json")
     public ResponseEntity<MessageResponse> forgotPassword(@Valid @RequestBody EmailVerificationRequest emailVerificationRequest){
         return ResponseEntity.ok(authService.validateVerificationCode(emailVerificationRequest));
@@ -168,26 +172,26 @@ public class AuthController {
         return ResponseEntity.ok(authService.resetPassword(resetPasswordRequest));
     }
 
-    @Operation(summary = "Sends activation code to current authorized email")
-    @PostMapping(value = "/acc/activation", produces = "application/json")
-    public ResponseEntity<MessageResponse> sendActivationCode(){
-        return ResponseEntity.ok(authService.sendActivationCode());
-    }
+//    @Operation(summary = "Sends activation code to current authorized email")
+//    @PostMapping(value = "/activation", produces = "application/json")
+//    public ResponseEntity<MessageResponse> sendActivationCode(){
+//        return ResponseEntity.ok(authService.sendActivationCode());
+//    }
 
     @Operation(summary = "Activates current account")
-    @PostMapping(value = "/acc/activate", produces = "application/json")
-    public ResponseEntity<MessageResponse> activateUser(@RequestParam("code") String code){
-        return ResponseEntity.ok(authService.activateUser(code));
+    @PostMapping(value = "/activate", produces = "application/json")
+    public ResponseEntity<MessageResponse> activateUser(@RequestBody EmailVerificationRequest emailVerificationRequest){
+        return ResponseEntity.ok(authService.activateUser(emailVerificationRequest));
     }
 
     @Operation(summary = "Gets current user (TESTING)")
-    @GetMapping(value = "/acc")
+    @GetMapping(value = "/my-account")
     public ResponseEntity<?> getCurrentUser(){
         return ResponseEntity.ok(userService.getCurrentUser());
     }
 
     @Operation(summary = "Updates current user (TESTING)")
-    @PutMapping(value = "/acc")
+    @PutMapping(value = "/my-account")
     public ResponseEntity<?> updateCurrentUser(@RequestBody UserDTO userDTO){
         return ResponseEntity.ok(userService.updateCurrentUser(userDTO));
     }

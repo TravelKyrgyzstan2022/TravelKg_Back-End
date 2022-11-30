@@ -12,6 +12,9 @@ import java.util.List;
 public interface BlogService {
     BlogDTO insertBlog(BlogDTO blogDTO) throws ContentNotFoundException;
     BlogDTO getBlogById(Long blogId) throws ContentNotFoundException;
+    List<BlogDTO> getMyBlogs();
+    BlogDTO updateMyBlogById(BlogDTO blogDTO, Long blogId);
+    BlogDTO deleteMyBlogById(Long blogId);
     List<BlogDTO> getBlogsByAttributes(Long authorId, String title,
                                        ReviewStatus reviewStatus, boolean MATCH_ALL) throws ContentNotFoundException;
     BlogDTO likeDislikeBlogById(Long blogId, boolean isDislike) throws ContentNotFoundException;

@@ -23,7 +23,7 @@ public class BlogDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @JsonProperty("author_id")
+    @JsonProperty(value = "author_id", access = JsonProperty.Access.READ_ONLY)
     private Long authorId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

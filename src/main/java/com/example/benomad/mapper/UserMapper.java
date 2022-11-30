@@ -15,6 +15,7 @@ public class UserMapper {
 
     private final DeletionInfoMapper deletionInfoMapper;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' HH:mm");
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public User dtoToEntity(UserDTO userDTO){
         return User.builder()
@@ -42,7 +43,8 @@ public class UserMapper {
                 .deleted(user.isDeleted())
                 .lastVisitDate(user.getLastVisitDate() != null ?
                         formatter.format(user.getLastVisitDate()) : "Haven't visited yet")
-                .registrationDate(user.getRegistrationDate())
+                .registrationDate(user.getRegistrationDate() != null ?
+                        dateFormatter.format(user.getRegistrationDate()) : null)
                 .deletionInfoDTO(user.getDeletionInfo() != null ?
                         deletionInfoMapper.entityToDto(user.getDeletionInfo()) : null)
                 .phoneNumber(user.getPhoneNumber())

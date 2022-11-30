@@ -3,19 +3,16 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.entity.Blog;
+import com.example.benomad.entity.User;
 import com.example.benomad.enums.AwsBucket;
 import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.enums.ImagePath;
 import com.example.benomad.enums.ReviewStatus;
-import com.example.benomad.exception.ContentNotFoundException;
-import com.example.benomad.exception.ContentIsAlreadyLikedException;
-import com.example.benomad.exception.ContentIsNotLikedException;
-import com.example.benomad.exception.FailedWhileUploadingException;
+import com.example.benomad.exception.*;
 import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.mapper.BlogMapper;
 import com.example.benomad.mapper.DeletionInfoMapper;
 import com.example.benomad.repository.BlogRepository;
-import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +35,7 @@ import java.util.UUID;
 public class BlogServiceImpl implements BlogService {
 
     private final BlogRepository blogRepository;
-    private final UserRepository userRepository;
+    private final UserServiceImpl userService;
     private final AuthServiceImpl authService;
     private final BlogMapper blogMapper;
     private final DeletionInfoMapper deletionInfoMapper;
@@ -54,16 +51,58 @@ public class BlogServiceImpl implements BlogService {
         return blogDTO;
     }
 
+    public BlogDTO insertMyBlog(BlogDTO blogDTO){
+        checkUserActivation();
+        blogDTO.setId(null);
+        blogDTO.setAuthorId(authService.getCurrentUserId());
+        blogDTO.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        Blog blog = blogRepository.save(blogMapper.dtoToEntity(blogDTO));
+        return blogDTO;
+    }
+
     @Override
     public BlogDTO getBlogById(Long blogId) throws ContentNotFoundException {
-        BlogDTO blogDTO = blogMapper.entityToDto(
-                blogRepository.findById(blogId).orElseThrow(
-                        () -> {
-                            throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id", String.valueOf(blogId));
-                        })
-        );
+        BlogDTO blogDTO = blogMapper.entityToDto(getBlogEntityById(blogId));
         logWriter.get(String.format("%s - Returned blog with id = %d", authService.getCurrentEmail(), blogId));
         return blogDTO;
+    }
+
+    @Override
+    public List<BlogDTO> getMyBlogs() {
+        User user = userService.getUserEntityById(authService.getCurrentUserId());
+        return blogMapper.entityListToDtoList(blogRepository.findByAuthor(user));
+    }
+
+    @Override
+    public BlogDTO updateMyBlogById(BlogDTO blogDTO, Long blogId) {
+        checkUserActivation();
+        checkBlog(blogId);
+        blogDTO.setId(blogId);
+        blogRepository.save(blogMapper.dtoToEntity(blogDTO));
+        return blogDTO;
+    }
+
+    private void checkUserActivation(){
+        Long userId = authService.getCurrentUserId();
+        User user = userService.getUserEntityById(userId);
+        if(!user.isActivated()){
+            throw new UserNotActivatedException();
+        }
+    }
+    private void checkBlog(Long blogId){
+        Blog blog = getBlogEntityById(blogId);
+        if(!blog.getAuthor().getId().equals(authService.getCurrentUserId())){
+            throw new NoAccessException();
+        }
+    }
+
+    @Override
+    public BlogDTO deleteMyBlogById(Long blogId) {
+        checkUserActivation();
+        checkBlog(blogId);
+        Blog blog = getBlogEntityById(blogId);
+        blogRepository.delete(blog);
+        return blogMapper.entityToDto(blog);
     }
 
     @Override
@@ -77,12 +116,7 @@ public class BlogServiceImpl implements BlogService {
                 .build();
 
         if(authorId != null){
-            blog.setAuthor(
-                    userRepository.findById(authorId).orElseThrow(
-                            () -> {
-                                throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(authorId));
-                            })
-            );
+            blog.setAuthor(userService.getUserEntityById(authorId));
         }
 
         Example<Blog> example = Example.of(blog, getExample(MATCH_ALL));
@@ -102,9 +136,7 @@ public class BlogServiceImpl implements BlogService {
     public BlogDTO likeDislikeBlogById(Long blogId, boolean isDislike) throws ContentNotFoundException {
         Long userId = authService.getCurrentUserId();
 
-        Blog blog = blogRepository.findById(blogId).orElseThrow(() -> {
-            throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id", String.valueOf(blogId));
-        });
+        Blog blog = getBlogEntityById(blogId);
         boolean isAlreadyLiked = blogRepository.isBlogLikedByUser(blogId, userId);
         if(isDislike){
             if(!isAlreadyLiked){
@@ -175,6 +207,12 @@ public class BlogServiceImpl implements BlogService {
                 .orElseThrow(() -> new ContentNotFoundException(ContentNotFoundEnum.PLACE,"id",String.valueOf(id)));
         String pathToFile = String.format("%s/%s", AwsBucket.MAIN_BUCKET.getBucketName(), ImagePath.BLOG.getPathToImage());
         return blog.getImageUrl().map(x -> imageService.getAwsImageByPathAndKey(pathToFile,x)).orElse(new byte[0]);
+    }
+
+    public Blog getBlogEntityById(Long blogId){
+        return blogRepository.findById(blogId).orElseThrow(() -> {
+            throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id", String.valueOf(blogId));
+        });
     }
 
     private boolean checkBlogForLikeByIdWithoutException(Long blogId, Long userId){

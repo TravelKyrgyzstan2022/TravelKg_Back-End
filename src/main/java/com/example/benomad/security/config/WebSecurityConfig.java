@@ -27,23 +27,25 @@ public class WebSecurityConfig {
     private final AuthEntryPointHandler unauthorizedHandler;
     private final AuthAccessDeniedHandler accessDeniedHandler;
     private final String[] PERMIT_ALL = {
-            "/api/auth/**",
+            "/api/account/**",
             "/documentation/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/v3/api-docs.yaml",
             "/error"
     };
+    private final String[] REGISTERED_COMMON = {};
 
     private final String[] USER = {
-            "/api/auth/acc/**",
-            "/api/auth/acc"
+            "/api/v1/user/**"
     };
 
     private final String[] ADMIN_COMMON = {
             "/api/v1/admin/**",
-            "/api/auth/acc",
-            "/api/auth/acc/**"
+    };
+
+    private final String[] SUPER_ADMIN_ONLY = {
+            "/api/superadmin/**"
     };
 
     private final String[] ADMIN_GET = {
@@ -100,8 +102,9 @@ public class WebSecurityConfig {
                 .cors()
                 .and()
                     .authorizeRequests()
-                    .antMatchers(USER).hasRole("USER")
+                    .antMatchers(USER).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
                     .antMatchers(ADMIN_COMMON).hasAnyRole("ADMIN", "SUPERADMIN")
+                    .antMatchers(SUPER_ADMIN_ONLY).hasRole("SUPERADMIN")
                     .antMatchers(PERMIT_ALL).permitAll()
                     .antMatchers(HttpMethod.GET, ADMIN_GET).hasAnyRole("ADMIN", "SUPERADMIN")
                     .antMatchers(HttpMethod.GET, PERMIT_ALL_GET).permitAll()

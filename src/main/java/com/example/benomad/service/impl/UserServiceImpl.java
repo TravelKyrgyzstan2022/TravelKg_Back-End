@@ -41,7 +41,6 @@ import java.util.Objects;
 @Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final DeletionInfoMapper deletionInfoMapper;
@@ -67,25 +66,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
 
-    public UserDTO addUser(UserDTO userDTO) {
 
-        User user = userMapper.dtoToEntity(userDTO);
-
-        if(userRepository.existsByEmail(userDTO.getEmail())){
-            throw new UserAttributeTakenException("email: ('" + user.getEmail() + "')");
-        }
-
-        user.setId(null);
-        user.setActivated(false);
-        user.setRegistrationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
-        user.setRoles(Collections.singleton(Role.ROLE_USER));
-        user.setPassword(encoder.encode(user.getPassword()));
-
-        userRepository.save(user);
-
-        logWriter.auth(String.format("%s - Registration completed", userDTO.getEmail()));
-        return userMapper.entityToDto(user);
-    }
 
     @Override
     public UserDTO getUserById(Long userId) throws ContentNotFoundException {
