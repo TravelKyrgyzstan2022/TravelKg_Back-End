@@ -1,10 +1,12 @@
 package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.PlanDTO;
+import com.example.benomad.entity.Comment;
 import com.example.benomad.entity.Plan;
 import com.example.benomad.entity.User;
 import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.exception.ContentNotFoundException;
+import com.example.benomad.exception.NoAccessException;
 import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.mapper.PlanMapper;
 import com.example.benomad.repository.PlanRepository;
@@ -25,6 +27,7 @@ public class PlanServiceImpl implements PlanService {
     private final PlanRepository planRepository;
     private final LogWriterServiceImpl logWriter;
     private final UserRepository userRepository;
+    private final UserServiceImpl userService;
 
     @Override
     public List<PlanDTO> getPlansByUserId(Long userId) throws ContentNotFoundException {
@@ -47,7 +50,6 @@ public class PlanServiceImpl implements PlanService {
         );
     }
 
-
     @Override
     public List<PlanDTO> getPlansByDate(GetPlanRequest request){
         User user = userRepository.findById(request.getUserId()).orElseThrow(
@@ -69,6 +71,8 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public PlanDTO updatePlan(PlanDTO planDTO, Long planId) throws ContentNotFoundException {
+        checkPlan(planId);
+
         if(!planRepository.existsById(planId)){
             throw new ContentNotFoundException(ContentNotFoundEnum.PLAN, "id", String.valueOf(planId));
         }
@@ -81,6 +85,8 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public PlanDTO deletePlanById(Long planId) {
+        checkPlan(planId);
+
         Plan plan = planRepository.findById(planId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(ContentNotFoundEnum.PLAN, "id", String.valueOf(planId));
@@ -89,5 +95,21 @@ public class PlanServiceImpl implements PlanService {
         planRepository.delete(plan);
         logWriter.delete(String.format("%s - Deleted plan with id = %d", authService.getCurrentEmail(), planId));
         return planMapper.entityToDto(plan);
+    }
+
+
+    private void checkPlan(Long planId){
+        User user = userService.getUserEntityById(authService.getCurrentUserId());
+        Plan plan = getPlanEntityById(planId);
+        if(!plan.getUser().getId().equals(user.getId())){
+            throw new NoAccessException();
+        }
+    }
+
+    private Plan getPlanEntityById(Long planId){
+        return planRepository.findById(planId).orElseThrow(
+                () -> {
+                    throw new ContentNotFoundException(ContentNotFoundEnum.PLAN, "id", String.valueOf(planId));
+                });
     }
 }

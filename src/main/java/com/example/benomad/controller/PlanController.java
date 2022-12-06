@@ -18,11 +18,6 @@ public class PlanController {
 
     private final PlanServiceImpl planService;
 
-//    @GetMapping(value = "/byUser/{userId}")
-//    public ResponseEntity<?> getPlansByUserId(@PathVariable("userId") Long userId){
-//        return ResponseEntity.ok(planService.getPlansByUserId(userId));
-//    }
-
     @Operation(summary = "Get plan by ID (TEST)")
     @GetMapping(value = "/{planId}")
     public ResponseEntity<?> getPlanById(@PathVariable("planId") Long planId){
