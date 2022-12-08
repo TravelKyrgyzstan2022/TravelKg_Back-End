@@ -56,6 +56,12 @@ public class Place {
             inverseJoinColumns = @JoinColumn(name = "comment_id")
     )
     private Set<Comment> comments;
+    
+     @Column(nullable = false)
+    private double latitude;
+
+    @Column(nullable = false)
+    private double longitude;
 
 
 }
