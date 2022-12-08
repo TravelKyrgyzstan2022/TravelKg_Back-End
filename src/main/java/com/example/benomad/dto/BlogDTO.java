@@ -38,18 +38,19 @@ public class BlogDTO {
     @JsonProperty(value = "image_urls",access = JsonProperty.Access.READ_ONLY)
     private List<String> imageUrls;
 
-    @Column(name = "creation_date")
+    @JsonProperty(value = "creation_date", access = JsonProperty.Access.READ_ONLY)
     private LocalDate creationDate;
 
-    @Column(name = "update_date")
+    @JsonProperty(value = "update_date", access = JsonProperty.Access.READ_ONLY)
     private LocalDate updateDate;
 
-    @JsonProperty("is_deleted")
-    private boolean isDeleted;
+    @JsonProperty(value = "is_deleted", access = JsonProperty.Access.READ_ONLY)
+    private Boolean isDeleted;
 
-    @JsonProperty("deletion_info")
+    @JsonProperty(value = "deletion_info", access = JsonProperty.Access.READ_ONLY)
     private DeletionInfoDTO deletionInfoDTO;
 
+    @JsonProperty(value = "review_status", access = JsonProperty.Access.READ_ONLY)
     private ReviewStatus reviewStatus;
 
     @JsonProperty(value = "is_liked_by_current_user", access = JsonProperty.Access.READ_ONLY)

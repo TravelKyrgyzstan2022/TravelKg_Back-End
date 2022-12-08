@@ -51,8 +51,8 @@ public class UserMapper {
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .activated(user.isActivated())
-                .deleted(user.isDeleted())
+                .activated(user.getIsActivated())
+                .deleted(user.getIsDeleted())
                 .lastVisitDate(user.getLastVisitDate() != null ?
                         formatter.format(user.getLastVisitDate()) : "Haven't visited yet")
                 .registrationDate(user.getRegistrationDate() != null ?

@@ -109,7 +109,7 @@ public class CommentServiceImpl implements CommentService {
     private void checkUserActivation(){
         Long userId = authService.getCurrentUserId();
         User user = userService.getUserEntityById(userId);
-        if(!user.isActivated()){
+        if(!user.getIsActivated()){
             throw new UserNotActivatedException();
         }
     }

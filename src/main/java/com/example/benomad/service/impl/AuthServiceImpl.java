@@ -111,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     //fixme maybe need to move code related to mail sending to verification code service
     public MessageResponse sendActivationCode(String email) {
-        if(userService.getUserEntityByEmail(email).isActivated()){
+        if(userService.getUserEntityByEmail(email).getIsActivated()){
             throw new UserAlreadyActivatedException();
         }
         String code = CodeGenerator.generateActivationCode();
@@ -140,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         user.setId(null);
-        user.setActivated(false);
+        user.setIsActivated(false);
         user.setRegistrationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         user.setLastVisitDate(LocalDateTime.now(ZoneId.of("Asia/Bishkek")));
         user.setRoles(Collections.singleton(Role.ROLE_USER));
@@ -156,7 +156,7 @@ public class AuthServiceImpl implements AuthService {
     public MessageResponse activateUser(EmailVerificationRequest request) {
         String email = request.getEmail();
         String code = request.getVerificationCode();
-        if(userService.getUserEntityByEmail(email).isActivated()){
+        if(userService.getUserEntityByEmail(email).getIsActivated()){
             throw new UserAlreadyActivatedException();
         }
         if(codeService.isCodeValid(email, code)){

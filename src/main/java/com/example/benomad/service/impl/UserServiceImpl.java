@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     public void setActivated(String email){
         User user = getUserEntityByEmail(email);
-        user.setActivated(true);
+        user.setIsActivated(true);
         userRepository.save(user);
     }
 
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .phoneNumber(phoneNumber)
                 .build();
         if(includeContent != IncludeContent.ALL){
-            user.setDeleted(includeContent == IncludeContent.ONLY_DELETED);
+            user.setIsDeleted(includeContent == IncludeContent.ONLY_DELETED);
         }
         Example<User> example = Example.of(user, getExample(MATCH_ALL, includeContent));
         List<UserDTO> userDTOS = userMapper.entityListToDtoList(userRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
@@ -182,7 +182,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = getUserEntityById(userId);
         boolean isAdmin = !user.getRoles().contains(Role.ROLE_ADMIN);
         if(!isAdmin){
-            user.setDeleted(true);
+            user.setIsDeleted(true);
             infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
             user.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
             userRepository.save(user);
@@ -245,13 +245,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .withMatcher("lastName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
                 .withMatcher("phoneNumber", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active");
+                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active", "isDeleted");
         ExampleMatcher MATCHER_ALL_WITHOUT_DELETED = ExampleMatcher.matchingAll()
                 .withMatcher("firstName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("lastName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
                 .withMatcher("phoneNumber", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active");
+                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active", "isDeleted");
 
         if(includeContent == IncludeContent.ALL){
             return MATCH_ALL ? MATCHER_ALL_WITHOUT_DELETED : MATCHER_ANY_WITHOUT_DELETED;
@@ -266,12 +266,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return ExampleMatcher.matchingAny()
                     .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.exact())
                     .withIgnorePaths("id", "password", "roles", "places", "blogs", "firstName", "lastName",
-                            "active", "activationCode", "phoneNumber");
+                            "active", "activationCode", "phoneNumber", "isDeleted");
         }
         return ExampleMatcher.matchingAny()
                 .withMatcher("phoneNumber", ExampleMatcher.GenericPropertyMatchers.exact())
                 .withIgnorePaths("id", "password", "roles", "places", "blogs", "firstName", "lastName",
-                        "active", "activationCode", "email");
+                        "active", "activationCode", "email", "isDeleted");
     }
 
     @Autowired

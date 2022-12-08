@@ -93,7 +93,7 @@ public class BlogServiceImpl implements BlogService {
     private void checkUserActivation(){
         Long userId = authService.getCurrentUserId();
         User user = userService.getUserEntityById(userId);
-        if(!user.isActivated()){
+        if(!user.getIsActivated()){
             throw new UserNotActivatedException();
         }
     }
@@ -126,10 +126,10 @@ public class BlogServiceImpl implements BlogService {
                 .reviewStatus(reviewStatus)
                 .build();
         if(includeContent != IncludeContent.ALL){
-            blog.setDeleted(includeContent == IncludeContent.ONLY_DELETED);
+            blog.setIsDeleted(includeContent == IncludeContent.ONLY_DELETED);
         }
 
-        Example<Blog> example = Example.of(blog, getExample(MATCH_ALL));
+        Example<Blog> example = Example.of(blog, getExample(MATCH_ALL, includeContent));
 
         List<Blog> blogs = blogRepository.findAll(example);
 
@@ -180,7 +180,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogDTO deleteBlogById(Long blogId, DeletionInfoDTO infoDTO){
         Blog blog = getBlogEntityById(blogId);
-        blog.setDeleted(true);
+        blog.setIsDeleted(true);
         infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blog.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
         blogRepository.save(blog);
@@ -244,19 +244,35 @@ public class BlogServiceImpl implements BlogService {
         dto.setLikes(blogRepository.getLikesNumberById(dto.getId()));
     }
 
-    private ExampleMatcher getExample(boolean MATCH_ALL){
-        ExampleMatcher MATCHER_ANY = ExampleMatcher.matchingAny()
+    private ExampleMatcher getExample(boolean MATCH_ALL, IncludeContent includeContent){
+        ExampleMatcher MATCHER_ANY_WITH_DELETED = ExampleMatcher.matchingAny()
                 .withMatcher("author", ExampleMatcher.GenericPropertyMatchers.exact())
                 .withMatcher("title", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("status", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("isDeleted", ExampleMatcher.GenericPropertyMatchers.exact())
                 .withIgnorePaths("id", "likedUsers");
-        ExampleMatcher MATCHER_ALL = ExampleMatcher.matchingAll()
+        ExampleMatcher MATCHER_ALL_WITH_DELETED = ExampleMatcher.matchingAll()
                 .withMatcher("author", ExampleMatcher.GenericPropertyMatchers.exact())
                 .withMatcher("title", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("status", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("isDeleted", ExampleMatcher.GenericPropertyMatchers.exact())
                 .withIgnorePaths("id", "likedUsers");
-        return MATCH_ALL ? MATCHER_ALL:MATCHER_ANY;
+        ExampleMatcher MATCHER_ANY_WITHOUT_DELETED = ExampleMatcher.matchingAny()
+                .withMatcher("author", ExampleMatcher.GenericPropertyMatchers.exact())
+                .withMatcher("title", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("status", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("isDeleted", ExampleMatcher.GenericPropertyMatchers.exact())
+                .withIgnorePaths("id", "likedUsers", "isDeleted");
+        ExampleMatcher MATCHER_ALL_WITHOUT_DELETED = ExampleMatcher.matchingAll()
+                .withMatcher("author", ExampleMatcher.GenericPropertyMatchers.exact())
+                .withMatcher("title", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("status", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withIgnorePaths("id", "likedUsers", "isDeleted");
+
+        if(includeContent == IncludeContent.ALL){
+            return MATCH_ALL ? MATCHER_ALL_WITHOUT_DELETED : MATCHER_ANY_WITHOUT_DELETED;
+        }else{
+            return MATCH_ALL ? MATCHER_ALL_WITH_DELETED : MATCHER_ANY_WITH_DELETED;
+        }
     }
 }

@@ -36,7 +36,7 @@ public class BlogMapper {
                 .body(blog.getBody())
                 .creationDate(blog.getCreationDate())
                 .updateDate(blog.getUpdateDate())
-                .isDeleted(blog.isDeleted())
+                .isDeleted(blog.getIsDeleted())
                 .deletionInfoDTO(blog.getDeletionInfo() != null ?
                         deletionInfoMapper.entityToDto(blog.getDeletionInfo()) : null)
                 .author((userMapper.entityToDto(blog.getAuthor())))
