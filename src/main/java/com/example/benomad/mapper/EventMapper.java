@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class EventMapper {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy at HH:mm");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' HH:mm");
 
     public EventDTO entityToDto(Event event){
         return EventDTO.builder()

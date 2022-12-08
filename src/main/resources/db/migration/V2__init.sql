@@ -7,13 +7,15 @@ create table blogs (id  bigserial not null, body varchar(10000) not null, creati
 create table comment_likes (comment_id int8 not null, liked_users_id int8 not null, primary key (comment_id, liked_users_id));
 create table comments (id  bigserial not null, body varchar(2000) not null, creation_date date, is_deleted boolean not null, update_date date, deletion_info_id int8, user_id int8 not null, primary key (id));
 create table deletion_info (id  bigserial not null, deletion_date date, reason varchar(255), responsible_user_id int8, primary key (id));
+create table event_image_urls (event_id int8 not null, image_urls varchar(255));
+create table events (id  bigserial not null, address varchar(255), date_time timestamp, description varchar(2000) not null, link_url varchar(255) not null, name varchar(255) not null, primary key (id));
 create table favorite_places (user_id int8 not null, place_id int8 not null);
 create table logs (id  bigserial not null, body varchar(10485750), primary key (id));
 create table place_comments (place_id int8 not null, comment_id int8 not null, primary key (place_id, comment_id));
 create table place_image_urls (place_id int8 not null, image_urls varchar(255));
 create table place_ratings (id  bigserial not null, rating int4 not null, place_id int8, user_id int8, primary key (id));
 create table places (id  bigserial not null, address varchar(255), description varchar(2000) not null, link_url varchar(255) not null, name varchar(255) not null, place_category varchar(255), place_type varchar(255), region varchar(255), primary key (id));
-create table plans (id  bigserial not null, end_date date, note varchar(500), start_date date, place_id int8, user_id int8, primary key (id));
+create table plans (id  bigserial not null, date date, note varchar(500), place_id int8, user_id int8, primary key (id));
 create table refreshtokens (id  bigserial not null, expiry_date timestamp not null, token varchar(255) not null, user_id int8, primary key (id));
 create table roles (user_id int8 not null, roles varchar(255));
 create table users (id  bigserial not null, email varchar(255) not null, first_name varchar(255) not null, image_url varchar(255), is_activated boolean, is_deleted boolean not null, last_name varchar(255) not null, last_visit_date timestamp, password varchar(255) not null, phone_number varchar(255), registration_date date, deletion_info_id int8, primary key (id));
@@ -37,6 +39,7 @@ alter table comment_likes add constraint FK3wa5u7bs1p1o9hmavtgdgk1go foreign key
 alter table comments add constraint FKhj6bbu6kfeoq8j011r34671tv foreign key (deletion_info_id) references deletion_info;
 alter table comments add constraint FK8omq0tc18jd43bu5tjh6jvraq foreign key (user_id) references users;
 alter table deletion_info add constraint FK9gkdtwx9f6g37rs74oxq027jb foreign key (responsible_user_id) references users;
+alter table event_image_urls add constraint FK5mj67wfiv17dl0cvhopo6vo6q foreign key (event_id) references events;
 alter table favorite_places add constraint FK4pf98npou01hnsgywly8isn0u foreign key (place_id) references places;
 alter table favorite_places add constraint FK5tmdgtn9286q309p0x4hv0cwc foreign key (user_id) references users;
 alter table place_comments add constraint FKg9cjbcwnns5kmqxakxod2dwxp foreign key (comment_id) references comments;
@@ -49,4 +52,4 @@ alter table plans add constraint FKbybv5po44ssyv6svnv062dwrf foreign key (user_i
 alter table refreshtokens add constraint FKg71xhi5ujnqbgw2rcvtxyrc8s foreign key (user_id) references users;
 alter table roles add constraint fk_users_role foreign key (user_id) references users;
 alter table users add constraint FKoc9wtxet5svvyiitpexiptlwh foreign key (deletion_info_id) references deletion_info;
-alter table verification_codes add constraint consto6nts1xd94owirq5evcpda foreign key (user_id) references users;
+alter table verification_codes add constraint FKa4qo6nts1xd94owirq5evcpda foreign key (user_id) references users;
