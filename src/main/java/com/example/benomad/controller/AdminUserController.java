@@ -4,6 +4,7 @@ import com.example.benomad.advice.ExceptionResponse;
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.dto.UserDTO;
+import com.example.benomad.enums.IncludeContent;
 import com.example.benomad.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,25 +83,27 @@ public class AdminUserController {
     })
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<?> findUserByAttributes(@RequestParam(name = "first_name", required = false) String firstName,
-                                          @RequestParam(name = "last_name", required = false) String lastName,
-                                          @RequestParam(name = "email", required = false) String email,
-                                          @RequestParam(name = "phone_number", required = false) String phoneNumber,
-                                          @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
+                                                  @RequestParam(name = "last_name", required = false) String lastName,
+                                                  @RequestParam(name = "email", required = false) String email,
+                                                  @RequestParam(name = "phone_number", required = false) String phoneNumber,
+                                                  @RequestParam(name = "include", defaultValue = "ALL")IncludeContent includeContent,
+                                                  @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
-        return ResponseEntity.ok(userService.getUsersByAttributes(firstName, lastName, email, phoneNumber,
-                MATCH_ALL));
+        return ResponseEntity.ok(userService.getUsersByAttributes(firstName, lastName, includeContent, email,
+                phoneNumber, MATCH_ALL));
     }
 
     @Hidden
     @GetMapping(value = "/", produces = "application/json")
     public ResponseEntity<?> forwardSlashFix(@RequestParam(name = "first_name", required = false) String firstName,
-                                                  @RequestParam(name = "last_name", required = false) String lastName,
-                                                  @RequestParam(name = "email", required = false) String email,
-                                                  @RequestParam(name = "phone_number", required = false) String phoneNumber,
-                                                  @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
+                                             @RequestParam(name = "last_name", required = false) String lastName,
+                                             @RequestParam(name = "email", required = false) String email,
+                                             @RequestParam(name = "phone_number", required = false) String phoneNumber,
+                                             @RequestParam(name = "include", defaultValue = "ALL")IncludeContent includeContent,
+                                             @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
-        return ResponseEntity.ok(userService.getUsersByAttributes(firstName, lastName, email, phoneNumber,
-                MATCH_ALL));
+        return ResponseEntity.ok(userService.getUsersByAttributes(firstName, lastName, includeContent, email,
+                phoneNumber, MATCH_ALL));
     }
 
     @Operation(summary = "Finds user by ID (ADMIN)",

@@ -2,15 +2,19 @@ package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.dto.DeletionInfoDTO;
+import com.example.benomad.dto.MessageResponse;
+import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.Blog;
 import com.example.benomad.entity.User;
 import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.enums.ImagePath;
+import com.example.benomad.enums.IncludeContent;
 import com.example.benomad.enums.ReviewStatus;
 import com.example.benomad.exception.*;
 import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.mapper.BlogMapper;
 import com.example.benomad.mapper.DeletionInfoMapper;
+import com.example.benomad.mapper.UserMapper;
 import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.service.BlogService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +42,7 @@ public class BlogServiceImpl implements BlogService {
     private final UserServiceImpl userService;
     private final AuthServiceImpl authService;
     private final BlogMapper blogMapper;
+    private final UserMapper userMapper;
     private final DeletionInfoMapper deletionInfoMapper;
     private final ImageServiceImpl imageService;
     private final LogWriterServiceImpl logWriter;
@@ -45,7 +50,8 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogDTO insertBlog(BlogDTO blogDTO) throws ContentNotFoundException {
         blogDTO.setId(null);
-        blogDTO.setAuthorId(authService.getCurrentUserId());
+        blogDTO.setAuthor(userMapper.entityToDto(
+                userService.getUserEntityById(authService.getCurrentUserId())));
         blogDTO.setId(blogRepository.save(blogMapper.dtoToEntity(blogDTO)).getId());
         logWriter.insert(String.format("%s - Inserted blog with id = %d", authService.getCurrentEmail(), blogDTO.getId()));
         return blogDTO;
@@ -54,9 +60,11 @@ public class BlogServiceImpl implements BlogService {
     public BlogDTO insertMyBlog(BlogDTO blogDTO){
         checkUserActivation();
         blogDTO.setId(null);
-        blogDTO.setAuthorId(authService.getCurrentUserId());
+        blogDTO.setAuthor(userMapper.entityToDto(
+                userService.getUserEntityById(authService.getCurrentUserId())));
         blogDTO.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         Blog blog = blogRepository.save(blogMapper.dtoToEntity(blogDTO));
+        blogDTO.setId(blog.getId());
         return blogDTO;
     }
 
@@ -105,18 +113,20 @@ public class BlogServiceImpl implements BlogService {
         return blogMapper.entityToDto(blog);
     }
 
+    public List<UserDTO> getAuthors(String firstName, String lastName){
+        return userService.getBlogAuthors(firstName, lastName);
+    }
+
     @Override
-    public List<BlogDTO> getBlogsByAttributes(Long authorId, String title,
-                                              ReviewStatus reviewStatus, boolean MATCH_ALL)
-            throws ContentNotFoundException {
-        Long userId = authService.getCurrentUserId();
+    public List<BlogDTO> getBlogsByAttributes(String title,
+                                              IncludeContent includeContent,
+                                              ReviewStatus reviewStatus, boolean MATCH_ALL){
         Blog blog = Blog.builder()
                 .title(title)
                 .reviewStatus(reviewStatus)
                 .build();
-
-        if(authorId != null){
-            blog.setAuthor(userService.getUserEntityById(authorId));
+        if(includeContent != IncludeContent.ALL){
+            blog.setDeleted(includeContent == IncludeContent.ONLY_DELETED);
         }
 
         Example<Blog> example = Example.of(blog, getExample(MATCH_ALL));
@@ -125,15 +135,13 @@ public class BlogServiceImpl implements BlogService {
 
         logWriter.get(String.format("%s - Returned %d blogs", authService.getCurrentEmail(), blogs.size()));
 
-        //fixme
-        System.out.println(LocalDate.now(ZoneId.of("Asia/Bishkek")));
-
         return blogMapper.entityListToDtoList(blogs);
     }
 
 
+
     @Override
-    public BlogDTO likeDislikeBlogById(Long blogId, boolean isDislike) throws ContentNotFoundException {
+    public BlogDTO likeDislikeBlogById(Long blogId, boolean isDislike){
         Long userId = authService.getCurrentUserId();
 
         Blog blog = getBlogEntityById(blogId);
@@ -155,7 +163,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogDTO updateBlogById(Long blogId, BlogDTO blogDTO) throws ContentNotFoundException {
+    public BlogDTO updateBlogById(Long blogId, BlogDTO blogDTO){
         if(!blogRepository.existsById(blogId)){
             throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id" , String.valueOf(blogId));
         }
@@ -170,10 +178,8 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogDTO deleteBlogById(Long blogId, DeletionInfoDTO infoDTO) throws ContentNotFoundException {
-        Blog blog = blogRepository.findById(blogId).orElseThrow(() -> {
-            throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id" , String.valueOf(blogId));
-        });
+    public BlogDTO deleteBlogById(Long blogId, DeletionInfoDTO infoDTO){
+        Blog blog = getBlogEntityById(blogId);
         blog.setDeleted(true);
         infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blog.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
@@ -183,22 +189,31 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public boolean insertImagesByBlogId(Long blogId, MultipartFile[] files) throws ContentNotFoundException {
-        Blog blog = blogRepository
-                .findById(blogId).orElseThrow(
-                        () -> new ContentNotFoundException(ContentNotFoundEnum.BLOG,"id",String.valueOf(blogId))
-                );
+    public MessageResponse approveBlog(Long blogId) {
+        return null;
+    }
+
+    @Override
+    public MessageResponse rejectBlog(Long blogId) {
+        return null;
+    }
+
+    @Override
+    public List<BlogDTO> getBlogsByAuthorId(Long userId) {
+        return blogMapper.entityListToDtoList(blogRepository.findByAuthor(userService.getUserEntityById(userId)));
+    }
+
+    @Override
+    public boolean insertImagesByBlogId(Long blogId, MultipartFile[] files){
+        Blog blog = getBlogEntityById(blogId);
         blog.setImageUrls(imageService.uploadImages(files, ImagePath.BLOG));
         blogRepository.save(blog);
         return true;
     }
 
     @Override
-    public List<String> getImagesById(Long id) throws ContentNotFoundException {
-        Blog blog = blogRepository.findById(id)
-                .orElseThrow(
-                        () -> new ContentNotFoundException(ContentNotFoundEnum.BLOG,"id",String.valueOf(id))
-                );
+    public List<String> getImagesById(Long blogId){
+        Blog blog = getBlogEntityById(blogId);
         return blog.getImageUrls();
     }
 
@@ -207,7 +222,7 @@ public class BlogServiceImpl implements BlogService {
     public boolean insertMyBlogWithImages(BlogDTO blogDTO, MultipartFile[] files) {
         checkUserActivation();
         blogDTO.setId(null);
-        blogDTO.setAuthorId(authService.getCurrentUserId());
+        blogDTO.setAuthor(userMapper.entityToDto(userService.getUserEntityById(authService.getCurrentUserId())));
         blogDTO.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blogDTO.setImageUrls(imageService.uploadImages(files, ImagePath.BLOG));
         blogRepository.save(blogMapper.dtoToEntity(blogDTO));
@@ -234,11 +249,13 @@ public class BlogServiceImpl implements BlogService {
                 .withMatcher("author", ExampleMatcher.GenericPropertyMatchers.exact())
                 .withMatcher("title", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("status", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("isDeleted", ExampleMatcher.GenericPropertyMatchers.exact())
                 .withIgnorePaths("id", "likedUsers");
         ExampleMatcher MATCHER_ALL = ExampleMatcher.matchingAll()
                 .withMatcher("author", ExampleMatcher.GenericPropertyMatchers.exact())
                 .withMatcher("title", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("status", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("isDeleted", ExampleMatcher.GenericPropertyMatchers.exact())
                 .withIgnorePaths("id", "likedUsers");
         return MATCH_ALL ? MATCHER_ALL:MATCHER_ANY;
     }

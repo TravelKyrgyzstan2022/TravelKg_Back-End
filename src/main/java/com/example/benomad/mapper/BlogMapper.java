@@ -8,6 +8,7 @@ import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.impl.AuthServiceImpl;
+import com.example.benomad.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class BlogMapper {
 
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
+    private final UserServiceImpl userService;
     private final UserMapper userMapper;
     private final AuthServiceImpl authService;
     private final DeletionInfoMapper deletionInfoMapper;
@@ -37,7 +39,7 @@ public class BlogMapper {
                 .isDeleted(blog.isDeleted())
                 .deletionInfoDTO(blog.getDeletionInfo() != null ?
                         deletionInfoMapper.entityToDto(blog.getDeletionInfo()) : null)
-                .authorId((userMapper.entityToDto(blog.getAuthor()).getId()))
+                .author((userMapper.entityToDto(blog.getAuthor())))
                 .likes(blogRepository.getLikesNumberById(blog.getId()))
                 .isLikedByCurrentUser(userId != null ?
                         blogRepository.isBlogLikedByUser(blog.getId(), userId) : null)
@@ -52,10 +54,7 @@ public class BlogMapper {
         return Blog.builder()
                 .id(blogDTO.getId())
                 .author(
-                        userRepository.findById(blogDTO.getAuthorId()).orElseThrow(
-                                () -> {
-                                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(blogDTO.getAuthorId()));
-                                })
+                        userService.getUserEntityById(authService.getCurrentUserId())
                 )
                 .creationDate(blogDTO.getCreationDate())
                 .updateDate(blogDTO.getUpdateDate())

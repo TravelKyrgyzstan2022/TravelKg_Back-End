@@ -5,6 +5,7 @@ import com.example.benomad.entity.User;
 
 import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.enums.ImagePath;
+import com.example.benomad.enums.IncludeContent;
 import com.example.benomad.exception.UserAttributeTakenException;
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.logger.LogWriterServiceImpl;
@@ -102,7 +103,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<UserDTO> getUsersByAttributes(String firstName, String lastName,
+    public List<UserDTO> getUsersByAttributes(String firstName, String lastName, IncludeContent includeContent,
                                               String email, String phoneNumber, boolean MATCH_ALL) {
         User user = User.builder()
                 .firstName(firstName)
@@ -110,10 +111,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .build();
-        Example<User> example = Example.of(user, getExample(MATCH_ALL));
+        if(includeContent != IncludeContent.ALL){
+            user.setDeleted(includeContent == IncludeContent.ONLY_DELETED);
+        }
+        Example<User> example = Example.of(user, getExample(MATCH_ALL, includeContent));
         List<UserDTO> userDTOS = userMapper.entityListToDtoList(userRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
         logWriter.get(String.format("%s - Returned %d users", getAuthName(), userDTOS.size()));
         return userDTOS;
+    }
+
+    @Override
+    public List<UserDTO> getBlogAuthors(String firstName, String lastName) {
+        List<User> authors;
+        if(firstName != null && lastName != null){
+            authors = userRepository.findBlogAuthorsByFirstNameAndLastName(firstName, lastName);
+        }else if(firstName != null){
+            authors = userRepository.findBlogAuthorsByFirstName(firstName);
+        }else if(lastName != null){
+            authors = userRepository.findBlogAuthorsByLastName(lastName);
+        }else{
+            authors = userRepository.findBlogAuthors();
+        }
+        return userMapper.entityListToDtoList(authors);
     }
 
     @Override
@@ -206,20 +225,40 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
-    private ExampleMatcher getExample(boolean MATCH_ALL){
-        ExampleMatcher MATCHER_ANY = ExampleMatcher.matchingAny()
+    private ExampleMatcher getExample(boolean MATCH_ALL, IncludeContent includeContent){
+        ExampleMatcher MATCHER_ANY_WITH_DELETED = ExampleMatcher.matchingAny()
                 .withMatcher("firstName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("lastName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
                 .withMatcher("phoneNumber", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active", "activationCode");
-        ExampleMatcher MATCHER_ALL = ExampleMatcher.matchingAll()
+                .withMatcher("isDeleted", ExampleMatcher.GenericPropertyMatchers.exact())
+                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active");
+        ExampleMatcher MATCHER_ALL_WITH_DELETED = ExampleMatcher.matchingAll()
                 .withMatcher("firstName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("lastName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
                 .withMatcher("phoneNumber", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active", "activationCode");
-        return MATCH_ALL ? MATCHER_ALL:MATCHER_ANY;
+                .withMatcher("isDeleted", ExampleMatcher.GenericPropertyMatchers.exact())
+                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active");
+        ExampleMatcher MATCHER_ANY_WITHOUT_DELETED = ExampleMatcher.matchingAny()
+                .withMatcher("firstName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("lastName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
+                .withMatcher("phoneNumber", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active", "isDeleted");
+        ExampleMatcher MATCHER_ALL_WITHOUT_DELETED = ExampleMatcher.matchingAll()
+                .withMatcher("firstName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("lastName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
+                .withMatcher("phoneNumber", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active", "isDeleted");
+
+        if(includeContent == IncludeContent.ALL){
+            return MATCH_ALL ? MATCHER_ALL_WITHOUT_DELETED : MATCHER_ANY_WITHOUT_DELETED;
+        }else{
+            return MATCH_ALL ? MATCHER_ALL_WITH_DELETED : MATCHER_ANY_WITH_DELETED;
+        }
+
     }
 
     private ExampleMatcher getExampleForAttribute(String attribute){
