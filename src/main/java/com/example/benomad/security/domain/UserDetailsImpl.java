@@ -40,7 +40,7 @@ public class UserDetailsImpl implements UserDetails {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .isActivated(user.isActivated())
+                .isActivated(user.getIsActivated())
                 .phoneNumber(user.getPhoneNumber())
                 .password(user.getPassword())
                 .authorities(user.getRoles())

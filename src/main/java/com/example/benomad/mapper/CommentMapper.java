@@ -7,6 +7,7 @@ import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.repository.CommentRepository;
 import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.impl.AuthServiceImpl;
+import com.example.benomad.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,19 +20,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentMapper {
 
-    private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final AuthServiceImpl authService;
+    private final UserServiceImpl userService;
+    private final UserMapper userMapper;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public Comment dtoToEntity(CommentDTO commentDTO) {
         return Comment.builder()
                 .id(commentDTO.getId())
-                .user(userRepository.findById(commentDTO.getUserId()).orElseThrow(
-                        () -> {
-                            throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(commentDTO.getUserId()));
-                        }
-                ))
                 .body(commentDTO.getBody())
                 .build();
     }
@@ -41,7 +38,7 @@ public class CommentMapper {
         return CommentDTO.builder()
                 .id(comment.getId())
                 .creationDate(formatter.format(comment.getCreationDate()))
-                .userId(comment.getUser().getId())
+                .user(userMapper.entityToDto(comment.getUser()))
                 .body(comment.getBody())
                 .likeCount(commentRepository.getLikesNumberById(comment.getId()))
                 .isLikedByCurrentUser(

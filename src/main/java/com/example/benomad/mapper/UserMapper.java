@@ -25,8 +25,8 @@ public class UserMapper {
                 .password(userDTO.getPassword())
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
-                .isDeleted(userDTO.isDeleted())
-                .isActivated(userDTO.isActivated())
+                .isDeleted(userDTO.getDeleted())
+                .isActivated(userDTO.getActivated())
                 .deletionInfo(userDTO.getDeletionInfoDTO() != null ?
                         deletionInfoMapper.dtoToEntity(userDTO.getDeletionInfoDTO()) : null)
                 .roles(userDTO.getRoles())
@@ -51,8 +51,8 @@ public class UserMapper {
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .activated(user.isActivated())
-                .deleted(user.isDeleted())
+                .activated(user.getIsActivated())
+                .deleted(user.getIsDeleted())
                 .lastVisitDate(user.getLastVisitDate() != null ?
                         formatter.format(user.getLastVisitDate()) : "Haven't visited yet")
                 .registrationDate(user.getRegistrationDate() != null ?

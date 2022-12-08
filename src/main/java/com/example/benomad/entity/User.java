@@ -51,7 +51,7 @@ public class User {
     @Column(name = "registration_date")
     private LocalDate registrationDate;
 
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(
@@ -62,7 +62,7 @@ public class User {
 
     @Column(name = "is_activated")
     @JsonIgnore
-    private boolean isActivated;
+    private Boolean isActivated;
 
     @Column(name = "last_visit_date")
     private LocalDateTime lastVisitDate;

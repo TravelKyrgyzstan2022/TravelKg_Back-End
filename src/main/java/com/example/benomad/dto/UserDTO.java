@@ -62,10 +62,10 @@ public class UserDTO {
     private String lastVisitDate;
 
     @JsonProperty(value = "is_activated", access = JsonProperty.Access.READ_ONLY)
-    private boolean activated;
+    private Boolean activated;
 
     @JsonProperty(value = "is_deleted", access = JsonProperty.Access.READ_ONLY)
-    private boolean deleted;
+    private Boolean deleted;
 
     @JsonProperty(value = "deletion_info", access = JsonProperty.Access.READ_ONLY)
     private DeletionInfoDTO deletionInfoDTO;

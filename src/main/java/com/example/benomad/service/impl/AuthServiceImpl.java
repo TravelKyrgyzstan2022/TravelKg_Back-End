@@ -7,7 +7,6 @@ import com.example.benomad.entity.User;
 import com.example.benomad.exception.RefreshTokenException;
 import com.example.benomad.exception.UserAlreadyActivatedException;
 import com.example.benomad.exception.UserAttributeTakenException;
-import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.mapper.UserMapper;
 import com.example.benomad.repository.UserRepository;
 import com.example.benomad.security.domain.Claims;
@@ -52,7 +51,6 @@ public class AuthServiceImpl implements AuthService {
     private final EmailSender emailSender;
     private final RefreshTokenServiceImpl refreshTokenService;
     private final JwtUtils jwtUtils;
-    private final LogWriterServiceImpl logWriter;
 
     @Override
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
@@ -90,7 +88,6 @@ public class AuthServiceImpl implements AuthService {
         user.setLastVisitDate(LocalDateTime.now(ZoneId.of("Asia/Bishkek")));
         userRepository.save(user);
         RefreshToken refreshToken = refreshTokenService.createToken(userDetails.getId());
-        logWriter.auth(String.format("%s - Authenticated", loginRequest.getEmail()));
         return JwtResponse.builder()
                 .role(role)
                 .claims(claims)
@@ -111,7 +108,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     //fixme maybe need to move code related to mail sending to verification code service
     public MessageResponse sendActivationCode(String email) {
-        if(userService.getUserEntityByEmail(email).isActivated()){
+        if(userService.getUserEntityByEmail(email).getIsActivated()){
             throw new UserAlreadyActivatedException();
         }
         String code = CodeGenerator.generateActivationCode();
@@ -140,7 +137,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         user.setId(null);
-        user.setActivated(false);
+        user.setIsActivated(false);
         user.setRegistrationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         user.setLastVisitDate(LocalDateTime.now(ZoneId.of("Asia/Bishkek")));
         user.setRoles(Collections.singleton(Role.ROLE_USER));
@@ -148,7 +145,6 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
         sendActivationCode(userDTO.getEmail());
-        logWriter.auth(String.format("%s - Registration completed", userDTO.getEmail()));
         return userMapper.entityToDto(user);
     }
 
@@ -156,7 +152,7 @@ public class AuthServiceImpl implements AuthService {
     public MessageResponse activateUser(EmailVerificationRequest request) {
         String email = request.getEmail();
         String code = request.getVerificationCode();
-        if(userService.getUserEntityByEmail(email).isActivated()){
+        if(userService.getUserEntityByEmail(email).getIsActivated()){
             throw new UserAlreadyActivatedException();
         }
         if(codeService.isCodeValid(email, code)){
@@ -216,7 +212,6 @@ public class AuthServiceImpl implements AuthService {
     public MessageResponse logoutUser(Long id) {
         UserDTO userDTO = userService.getUserById(id);
         refreshTokenService.deleteByUserId(userDTO.getId());
-        logWriter.auth(String.format("%s - Logged out", userDTO.getEmail()));
         return new MessageResponse("User has been successfully logged out!", 200);
     }
 
@@ -238,6 +233,7 @@ public class AuthServiceImpl implements AuthService {
         return null;
     }
 
+    // FIXME: 08.12.2022
 //    private Claims getClaims(Role role){
 //        String[] superAdminGetClaims = {
 //                "**"

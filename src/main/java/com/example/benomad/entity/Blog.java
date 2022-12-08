@@ -46,7 +46,7 @@ public class Blog {
     @Column(name = "update_date")
     private LocalDate updateDate;
 
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(

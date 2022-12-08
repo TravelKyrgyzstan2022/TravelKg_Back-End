@@ -36,7 +36,7 @@ public class BlogMapper {
                 .body(blog.getBody())
                 .creationDate(blog.getCreationDate())
                 .updateDate(blog.getUpdateDate())
-                .isDeleted(blog.isDeleted())
+                .isDeleted(blog.getIsDeleted())
                 .deletionInfoDTO(blog.getDeletionInfo() != null ?
                         deletionInfoMapper.entityToDto(blog.getDeletionInfo()) : null)
                 .author((userMapper.entityToDto(blog.getAuthor())))
@@ -53,12 +53,9 @@ public class BlogMapper {
         }
         return Blog.builder()
                 .id(blogDTO.getId())
-                .author(
-                        userService.getUserEntityById(authService.getCurrentUserId())
-                )
                 .creationDate(blogDTO.getCreationDate())
                 .updateDate(blogDTO.getUpdateDate())
-                .isDeleted(blogDTO.isDeleted())
+                .isDeleted(blogDTO.getIsDeleted())
                 .deletionInfo(blogDTO.getDeletionInfoDTO() != null ?
                         deletionInfoMapper.dtoToEntity(blogDTO.getDeletionInfoDTO()) : null)
                 .title(blogDTO.getTitle())
