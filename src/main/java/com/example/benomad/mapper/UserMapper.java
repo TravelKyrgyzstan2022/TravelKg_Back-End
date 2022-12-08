@@ -25,8 +25,8 @@ public class UserMapper {
                 .password(userDTO.getPassword())
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
-                .isDeleted(userDTO.isDeleted())
-                .isActivated(userDTO.isActivated())
+                .isDeleted(userDTO.getDeleted())
+                .isActivated(userDTO.getActivated())
                 .deletionInfo(userDTO.getDeletionInfoDTO() != null ?
                         deletionInfoMapper.dtoToEntity(userDTO.getDeletionInfoDTO()) : null)
                 .roles(userDTO.getRoles())

@@ -5,7 +5,6 @@ import com.example.benomad.entity.Plan;
 import com.example.benomad.entity.User;
 import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.exception.ContentNotFoundException;
-import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.mapper.PlanMapper;
 import com.example.benomad.repository.PlanRepository;
 import com.example.benomad.repository.UserRepository;
@@ -23,7 +22,6 @@ public class PlanServiceImpl implements PlanService {
     private final AuthServiceImpl authService;
     private final PlanMapper planMapper;
     private final PlanRepository planRepository;
-    private final LogWriterServiceImpl logWriter;
     private final UserRepository userRepository;
 
     @Override
@@ -34,7 +32,6 @@ public class PlanServiceImpl implements PlanService {
                 }
         );
         List<PlanDTO> dtos = planMapper.entityListToDtoList(planRepository.findByUser(user));
-        logWriter.get(String.format("%s - Returned %d plans", authService.getCurrentEmail(), dtos.size()));
         return dtos;
     }
 
@@ -56,14 +53,12 @@ public class PlanServiceImpl implements PlanService {
                 }
         );
         List<PlanDTO> dtos = planMapper.entityListToDtoList(planRepository.findByDate(request.getUserId(), request.getDate()));
-        logWriter.get(String.format("%s - Returned %d plans", authService.getCurrentEmail(), dtos.size()));
         return dtos;
     }
 
     @Override
     public PlanDTO insertPlan(PlanDTO planDTO) {
         planRepository.save(planMapper.dtoToEntity(planDTO));
-        logWriter.insert(String.format("%s - Inserted plan with id = %d", authService.getCurrentEmail(), planDTO.getId()));
         return planDTO;
     }
 
@@ -75,7 +70,6 @@ public class PlanServiceImpl implements PlanService {
 
         planDTO.setId(planId);
         planRepository.save(planMapper.dtoToEntity(planDTO));
-        logWriter.update(String.format("%s - Updated plan with id = %d", authService.getCurrentEmail(), planId));
         return planDTO;
     }
 
@@ -87,7 +81,6 @@ public class PlanServiceImpl implements PlanService {
                 });
 
         planRepository.delete(plan);
-        logWriter.delete(String.format("%s - Deleted plan with id = %d", authService.getCurrentEmail(), planId));
         return planMapper.entityToDto(plan);
     }
 }

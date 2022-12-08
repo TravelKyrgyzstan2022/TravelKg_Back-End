@@ -10,7 +10,6 @@ create table deletion_info (id  bigserial not null, deletion_date date, reason v
 create table event_image_urls (event_id int8 not null, image_urls varchar(255));
 create table events (id  bigserial not null, address varchar(255), date_time timestamp, description varchar(2000) not null, link_url varchar(255) not null, name varchar(255) not null, primary key (id));
 create table favorite_places (user_id int8 not null, place_id int8 not null);
-create table logs (id  bigserial not null, body varchar(10485750), primary key (id));
 create table place_comments (place_id int8 not null, comment_id int8 not null, primary key (place_id, comment_id));
 create table place_image_urls (place_id int8 not null, image_urls varchar(255));
 create table place_ratings (id  bigserial not null, rating int4 not null, place_id int8, user_id int8, primary key (id));

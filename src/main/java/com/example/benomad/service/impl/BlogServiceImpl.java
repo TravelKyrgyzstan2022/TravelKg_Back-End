@@ -11,7 +11,6 @@ import com.example.benomad.enums.ImagePath;
 import com.example.benomad.enums.IncludeContent;
 import com.example.benomad.enums.ReviewStatus;
 import com.example.benomad.exception.*;
-import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.mapper.BlogMapper;
 import com.example.benomad.mapper.DeletionInfoMapper;
 import com.example.benomad.mapper.UserMapper;
@@ -25,13 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,19 +40,9 @@ public class BlogServiceImpl implements BlogService {
     private final UserMapper userMapper;
     private final DeletionInfoMapper deletionInfoMapper;
     private final ImageServiceImpl imageService;
-    private final LogWriterServiceImpl logWriter;
 
     @Override
     public BlogDTO insertBlog(BlogDTO blogDTO) throws ContentNotFoundException {
-        blogDTO.setId(null);
-        blogDTO.setAuthor(userMapper.entityToDto(
-                userService.getUserEntityById(authService.getCurrentUserId())));
-        blogDTO.setId(blogRepository.save(blogMapper.dtoToEntity(blogDTO)).getId());
-        logWriter.insert(String.format("%s - Inserted blog with id = %d", authService.getCurrentEmail(), blogDTO.getId()));
-        return blogDTO;
-    }
-
-    public BlogDTO insertMyBlog(BlogDTO blogDTO){
         checkUserActivation();
         blogDTO.setId(null);
         blogDTO.setAuthor(userMapper.entityToDto(
@@ -70,9 +55,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public BlogDTO getBlogById(Long blogId) throws ContentNotFoundException {
-        BlogDTO blogDTO = blogMapper.entityToDto(getBlogEntityById(blogId));
-        logWriter.get(String.format("%s - Returned blog with id = %d", authService.getCurrentEmail(), blogId));
-        return blogDTO;
+        return blogMapper.entityToDto(getBlogEntityById(blogId));
     }
 
     @Override
@@ -109,9 +92,12 @@ public class BlogServiceImpl implements BlogService {
         checkUserActivation();
         checkBlog(blogId);
         Blog blog = getBlogEntityById(blogId);
-        blogRepository.delete(blog);
-        return blogMapper.entityToDto(blog);
+        blog.setIsDeleted(true);
+        return blogMapper.entityToDto(blogRepository.save(blog));
     }
+
+    // FIXME: 08.12.2022
+    public void updateMyBlog(){}
 
     public List<UserDTO> getAuthors(String firstName, String lastName){
         return userService.getBlogAuthors(firstName, lastName);
@@ -132,8 +118,6 @@ public class BlogServiceImpl implements BlogService {
         Example<Blog> example = Example.of(blog, getExample(MATCH_ALL, includeContent));
 
         List<Blog> blogs = blogRepository.findAll(example);
-
-        logWriter.get(String.format("%s - Returned %d blogs", authService.getCurrentEmail(), blogs.size()));
 
         return blogMapper.entityListToDtoList(blogs);
     }
@@ -157,8 +141,6 @@ public class BlogServiceImpl implements BlogService {
             }
             blogRepository.likeBlogById(blogId, userId);
         }
-        logWriter.update(String.format("%s - %s blog with id = %d", authService.getCurrentEmail(),
-                isDislike ? "Disliked" : "Liked", blogId));
         return blogMapper.entityToDto(blog);
     }
 
@@ -173,7 +155,6 @@ public class BlogServiceImpl implements BlogService {
         blog.setUpdateDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blogRepository.save(blog);
         addIsLikedAndLikesCount(blogDTO, authService.getCurrentUserId());
-        logWriter.update(String.format("%s - Updated blog with id = %d", authService.getCurrentEmail(), blogId));
         return blogDTO;
     }
 
@@ -184,7 +165,6 @@ public class BlogServiceImpl implements BlogService {
         infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blog.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
         blogRepository.save(blog);
-        logWriter.delete(String.format("%s - Deleted blog with id = %d", authService.getCurrentEmail(), blogId));
         return blogMapper.entityToDto(blog);
     }
 

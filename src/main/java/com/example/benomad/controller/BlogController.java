@@ -177,7 +177,7 @@ public class BlogController {
             @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
             @RequestParam(name = "page", required = false) Optional<Integer> page,
             @RequestParam(name = "size", required = false) Optional<Integer> size){
-        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1),
+        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(10),
                 Sort.by(sortBy.orElse("id")));
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok(commentService.getReferenceCommentsById(blogId, CommentReference.BLOG, pageRequest));

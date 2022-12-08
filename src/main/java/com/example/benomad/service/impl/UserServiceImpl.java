@@ -8,7 +8,6 @@ import com.example.benomad.enums.ImagePath;
 import com.example.benomad.enums.IncludeContent;
 import com.example.benomad.exception.UserAttributeTakenException;
 import com.example.benomad.exception.ContentNotFoundException;
-import com.example.benomad.logger.LogWriterServiceImpl;
 import com.example.benomad.mapper.DeletionInfoMapper;
 import com.example.benomad.security.domain.Role;
 import com.example.benomad.security.domain.UserDetailsImpl;
@@ -48,7 +47,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private  UserMapper userMapper;
     private  DeletionInfoMapper deletionInfoMapper;
     private  JwtUtils jwtUtils;
-    private  LogWriterServiceImpl logWriter;
     private  PasswordEncoder encoder;
     private  AuthServiceImpl authService;
     private  ImageServiceImpl imageService;
@@ -76,7 +74,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDTO getUserById(Long userId) throws ContentNotFoundException {
         UserDTO userDTO = userMapper.entityToDto(getUserEntityById(userId));
-        logWriter.get(String.format("%s - Returned user with id = %d", getAuthName(), userId));
         return userDTO;
     }
 
@@ -88,7 +85,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new UserAttributeTakenException("email: ('" + userDTO.getEmail() + "')");
         }
         userDTO.setId(userRepository.save(userMapper.dtoToEntity(userDTO)).getId());
-        logWriter.insert(String.format("%s - Inserted user with id = %d", getAuthName(), userDTO.getId()));
         return userDTO;
     }
 
@@ -116,7 +112,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         Example<User> example = Example.of(user, getExample(MATCH_ALL, includeContent));
         List<UserDTO> userDTOS = userMapper.entityListToDtoList(userRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
-        logWriter.get(String.format("%s - Returned %d users", getAuthName(), userDTOS.size()));
         return userDTOS;
     }
 
@@ -172,7 +167,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             userDTO.setId(userId);
             userRepository.save(userMapper.dtoToEntity(userDTO));
         }
-        logWriter.update(String.format("%s - Updated user with id - %d", getAuthName(), userId));
         return userDTO;
     }
 
@@ -187,8 +181,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             user.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
             userRepository.save(user);
         }
-        logWriter.delete(String.format("%s - %s with id - %d", getAuthName(),
-                isAdmin ? "Couldn't delete admin" : "Deleted user", userId));
         return userMapper.entityToDto(user);
     }
 
@@ -275,12 +267,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, DeletionInfoMapper deletionInfoMapper, JwtUtils jwtUtils, LogWriterServiceImpl logWriter, PasswordEncoder encoder, @Lazy AuthServiceImpl authService, ImageServiceImpl imageService) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, DeletionInfoMapper deletionInfoMapper, JwtUtils jwtUtils, PasswordEncoder encoder, @Lazy AuthServiceImpl authService, ImageServiceImpl imageService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.deletionInfoMapper = deletionInfoMapper;
         this.jwtUtils = jwtUtils;
-        this.logWriter = logWriter;
         this.encoder = encoder;
         this.authService = authService;
         this.imageService = imageService;

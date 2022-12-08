@@ -53,12 +53,9 @@ public class BlogMapper {
         }
         return Blog.builder()
                 .id(blogDTO.getId())
-                .author(
-                        userService.getUserEntityById(authService.getCurrentUserId())
-                )
                 .creationDate(blogDTO.getCreationDate())
                 .updateDate(blogDTO.getUpdateDate())
-                .isDeleted(blogDTO.isDeleted())
+                .isDeleted(blogDTO.getIsDeleted())
                 .deletionInfo(blogDTO.getDeletionInfoDTO() != null ?
                         deletionInfoMapper.dtoToEntity(blogDTO.getDeletionInfoDTO()) : null)
                 .title(blogDTO.getTitle())

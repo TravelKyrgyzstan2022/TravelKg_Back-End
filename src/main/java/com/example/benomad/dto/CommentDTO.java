@@ -20,8 +20,8 @@ public class CommentDTO {
     @JsonProperty("reference_id")
     private Long referenceId;
 
-    @JsonProperty("user_id")
-    private Long userId;
+    @JsonProperty("user")
+    private UserDTO user;
 
     private String body;
 

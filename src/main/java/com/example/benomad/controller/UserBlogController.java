@@ -41,7 +41,7 @@ public class UserBlogController {
     @Operation(summary = "Insert new blog")
     @PostMapping(value = "/")
     public ResponseEntity<?> insertMyBlog(@RequestBody BlogDTO blogDTO){
-        return ResponseEntity.ok(blogService.insertMyBlog(blogDTO));
+        return ResponseEntity.ok(blogService.insertBlog(blogDTO));
     }
 
     @Operation(summary = "Delete my blog by ID")
