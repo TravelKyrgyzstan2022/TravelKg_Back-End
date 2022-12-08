@@ -48,6 +48,9 @@ public class UserDTO {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String role;
+
     //fixme
     @NotNull(message = "Role can't be null or empty")
     private Set<Role> roles = new HashSet<>();

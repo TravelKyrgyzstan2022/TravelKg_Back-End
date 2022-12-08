@@ -86,14 +86,6 @@ public class User {
     @Column(name = "image_url")
     private String imageUrl;
 
-    public void addRole(Role role){
-        roles.add(role);
-    }
-
-    public void removeRole(Role role){
-        roles.remove(role);
-    }
-
     public Optional<String> getImageUrl() {
         return Optional.ofNullable(imageUrl);
     }

@@ -50,12 +50,6 @@ public class LogWriterServiceImpl {
         saveLogToDB(LogMarkers.OTHER.toString(), message);
     }
 
-//    public static class http{
-//        public static void NOT_FOUND(String message){
-//            log.info(LogMarkers.OTHER.get(), message);
-//        }
-//    }
-
     private void saveLogToDB(String marker, String message){
         LogEntity logEntity = logRepository.findById(1L).orElse(new LogEntity());
 

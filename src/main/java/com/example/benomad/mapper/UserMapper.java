@@ -2,11 +2,13 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.User;
+import com.example.benomad.security.domain.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +37,15 @@ public class UserMapper {
     }
 
     public UserDTO entityToDto(User user){
+        String role;
+        Set<Role> roles = user.getRoles();
+        if(roles.contains(Role.ROLE_SUPERADMIN)){
+            role = Role.ROLE_SUPERADMIN.toString();
+        }else if(roles.contains(Role.ROLE_ADMIN)){
+            role = Role.ROLE_ADMIN.toString();
+        }else{
+            role = Role.ROLE_USER.toString();
+        }
         return UserDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
@@ -49,6 +60,7 @@ public class UserMapper {
                 .deletionInfoDTO(user.getDeletionInfo() != null ?
                         deletionInfoMapper.entityToDto(user.getDeletionInfo()) : null)
                 .phoneNumber(user.getPhoneNumber())
+                .role(role)
                 .roles(user.getRoles())
                 .imageUrl(user.getImageUrl().orElse(null))
                 .build();

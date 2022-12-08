@@ -4,7 +4,9 @@ import com.example.benomad.advice.ExceptionResponse;
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.dto.DeletionInfoDTO;
+import com.example.benomad.dto.UserDTO;
 import com.example.benomad.enums.CommentReference;
+import com.example.benomad.enums.IncludeContent;
 import com.example.benomad.enums.ReviewStatus;
 import com.example.benomad.service.impl.BlogServiceImpl;
 import com.example.benomad.service.impl.CommentServiceImpl;
@@ -65,22 +67,46 @@ public class BlogController {
             )
     })
     @GetMapping(value = {""}, produces = "application/json")
-    public ResponseEntity<?> findBlogs(@RequestParam(name = "author_id", required = false) Long authorId,
-                                       @RequestParam(name = "title", required = false) String title,
+    public ResponseEntity<?> findBlogs(@RequestParam(name = "title", required = false) String title,
+                                       @RequestParam(name = "include", defaultValue = "ALL") IncludeContent includeContent,
                                        @RequestParam(name = "status", required = false) ReviewStatus reviewStatus,
                                        @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
         return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogsByAttributes(
-                authorId, title, reviewStatus, MATCH_ALL));
+                title, includeContent, reviewStatus, MATCH_ALL));
     }
 
     @Hidden
     @GetMapping(value = {"/"}, produces = "application/json")
-    public ResponseEntity<?> forwardSlashFix(@RequestParam(name = "author_id", required = false) Long authorId,
-                                       @RequestParam(name = "title", required = false) String title,
-                                       @RequestParam(name = "status", required = false) ReviewStatus reviewStatus,
-                                       @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
+    public ResponseEntity<?> forwardSlashFix(@RequestParam(name = "title", required = false) String title,
+                                             @RequestParam(name = "include", defaultValue = "ALL") IncludeContent includeContent,
+                                             @RequestParam(name = "status", required = false) ReviewStatus reviewStatus,
+                                             @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
         return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogsByAttributes(
-                authorId, title, reviewStatus, MATCH_ALL));
+                title, includeContent, reviewStatus, MATCH_ALL));
+    }
+
+    @Operation(summary = "Get all authors")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @GetMapping(value = "/authors")
+    public ResponseEntity<?> getAllAuthors(@RequestParam(name = "first_name", required = false) String firstName,
+                                           @RequestParam(name = "last_name", required = false) String lastName){
+        return ResponseEntity.ok(blogService.getAuthors(firstName, lastName));
     }
 
     @Operation(summary = "Finds blog by ID",
