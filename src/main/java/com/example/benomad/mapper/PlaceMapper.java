@@ -33,6 +33,8 @@ public class PlaceMapper {
                 .imageUrls(placeDTO.getImageUrls())
                 .linkUrl(placeDTO.getLinkUrl())
                 .address(placeDTO.getAddress())
+                .latitude(placeDTO.getLatitude())
+                .longitude(placeDTO.getLongitude())
                 .build();
     }
 
@@ -53,6 +55,8 @@ public class PlaceMapper {
                 .favoriteOfCurrentUser(userId != null && userRepository.findById(userId).orElseThrow(
                         () -> new ContentNotFoundException(ContentNotFoundEnum.USER, "userId", String.valueOf(userId))
                 ).getPlaces().contains(place))
+                .latitude(place.getLatitude())
+                .longitude(place.getLongitude())
                 .build();
     }
 
