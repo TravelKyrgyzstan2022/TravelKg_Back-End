@@ -202,19 +202,20 @@ public class PlaceServiceImpl implements PlaceService {
         return placeMapper.entityToDto(place);
     }
 
+    
     private ExampleMatcher getExampleMatcher(Boolean match) {
         ExampleMatcher matches = ExampleMatcher.matchingAll()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("region",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("placeType",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("address",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
-                .withIgnorePaths("id","description","imageUrl","linkUrl","placeCategory","region");
+                .withIgnorePaths("id","description","imageUrl","linkUrl","placeCategory","region","latitude","longitude");
         ExampleMatcher notMatches = ExampleMatcher.matchingAny()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("region",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("placeType",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("address",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
-                .withIgnorePaths("id","description","imageUrl","linkUrl","placeCategory","region");
+                .withIgnorePaths("id","description","imageUrl","linkUrl","placeCategory","region","latitude","longitude");
         return match ? matches : notMatches;
     }
 }
