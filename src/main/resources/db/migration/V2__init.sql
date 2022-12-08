@@ -13,7 +13,7 @@ create table favorite_places (user_id int8 not null, place_id int8 not null);
 create table place_comments (place_id int8 not null, comment_id int8 not null, primary key (place_id, comment_id));
 create table place_image_urls (place_id int8 not null, image_urls varchar(255));
 create table place_ratings (id  bigserial not null, rating int4 not null, place_id int8, user_id int8, primary key (id));
-create table places (id  bigserial not null, address varchar(255), description varchar(2000) not null, link_url varchar(255) not null, name varchar(255) not null, place_category varchar(255), place_type varchar(255), region varchar(255), primary key (id));
+create table places (id  bigserial not null, address varchar(255), description varchar(2000) not null, latitude float8 not null, link_url varchar(2000) not null, longitude float8 not null, name varchar(255) not null, place_category varchar(255), place_type varchar(255), region varchar(255), primary key (id));
 create table plans (id  bigserial not null, date date, note varchar(500), place_id int8, user_id int8, primary key (id));
 create table refreshtokens (id  bigserial not null, expiry_date timestamp not null, token varchar(255) not null, user_id int8, primary key (id));
 create table roles (user_id int8 not null, roles varchar(255));
