@@ -14,14 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/user/plans")
 @Tag(name = "Planner resource", description = "The Planner API")
-public class PlanController {
+public class UserPlanController {
 
     private final PlanServiceImpl planService;
-
-//    @GetMapping(value = "/byUser/{userId}")
-//    public ResponseEntity<?> getPlansByUserId(@PathVariable("userId") Long userId){
-//        return ResponseEntity.ok(planService.getPlansByUserId(userId));
-//    }
 
     @Operation(summary = "Get plan by ID (TEST)")
     @GetMapping(value = "/{planId}")

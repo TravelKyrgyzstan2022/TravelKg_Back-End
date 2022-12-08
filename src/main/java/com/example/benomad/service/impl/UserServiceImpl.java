@@ -245,13 +245,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .withMatcher("lastName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
                 .withMatcher("phoneNumber", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active", "isDeleted");
+                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active");
         ExampleMatcher MATCHER_ALL_WITHOUT_DELETED = ExampleMatcher.matchingAll()
                 .withMatcher("firstName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("lastName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.exact().ignoreCase())
                 .withMatcher("phoneNumber", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active", "isDeleted");
+                .withIgnorePaths("id", "password", "roles", "places", "blogs", "active");
 
         if(includeContent == IncludeContent.ALL){
             return MATCH_ALL ? MATCHER_ALL_WITHOUT_DELETED : MATCHER_ANY_WITHOUT_DELETED;

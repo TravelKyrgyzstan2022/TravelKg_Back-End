@@ -164,13 +164,6 @@ public class AdminUserController {
         return ResponseEntity.ok(userService.getUserById(1L));
     }
 
-    //fixme
-//    @Operation(summary = "Inserts a user to the database")
-//    @PostMapping(value = {"/", ""}, consumes = "application/json", produces = "application/json")
-//    public ResponseEntity<?> insertUser(@RequestBody UserDTO userDTO){
-//        return ResponseEntity.status(HttpStatus.CREATED).body(userService.insertUser(userDTO));
-//    }
-
     @Operation(summary = "Updates user by ID")
     @ApiResponses(value = {
             @ApiResponse(
