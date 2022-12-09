@@ -36,5 +36,11 @@ public enum ContentNotFoundEnum {
         public String toString() {
             return "Plan";
         }
+    },
+    SUPPORT{
+        @Override
+        public String toString() {
+            return "Support";
+        }
     }
 }
