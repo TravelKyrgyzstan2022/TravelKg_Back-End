@@ -17,7 +17,7 @@ public class PlanDTO {
     private Long id;
 
     @JsonProperty("date")
-    private LocalDate date;
+    private String date;
 
     @JsonProperty(value = "user", access = JsonProperty.Access.READ_ONLY)
     private UserDTO user;

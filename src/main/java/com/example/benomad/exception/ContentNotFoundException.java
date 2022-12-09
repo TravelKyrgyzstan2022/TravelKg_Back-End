@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Data
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ContentNotFoundException extends CustomException{
-    private final String messageFormat = "%s with %s : {%s} was not found";
+    private final String messageFormat = "%s with %s = {%s} was not found";
     private final Integer statusCode = 404;
     private String message;
 

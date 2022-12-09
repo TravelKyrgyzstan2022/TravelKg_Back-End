@@ -1,6 +1,7 @@
 package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.PlaceDTO;
+import com.example.benomad.entity.Comment;
 import com.example.benomad.entity.Place;
 import com.example.benomad.entity.Rating;
 import com.example.benomad.enums.Content;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -157,6 +159,14 @@ public class PlaceServiceImpl implements PlaceService {
         else user.getPlaces().add(place);
         userRepository.save(user);
         return placeMapper.entityToDto(place);
+    }
+
+    public void addComment(Long placeId, Comment comment){
+        Place place = getPlaceEntityById(placeId);
+        Set<Comment> comments = place.getComments();
+        comments.add(comment);
+        place.setComments(comments);
+        placeRepository.save(place);
     }
 
     public Place getPlaceEntityById(Long placeId){

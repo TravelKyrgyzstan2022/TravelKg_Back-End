@@ -1,6 +1,7 @@
 package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.DeletionInfoDTO;
+import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.entity.User;
 import com.example.benomad.enums.CommentReference;
 import com.example.benomad.enums.Content;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,8 +53,7 @@ public class CommentServiceImpl implements CommentService {
             placeService.getPlaceEntityById(referenceId);
             page = commentRepository.getPlaceCommentsById(referenceId, pageRequest);
         }
-        List<CommentDTO> commentDTOS = commentMapper.entityListToDtoList(page.stream().collect(Collectors.toList()));
-        return commentDTOS;
+        return commentMapper.entityListToDtoList(page.stream().collect(Collectors.toList()));
     }
 
     private void checkComment(Long commentId){
@@ -66,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentDTO deleteMyComment(Long commentId){
         checkComment(commentId);
         Comment comment = getCommentEntityById(commentId);
-        comment.setDeleted(true);
+        comment.setIsDeleted(true);
         commentRepository.save(comment);
         return commentMapper.entityToDto(comment);
     }
@@ -87,25 +88,29 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO likeDislikeComment(Long commentId, boolean isDislike){
+    public MessageResponse likeDislikeComment(Long commentId, boolean isDislike){
         Long userId = authService.getCurrentUserId();
-
-        getCommentById(commentId);
-
-        boolean isAlreadyLiked = commentRepository.isCommentLikedByUser(commentId, userId);
-
+        User user = userService.getUserEntityById(userId);
+        Comment comment = getCommentEntityById(commentId);
+        Set<User> likedUsers = comment.getLikedUsers();
+        boolean isAlreadyLiked = likedUsers.contains(user);
+        String message;
         if(isDislike){
             if(!isAlreadyLiked){
                 throw new ContentIsNotLikedException(Content.COMMENT);
             }
-            commentRepository.dislikeCommentById(commentId, userId);
+            likedUsers.remove(user);
+            message = String.format("Like has been successfully removed from comment with id = {%d}!", commentId);
         }else{
             if(isAlreadyLiked){
                 throw new ContentIsAlreadyLikedException(Content.COMMENT);
             }
-            commentRepository.likeCommentById(commentId, userId);
+            likedUsers.add(user);
+            message = String.format("Like has been successfully added to the comment with id = {%d}!", commentId);
         }
-        return commentMapper.entityToDto(getCommentEntityById(commentId));
+        comment.setLikedUsers(likedUsers);
+        commentRepository.save(comment);
+        return new MessageResponse(message, 200);
     }
 
     @Override
@@ -115,23 +120,22 @@ public class CommentServiceImpl implements CommentService {
         commentDTO.setReferenceId(referenceId);
 
         Comment comment = commentMapper.dtoToEntity(commentDTO);
-        comment.setCreationDate(LocalDate.now());
-
+        comment.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        comment.setUser(userService.getUserEntityById(authService.getCurrentUserId()));
         commentDTO.setId(commentRepository.save(comment).getId());
-
-        // FIXME: 09.12.2022
-//        if(reference == CommentReference.PLACE){
-//            commentRepository.insertPlaceComment(commentDTO.getId(), referenceId);
-//        }else if(reference == CommentReference.BLOG){
-//            commentRepository.insertBlogComment(commentDTO.getId(), referenceId);
-//        }
+        comment = commentRepository.save(comment);
+        if(reference == CommentReference.PLACE){
+            placeService.addComment(referenceId, comment);
+        }else if(reference == CommentReference.BLOG){
+            blogService.addComment(referenceId, comment);
+        }
         return commentDTO;
     }
 
     @Override
     public CommentDTO deleteCommentById(Long commentId, DeletionInfoDTO infoDTO){
         Comment comment = getCommentEntityById(commentId);
-        comment.setDeleted(true);
+        comment.setIsDeleted(true);
         infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         comment.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
         return commentMapper.entityToDto(comment);

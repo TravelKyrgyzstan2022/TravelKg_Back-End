@@ -43,6 +43,9 @@ public class PlaceDTO {
     @JsonProperty(value = "rating_count", access = JsonProperty.Access.READ_ONLY)
     private Integer ratingCount;
 
+    @JsonProperty(value = "comment_count", access = JsonProperty.Access.READ_ONLY)
+    private Integer commentCount;
+
     @Schema(required = true)
     private String description;
 

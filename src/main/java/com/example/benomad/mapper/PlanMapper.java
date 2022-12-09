@@ -7,6 +7,7 @@ import com.example.benomad.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,12 +18,12 @@ public class PlanMapper {
 
     private final UserMapper userMapper;
     private final PlaceMapper placeMapper;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' HH:mm");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public PlanDTO entityToDto(Plan plan){
         return PlanDTO.builder()
                 .id(plan.getId())
-                .date(plan.getDate())
+                .date(formatter.format(plan.getDate()))
                 .user(userMapper.entityToDto(plan.getUser()))
                 .place(placeMapper.entityToDto(plan.getPlace()))
                 .note(plan.getNote())
@@ -32,7 +33,7 @@ public class PlanMapper {
     public Plan dtoToEntity(PlanDTO planDTO){
         return Plan.builder()
                 .id(planDTO.getId())
-                .date(planDTO.getDate())
+                .date(LocalDate.parse(planDTO.getDate(), formatter))
                 .note(planDTO.getNote())
                 .build();
     }

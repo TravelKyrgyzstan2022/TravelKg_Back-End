@@ -33,7 +33,8 @@ public class BlogMapper {
                 .deletionInfoDTO(blog.getDeletionInfo() != null ?
                         deletionInfoMapper.entityToDto(blog.getDeletionInfo()) : null)
                 .author((userMapper.entityToDto(blog.getAuthor())))
-                .likes(blogRepository.getLikesNumberById(blog.getId()))
+                .likeCount(blogRepository.getLikesNumberById(blog.getId()))
+                .commentCount(blog.getComments().size())
                 .isLikedByCurrentUser(userId != null ?
                         blogRepository.isBlogLikedByUser(blog.getId(), userId) : null)
                 .imageUrls(blog.getImageUrls())
