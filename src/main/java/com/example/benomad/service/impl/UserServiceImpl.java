@@ -29,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -73,18 +74,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDTO getUserById(Long userId) throws ContentNotFoundException {
-        UserDTO userDTO = userMapper.entityToDto(getUserEntityById(userId));
-        return userDTO;
+        return userMapper.entityToDto(getUserEntityById(userId));
     }
 
     //is not used
     @Override
     public UserDTO insertUser(UserDTO userDTO) throws UserAttributeTakenException {
         userDTO.setId(null);
+        userDTO.setDeleted(false);
         if(userRepository.existsByEmail(userDTO.getEmail())){
             throw new UserAttributeTakenException("email: ('" + userDTO.getEmail() + "')");
         }
-        userDTO.setId(userRepository.save(userMapper.dtoToEntity(userDTO)).getId());
+        User user = userMapper.dtoToEntity(userDTO);
+        user.setRegistrationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        userDTO.setId(userRepository.save(user).getId());
         return userDTO;
     }
 

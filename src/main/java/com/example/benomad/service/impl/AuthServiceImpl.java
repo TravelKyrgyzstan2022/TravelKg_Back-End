@@ -138,6 +138,7 @@ public class AuthServiceImpl implements AuthService {
 
         user.setId(null);
         user.setIsActivated(false);
+        user.setIsDeleted(false);
         user.setRegistrationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         user.setLastVisitDate(LocalDateTime.now(ZoneId.of("Asia/Bishkek")));
         user.setRoles(Collections.singleton(Role.ROLE_USER));

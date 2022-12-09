@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 public class BlogMapper {
 
     private final BlogRepository blogRepository;
-    private final UserRepository userRepository;
-    private final UserServiceImpl userService;
     private final UserMapper userMapper;
     private final AuthServiceImpl authService;
     private final DeletionInfoMapper deletionInfoMapper;

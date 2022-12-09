@@ -1,6 +1,5 @@
 package com.example.benomad.dto;
 
-import com.example.benomad.entity.DeletionInfo;
 import com.example.benomad.enums.ReviewStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -8,9 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import java.time.LocalDate;
 import java.util.List;
 

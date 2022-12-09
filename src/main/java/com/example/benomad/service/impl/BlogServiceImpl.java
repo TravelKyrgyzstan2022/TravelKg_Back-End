@@ -45,6 +45,7 @@ public class BlogServiceImpl implements BlogService {
     public BlogDTO insertBlog(BlogDTO blogDTO) throws ContentNotFoundException {
         checkUserActivation();
         blogDTO.setId(null);
+        blogDTO.setIsDeleted(false);
         blogDTO.setAuthor(userMapper.entityToDto(
                 userService.getUserEntityById(authService.getCurrentUserId())));
         blogDTO.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
