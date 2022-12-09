@@ -93,7 +93,7 @@ public class UserBlogController {
         return ResponseEntity.ok(blogService.insertImagesByBlogId(blogId,files));
     }
 
-    @Operation(summary = "Inserts new blog with along the images")
+    @Operation(summary = "Inserts new blog with images")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
