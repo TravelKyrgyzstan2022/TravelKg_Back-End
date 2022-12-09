@@ -203,6 +203,7 @@ public class BlogServiceImpl implements BlogService {
     public boolean insertMyBlogWithImages(BlogDTO blogDTO, MultipartFile[] files) {
         checkUserActivation();
         blogDTO.setId(null);
+        blogDTO.setIsDeleted(false);
         blogDTO.setAuthor(userMapper.entityToDto(userService.getUserEntityById(authService.getCurrentUserId())));
         blogDTO.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blogDTO.setImageUrls(imageService.uploadImages(files, ImagePath.BLOG));
