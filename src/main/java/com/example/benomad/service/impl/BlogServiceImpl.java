@@ -48,10 +48,9 @@ public class BlogServiceImpl implements BlogService {
     public BlogDTO insertBlog(BlogDTO blogDTO) throws ContentNotFoundException {
         blogDTO.setId(null);
         blogDTO.setIsDeleted(false);
-        blogDTO.setAuthor(userMapper.entityToDto(
-                userService.getUserEntityById(authService.getCurrentUserId())));
-        blogDTO.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
-        Blog blog = blogRepository.save(blogMapper.dtoToEntity(blogDTO));
+        Blog blog = blogMapper.dtoToEntity(blogDTO);
+        blog.setAuthor(userService.getUserEntityById(authService.getCurrentUserId()));
+        blog.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blogDTO.setId(blog.getId());
         return blogDTO;
     }
@@ -71,8 +70,10 @@ public class BlogServiceImpl implements BlogService {
     public BlogDTO updateMyBlogById(BlogDTO blogDTO, Long blogId) {
         checkBlog(blogId);
         blogDTO.setId(blogId);
-        blogRepository.save(blogMapper.dtoToEntity(blogDTO));
-        return blogDTO;
+        Blog blog = blogMapper.dtoToEntity(blogDTO);
+        blog.setUpdateDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        blogRepository.save(blog);
+        return blogMapper.entityToDto(blog);
     }
 
     private void checkBlog(Long blogId){
@@ -89,8 +90,6 @@ public class BlogServiceImpl implements BlogService {
         blog.setIsDeleted(true);
         return blogMapper.entityToDto(blogRepository.save(blog));
     }
-
-
 
     public List<UserDTO> getAuthors(String firstName, String lastName){
         return userService.getBlogAuthors(firstName, lastName);
@@ -181,11 +180,11 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public boolean insertImagesByBlogId(Long blogId, MultipartFile[] files){
+    public MessageResponse insertImagesByBlogId(Long blogId, MultipartFile[] files){
         Blog blog = getBlogEntityById(blogId);
         blog.setImageUrls(imageService.uploadImages(files, ImagePath.BLOG));
         blogRepository.save(blog);
-        return true;
+        return new MessageResponse("Images have been successfully added to the blog!", 200);
     }
 
     @Override
@@ -195,14 +194,14 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public boolean insertMyBlogWithImages(BlogDTO blogDTO, MultipartFile[] files) {
+    public BlogDTO insertMyBlogWithImages(BlogDTO blogDTO, MultipartFile[] files) {
         blogDTO.setId(null);
         blogDTO.setIsDeleted(false);
-        blogDTO.setAuthor(userMapper.entityToDto(userService.getUserEntityById(authService.getCurrentUserId())));
-        blogDTO.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blogDTO.setImageUrls(imageService.uploadImages(files, ImagePath.BLOG));
-        blogRepository.save(blogMapper.dtoToEntity(blogDTO));
-        return true;
+        Blog blog = blogMapper.dtoToEntity(blogDTO);
+        blog.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        blog.setAuthor(userService.getUserEntityById(authService.getCurrentUserId()));
+        return blogMapper.entityToDto(blogRepository.save(blog));
     }
 
     public void addComment(Long blogId, Comment comment){

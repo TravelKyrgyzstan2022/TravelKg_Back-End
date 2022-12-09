@@ -1,6 +1,7 @@
 package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.ArticleDTO;
+import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.entity.Article;
 import com.example.benomad.enums.Content;
 import com.example.benomad.enums.ImagePath;
@@ -24,6 +25,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final ArticleMapper articleMapper;
     private final AuthServiceImpl authService;
+    private final UserServiceImpl userService;
     private final ImageServiceImpl imageService;
 
     @Override
@@ -47,8 +49,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public ArticleDTO insertArticle(ArticleDTO articleDTO) {
         articleDTO.setId(null);
-        articleDTO.setUserId(authService.getCurrentUserId());
-        articleDTO.setId(articleRepository.save(articleMapper.dtoToEntity(articleDTO)).getId());
+        Article article = articleMapper.dtoToEntity(articleDTO);
+        article.setUser(userService.getUserEntityById(authService.getCurrentUserId()));
+        articleDTO.setId(articleRepository.save(article).getId());
         return articleDTO;
     }
 
@@ -60,11 +63,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public boolean insertImagesByArticleId(Long articleId, MultipartFile[] files) throws ContentNotFoundException {
+    public MessageResponse insertImagesByArticleId(Long articleId, MultipartFile[] files) throws ContentNotFoundException {
         Article article = getArticleEntityById(articleId);
         article.setImageUrls(imageService.uploadImages(files, ImagePath.ARTICLE));
         articleRepository.save(article);
-        return true;
+        return new MessageResponse("Images have been successfully added to the article!", 200);
     }
 
     @Override
@@ -74,12 +77,12 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public boolean insertArticleWithImages(ArticleDTO articleDTO, MultipartFile[] files) {
+    public ArticleDTO insertArticleWithImages(ArticleDTO articleDTO, MultipartFile[] files) {
         articleDTO.setId(null);
-        articleDTO.setUserId(authService.getCurrentUserId());
         articleDTO.setImageUrls(imageService.uploadImages(files, ImagePath.ARTICLE));
-        articleRepository.save(articleMapper.dtoToEntity(articleDTO));
-        return true;
+        Article article = articleMapper.dtoToEntity(articleDTO);
+        article.setUser(userService.getUserEntityById(authService.getCurrentUserId()));
+        return articleMapper.entityToDto(articleRepository.save(article));
     }
 
     public Article getArticleEntityById(Long articleId){

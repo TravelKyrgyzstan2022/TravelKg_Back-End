@@ -1,5 +1,6 @@
 package com.example.benomad.service;
 
+import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.enums.PlaceCategory;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
@@ -21,7 +22,7 @@ public interface PlaceService {
     List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories, List<PlaceType> types, List<Region> regions,Pageable pageable);
 
     PlaceDTO addPlaceToFavorites(Long id) throws ContentNotFoundException;
-    boolean insertImagesByPlaceId(Long placeId, MultipartFile[] files) throws ContentNotFoundException;
+    MessageResponse insertImagesByPlaceId(Long placeId, MultipartFile[] files) throws ContentNotFoundException;
     List<String> getImagesById(Long id) throws ContentNotFoundException;
-    boolean insertPlaceWithImages(PlaceDTO placeDTO, MultipartFile[] files);
+    PlaceDTO insertPlaceWithImages(PlaceDTO placeDTO, MultipartFile[] files);
 }

@@ -26,7 +26,7 @@ public interface BlogService {
     MessageResponse approveBlog(Long blogId);
     MessageResponse rejectBlog(Long blogId);
     List<BlogDTO> getBlogsByAuthorId(Long userId);
-    boolean insertImagesByBlogId(Long blogId, MultipartFile[] files) throws ContentNotFoundException;
+    MessageResponse insertImagesByBlogId(Long blogId, MultipartFile[] files) throws ContentNotFoundException;
     List<String> getImagesById(Long id) throws ContentNotFoundException;
-    boolean insertMyBlogWithImages(BlogDTO blogDTO, MultipartFile[] files);
+    BlogDTO insertMyBlogWithImages(BlogDTO blogDTO, MultipartFile[] files);
 }

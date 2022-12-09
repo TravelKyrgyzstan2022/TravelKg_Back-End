@@ -13,7 +13,6 @@ import com.example.benomad.mapper.DeletionInfoMapper;
 import com.example.benomad.repository.CommentRepository;
 import com.example.benomad.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

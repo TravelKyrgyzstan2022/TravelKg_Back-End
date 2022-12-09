@@ -1,5 +1,6 @@
 package com.example.benomad.service.impl;
 
+import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.entity.Comment;
 import com.example.benomad.entity.Place;
@@ -129,11 +130,11 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public boolean insertImagesByPlaceId(Long placeId, MultipartFile[] files) {
+    public MessageResponse insertImagesByPlaceId(Long placeId, MultipartFile[] files) {
         Place place = getPlaceEntityById(placeId);
         place.setImageUrls(imageService.uploadImages(files, ImagePath.PLACE));
         placeRepository.save(place);
-        return true;
+        return new MessageResponse("Images have been successfully added to the place!", 200);
     }
 
     @Override
@@ -143,11 +144,11 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public boolean insertPlaceWithImages(PlaceDTO placeDTO, MultipartFile[] files) {
+    public PlaceDTO insertPlaceWithImages(PlaceDTO placeDTO, MultipartFile[] files) {
         placeDTO.setId(null);
         placeDTO.setImageUrls(imageService.uploadImages(files, ImagePath.PLACE));
-        placeRepository.save(placeMapper.dtoToEntity(placeDTO));
-        return true;
+        placeDTO.setId(placeRepository.save(placeMapper.dtoToEntity(placeDTO)).getId());
+        return placeDTO;
     }
 
     @Override

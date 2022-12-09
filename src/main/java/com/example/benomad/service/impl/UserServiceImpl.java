@@ -1,6 +1,7 @@
 package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.DeletionInfoDTO;
+import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.entity.User;
 
 import com.example.benomad.enums.Content;
@@ -175,14 +176,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public boolean insertMyImage(MultipartFile file) {
-        //Fixme throw not authorized exception
+    public MessageResponse insertMyImage(MultipartFile file) {
         if (authService.getCurrentUserId() != null  && userRepository.findById(authService.getCurrentUserId()).isPresent()) {
             User user = userRepository.findById(authService.getCurrentUserId()).get();
             user.setImageUrl(imageService.uploadImage(file, ImagePath.USER));
             userRepository.save(user);
         }
-        return true;
+        return new MessageResponse("Image has been successfully set as a profile picture!", 200);
     }
 
     public void resetPassword(String email, String password){

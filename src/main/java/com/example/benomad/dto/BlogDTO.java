@@ -38,10 +38,10 @@ public class BlogDTO {
     private List<String> imageUrls;
 
     @JsonProperty(value = "creation_date", access = JsonProperty.Access.READ_ONLY)
-    private LocalDate creationDate;
+    private String creationDate;
 
     @JsonProperty(value = "update_date", access = JsonProperty.Access.READ_ONLY)
-    private LocalDate updateDate;
+    private String updateDate;
 
     @JsonProperty(value = "is_deleted", access = JsonProperty.Access.READ_ONLY)
     private Boolean isDeleted;

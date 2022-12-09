@@ -8,6 +8,7 @@ import com.example.benomad.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ public class BlogMapper {
     private final UserMapper userMapper;
     private final AuthServiceImpl authService;
     private final DeletionInfoMapper deletionInfoMapper;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public BlogDTO entityToDto(Blog blog){
         Long userId = authService.getCurrentUserId();
@@ -27,8 +29,8 @@ public class BlogMapper {
                 .reviewStatus(blog.getReviewStatus())
                 .title(blog.getTitle())
                 .body(blog.getBody())
-                .creationDate(blog.getCreationDate())
-                .updateDate(blog.getUpdateDate())
+                .creationDate(formatter.format(blog.getCreationDate()))
+                .updateDate(formatter.format(blog.getUpdateDate()))
                 .isDeleted(blog.getIsDeleted())
                 .deletionInfoDTO(blog.getDeletionInfo() != null ?
                         deletionInfoMapper.entityToDto(blog.getDeletionInfo()) : null)
@@ -47,8 +49,6 @@ public class BlogMapper {
         }
         return Blog.builder()
                 .id(blogDTO.getId())
-                .creationDate(blogDTO.getCreationDate())
-                .updateDate(blogDTO.getUpdateDate())
                 .isDeleted(blogDTO.getIsDeleted())
                 .deletionInfo(blogDTO.getDeletionInfoDTO() != null ?
                         deletionInfoMapper.dtoToEntity(blogDTO.getDeletionInfoDTO()) : null)

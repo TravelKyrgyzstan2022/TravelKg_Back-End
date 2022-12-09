@@ -28,6 +28,6 @@ public interface UserService {
     UserDTO updateCurrentUser(UserDTO userDTO);
     UserDTO updateUserById(Long id, UserDTO userDTO) throws ContentNotFoundException;
     UserDTO deleteUserById(Long userId, DeletionInfoDTO infoDTO) throws ContentNotFoundException;
-    boolean insertMyImage(MultipartFile file);
+    MessageResponse insertMyImage(MultipartFile file);
 
 }
