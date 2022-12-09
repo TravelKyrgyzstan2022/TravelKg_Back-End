@@ -28,7 +28,7 @@ public class Article {
     @ElementCollection(targetClass=String.class)
     private List<String> imageUrls = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             columnDefinition = "user_id",
             referencedColumnName = "id"

@@ -22,7 +22,7 @@ public class Blog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JoinColumn(columnDefinition = "author_id",
                 referencedColumnName = "id")
     private User author;

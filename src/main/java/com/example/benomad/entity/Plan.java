@@ -17,12 +17,12 @@ public class Plan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(columnDefinition = "user_id",
                 referencedColumnName = "id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(columnDefinition = "place_id",
             referencedColumnName = "id")
     private Place place;
