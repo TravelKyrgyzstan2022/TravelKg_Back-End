@@ -20,7 +20,7 @@ public interface BlogService {
     BlogDTO deleteMyBlogById(Long blogId);
     List<BlogDTO> getBlogsByAttributes(String title, IncludeContent includeContent,
                                        ReviewStatus reviewStatus, boolean MATCH_ALL) throws ContentNotFoundException;
-    BlogDTO likeDislikeBlogById(Long blogId, boolean isDislike) throws ContentNotFoundException;
+    MessageResponse likeDislikeBlogById(Long blogId, boolean isDislike) throws ContentNotFoundException;
     BlogDTO updateBlogById(Long blogId, BlogDTO blogDTO) throws ContentNotFoundException;
     BlogDTO deleteBlogById(Long blogId, DeletionInfoDTO infoDTO) throws ContentNotFoundException;
     MessageResponse approveBlog(Long blogId);

@@ -14,7 +14,6 @@ import java.util.List;
 @Repository
 public interface PlanRepository extends JpaRepository <Plan, Long> {
     List<Plan> findByUser(User user);
-    List<Plan> findByPlace(Place place);
 
     @Query(value = "SELECT * FROM plans WHERE date = :date AND user_id = :userId", nativeQuery = true)
     List<Plan> findByDate(@Param("userId") Long userId, @Param("date") LocalDate date);

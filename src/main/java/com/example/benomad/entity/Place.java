@@ -57,11 +57,9 @@ public class Place {
     )
     private Set<Comment> comments;
     
-     @Column(nullable = false)
+    @Column(nullable = false)
     private double latitude;
 
     @Column(nullable = false)
     private double longitude;
-
-
 }

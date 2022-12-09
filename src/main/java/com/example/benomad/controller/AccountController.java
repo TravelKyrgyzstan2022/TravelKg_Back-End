@@ -184,22 +184,4 @@ public class AccountController {
     public ResponseEntity<MessageResponse> activateUser(@RequestBody EmailVerificationRequest emailVerificationRequest){
         return ResponseEntity.ok(authService.activateUser(emailVerificationRequest));
     }
-
-    @Operation(summary = "Gets current user (TESTING)")
-    @GetMapping(value = "/my-account")
-    public ResponseEntity<?> getCurrentUser(){
-        return ResponseEntity.ok(userService.getCurrentUser());
-    }
-
-    @Operation(summary = "Updates current user (TESTING)")
-    @PutMapping(value = "/my-account")
-    public ResponseEntity<?> updateCurrentUser(@RequestBody UserDTO userDTO){
-        return ResponseEntity.ok(userService.updateCurrentUser(userDTO));
-    }
-
-    @Operation(summary = "Inserts current user image")
-    @PutMapping(value = "/my-account/image")
-    public ResponseEntity<?> insertUserImage(@RequestPart("file") MultipartFile file){
-        return ResponseEntity.ok(userService.insertMyImage(file));
-    }
 }

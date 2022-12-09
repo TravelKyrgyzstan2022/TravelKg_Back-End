@@ -1,1 +1,0 @@
-create table supports(id bigserial not null primary key, user_id bigint, date timestamp, foreign key (user_id) references users(id));

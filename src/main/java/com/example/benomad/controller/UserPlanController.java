@@ -24,16 +24,18 @@ public class UserPlanController {
         return ResponseEntity.ok(planService.getPlanById(planId));
     }
 
+    // FIXME: 09.12.2022
     @Operation(summary = "Get plans by Date (TEST)")
-    @PostMapping(value = {"/byDate/"})
+    @PostMapping(value = {"/date/"})
     public ResponseEntity<?> getPlansByDate(@RequestBody GetPlanRequest request){
         return ResponseEntity.ok(planService.getPlansByDate(request));
     }
 
-    @Operation(summary = "Insert plan by ID (TEST)")
+    @Operation(summary = "Insert plan")
     @PostMapping(value = {"/", ""})
-    public ResponseEntity<?> insertPlan(@RequestBody PlanDTO planDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(planService.insertPlan(planDTO));
+    public ResponseEntity<?> insertPlan(@RequestBody PlanDTO planDTO,
+                                        @RequestParam(name = "place_id") Long placeId){
+        return ResponseEntity.status(HttpStatus.CREATED).body(planService.insertPlan(planDTO, placeId));
     }
 
     @Operation(summary = "Update plan by ID (TEST)")
@@ -43,7 +45,7 @@ public class UserPlanController {
     }
 
     @Operation(summary = "Delete plan by ID (TEST)")
-    @DeleteMapping(value = "{planId}")
+    @DeleteMapping(value = "/{planId}")
     public ResponseEntity<?> deletePlan(@PathVariable("planId") Long planId){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(planService.deletePlanById(planId));
     }

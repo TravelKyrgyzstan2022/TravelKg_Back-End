@@ -20,7 +20,7 @@ public class EventDTO {
     @Schema(required = true)
     private String name;
 
-    @JsonProperty(value = "date", required = true)
+    @JsonProperty(value = "datetime", required = true)
     private String dateTime;
 
     @Schema(required = true)

@@ -32,7 +32,7 @@ public class Comment {
     @Column(name = "update_date")
     private LocalDate updateDate;
 
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(
@@ -49,9 +49,4 @@ public class Comment {
                     referencedColumnName = "id")
     )
     private Set<User> likedUsers;
-
-    //fixme
-//    public void addLikedUser(User user){
-//        likedUsers.add(user);
-//    }
 }

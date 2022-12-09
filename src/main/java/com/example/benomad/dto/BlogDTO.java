@@ -23,8 +23,11 @@ public class BlogDTO {
     @JsonProperty(value = "author", access = JsonProperty.Access.READ_ONLY)
     private UserDTO author;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long likes;
+    @JsonProperty(value = "like_count", access = JsonProperty.Access.READ_ONLY)
+    private Integer likeCount;
+
+    @JsonProperty(value = "comment_count", access = JsonProperty.Access.READ_ONLY)
+    private Integer commentCount;
 
     private String title;
 

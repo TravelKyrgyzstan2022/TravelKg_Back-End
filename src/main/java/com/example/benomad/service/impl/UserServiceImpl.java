@@ -3,7 +3,7 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.entity.User;
 
-import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.enums.Content;
 import com.example.benomad.enums.ImagePath;
 import com.example.benomad.enums.IncludeContent;
 import com.example.benomad.exception.UserAttributeTakenException;
@@ -18,45 +18,41 @@ import com.example.benomad.mapper.UserMapper;
 import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    private  UserRepository userRepository;
-    private  UserMapper userMapper;
-    private  DeletionInfoMapper deletionInfoMapper;
-    private  JwtUtils jwtUtils;
-    private  PasswordEncoder encoder;
-    private  AuthServiceImpl authService;
-    private  ImageServiceImpl imageService;
+    private UserRepository userRepository;
+    private UserMapper userMapper;
+    private DeletionInfoMapper deletionInfoMapper;
+    private JwtUtils jwtUtils;
+    private PasswordEncoder encoder;
+    private AuthServiceImpl authService;
+    private ImageServiceImpl imageService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> {throw new ContentNotFoundException(ContentNotFoundEnum.USER, "email", email);}
-        );
+        User user = getUserEntityByEmail(email);
         return UserDetailsImpl.build(user);
     }
 
@@ -69,9 +65,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-
-
-
     @Override
     public UserDTO getUserById(Long userId) throws ContentNotFoundException {
         return userMapper.entityToDto(getUserEntityById(userId));
@@ -81,7 +74,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDTO insertUser(UserDTO userDTO) throws UserAttributeTakenException {
         userDTO.setId(null);
-        userDTO.setDeleted(false);
+        userDTO.setIsDeleted(false);
         if(userRepository.existsByEmail(userDTO.getEmail())){
             throw new UserAttributeTakenException("email: ('" + userDTO.getEmail() + "')");
         }
@@ -90,10 +83,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userDTO.setId(userRepository.save(user).getId());
         return userDTO;
     }
-
-    //fixme
-    public void setDeleted(){}
-    public void sameGoesForBlogsBro(){}
 
     public void setActivated(String email){
         User user = getUserEntityByEmail(email);
@@ -114,8 +103,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             user.setIsDeleted(includeContent == IncludeContent.ONLY_DELETED);
         }
         Example<User> example = Example.of(user, getExample(MATCH_ALL, includeContent));
-        List<UserDTO> userDTOS = userMapper.entityListToDtoList(userRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
-        return userDTOS;
+        return userMapper.entityListToDtoList(userRepository.findAll(example, Sort.by(Sort.Direction.ASC, "id")));
     }
 
     @Override
@@ -140,13 +128,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDTO getCurrentUser() {
-        return userMapper.entityToDto(getUserEntityByEmail(getAuthName()));
+        return userMapper.entityToDto(getUserEntityByEmail(authService.getCurrentEmail()));
     }
 
     @Override
     public UserDTO updateCurrentUser(UserDTO userDTO) {
-        userDTO.setEmail(getAuthName());
-        userDTO.setId(getUserEntityByEmail(getAuthName()).getId());
+        userDTO.setEmail(authService.getCurrentEmail());
+        userDTO.setId(getUserEntityByEmail(authService.getCurrentEmail()).getId());
         return userMapper.entityToDto(userRepository.save(userMapper.dtoToEntity(userDTO)));
     }
 
@@ -166,7 +154,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 throw new UserAttributeTakenException("phone_number: ('" + user.getPhoneNumber() + "')");
             }
         }
-        if(!isAdmin || getAuthName().equals(userDTO.getEmail())){
+        if(!isAdmin || authService.getCurrentEmail().equals(userDTO.getEmail())){
             userDTO.setId(userId);
             userRepository.save(userMapper.dtoToEntity(userDTO));
         }
@@ -174,10 +162,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    //fixme
     public UserDTO deleteUserById(Long userId, DeletionInfoDTO infoDTO) throws ContentNotFoundException {
         User user = getUserEntityById(userId);
-        boolean isAdmin = !user.getRoles().contains(Role.ROLE_ADMIN);
+        boolean isAdmin = user.getRoles().contains(Role.ROLE_ADMIN) || user.getRoles().contains(Role.ROLE_SUPERADMIN);
         if(!isAdmin){
             user.setIsDeleted(true);
             infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
@@ -198,12 +185,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return true;
     }
 
-    public User getUserEntityByEmail(String email){
-        return userRepository.findByEmail(email).orElseThrow(
-                () -> new ContentNotFoundException(ContentNotFoundEnum.USER, "email", email)
-        );
-    }
-
     public void resetPassword(String email, String password){
         User user = getUserEntityByEmail(email);
         user.setPassword(encoder.encode(password));
@@ -212,12 +193,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     public User getUserEntityById(Long userId){
         return userRepository.findById(userId).orElseThrow(
-                () -> new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId))
+                () -> new ContentNotFoundException(Content.USER, "id", String.valueOf(userId))
         );
     }
 
-    private String getAuthName(){
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+    public User getUserEntityByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new ContentNotFoundException(Content.USER, "email", email)
+        );
     }
 
     private ExampleMatcher getExample(boolean MATCH_ALL, IncludeContent includeContent){

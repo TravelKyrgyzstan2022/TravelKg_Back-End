@@ -1,6 +1,6 @@
 package com.example.benomad.exception;
 
-import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.enums.Content;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -15,7 +15,7 @@ public class ContentIsAlreadyLikedException extends CustomException{
     private final Integer statusCode = 409;
     private String message;
 
-    public ContentIsAlreadyLikedException(ContentNotFoundEnum content){
+    public ContentIsAlreadyLikedException(Content content){
         this.message = String.format(messageFormat, content.toString(), content.toString());
     }
 }

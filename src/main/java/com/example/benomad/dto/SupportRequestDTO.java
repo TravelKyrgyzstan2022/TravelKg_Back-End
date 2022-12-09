@@ -4,26 +4,19 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SupportDTO {
+public class SupportRequestDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @JsonProperty("user_id")
-    private Long userId;
+    @JsonProperty(value = "user", access = JsonProperty.Access.READ_ONLY)
+    private UserDTO user;
 
-    private String firstName;
-
-    private String lastName;
-
-    private String email;
-
-    private LocalDateTime date;
+    @JsonProperty(value = "datetime", access = JsonProperty.Access.READ_ONLY)
+    private String dateTime;
 }

@@ -7,12 +7,14 @@ import com.example.benomad.security.domain.Role;
 import com.example.benomad.service.SuperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SuperServiceImpl implements SuperService {
 
     private final UserServiceImpl userService;

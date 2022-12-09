@@ -7,6 +7,7 @@ import com.example.benomad.entity.User;
 import com.example.benomad.exception.RefreshTokenException;
 import com.example.benomad.exception.UserAlreadyActivatedException;
 import com.example.benomad.exception.UserAttributeTakenException;
+import com.example.benomad.exception.UserNotActivatedException;
 import com.example.benomad.mapper.UserMapper;
 import com.example.benomad.repository.UserRepository;
 import com.example.benomad.security.domain.Claims;
@@ -37,7 +38,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -54,18 +54,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
-
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
         String email = ((UserDetailsImpl) authentication.getPrincipal()).getEmail();
-
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-
         Role role;
         String jwt;
         Claims claims = new Claims();
@@ -83,8 +77,12 @@ public class AuthServiceImpl implements AuthService {
             jwt = jwtUtils.generateTokenFromEmail(email);
 //            claims = getClaims(Role.ROLE_USER);
         }
+
         UserDTO userDTO = userService.getUserById(userDetails.getId());
         User user = userService.getUserEntityById(userDetails.getId());
+        if(!user.getIsActivated()){
+            throw new UserNotActivatedException();
+        }
         user.setLastVisitDate(LocalDateTime.now(ZoneId.of("Asia/Bishkek")));
         userRepository.save(user);
         RefreshToken refreshToken = refreshTokenService.createToken(userDetails.getId());
@@ -167,9 +165,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public MessageResponse sendForgotPasswordCode(CodeRequest codeRequest) {
         String email = codeRequest.getEmail();
-
         userService.getUserByEmail(email);
-
         String code = CodeGenerator.generateResetPasswordCode();
         codeService.newCode(email, code);
         String mailMessage = String.format("""

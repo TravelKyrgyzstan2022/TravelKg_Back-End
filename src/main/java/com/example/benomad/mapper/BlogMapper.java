@@ -2,15 +2,10 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
-import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.enums.ReviewStatus;
-import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.repository.BlogRepository;
-import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.impl.AuthServiceImpl;
-import com.example.benomad.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,7 +33,8 @@ public class BlogMapper {
                 .deletionInfoDTO(blog.getDeletionInfo() != null ?
                         deletionInfoMapper.entityToDto(blog.getDeletionInfo()) : null)
                 .author((userMapper.entityToDto(blog.getAuthor())))
-                .likes(blogRepository.getLikesNumberById(blog.getId()))
+                .likeCount(blogRepository.getLikesNumberById(blog.getId()))
+                .commentCount(blog.getComments().size())
                 .isLikedByCurrentUser(userId != null ?
                         blogRepository.isBlogLikedByUser(blog.getId(), userId) : null)
                 .imageUrls(blog.getImageUrls())
