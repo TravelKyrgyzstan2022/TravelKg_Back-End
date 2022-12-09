@@ -132,7 +132,7 @@ public class UserBlogController {
             )
     })
     @PostMapping(value = {"","/"},consumes = { "multipart/form-data","application/json" })
-    public ResponseEntity<?> insertMyBlogWithImages(@RequestPart("blogDTO") BlogDTO blogDTO, @RequestPart("files") MultipartFile[] files){
+    public ResponseEntity<?> insertMyBlogWithImages(@RequestPart("blogDTO") BlogDTO blogDTO, @RequestPart() MultipartFile[] files){
         return ResponseEntity.ok(blogService.insertMyBlogWithImages(blogDTO,files));
     }
 }
