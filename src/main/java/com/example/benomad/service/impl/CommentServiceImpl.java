@@ -3,45 +3,41 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.entity.User;
 import com.example.benomad.enums.CommentReference;
-import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.enums.Content;
 import com.example.benomad.exception.*;
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.entity.Comment;
 import com.example.benomad.mapper.CommentMapper;
 import com.example.benomad.mapper.DeletionInfoMapper;
-import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.repository.CommentRepository;
-import com.example.benomad.repository.PlaceRepository;
-import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
     private final AuthServiceImpl authService;
     private final UserServiceImpl userService;
-    private final PlaceRepository placeRepository;
-    private final BlogRepository blogRepository;
+    private final PlaceServiceImpl placeService;
+    private final BlogServiceImpl blogService;
     private final CommentMapper commentMapper;
     private final DeletionInfoMapper deletionInfoMapper;
 
     @Override
     public List<CommentDTO> getAllComments() {
-        List<CommentDTO> commentDTOS = commentMapper.entityListToDtoList(commentRepository.findAll());
-        return commentDTOS;
+        return commentMapper.entityListToDtoList(commentRepository.findAll());
     }
 
     @Override
@@ -49,14 +45,10 @@ public class CommentServiceImpl implements CommentService {
                                                      PageRequest pageRequest) {
         Page<Comment> page;
         if(reference == CommentReference.BLOG){
-            if(!blogRepository.existsById(referenceId)){
-                throw new ContentNotFoundException(ContentNotFoundEnum.BLOG, "id", String.valueOf(referenceId));
-            }
+            blogService.getBlogEntityById(referenceId);
             page = commentRepository.getBlogCommentsById(referenceId, pageRequest);
         }else{
-            if(!placeRepository.existsById(referenceId)){
-                throw new ContentNotFoundException(ContentNotFoundEnum.PLACE, "id", String.valueOf(referenceId));
-            }
+            placeService.getPlaceEntityById(referenceId);
             page = commentRepository.getPlaceCommentsById(referenceId, pageRequest);
         }
         List<CommentDTO> commentDTOS = commentMapper.entityListToDtoList(page.stream().collect(Collectors.toList()));
@@ -72,7 +64,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     public CommentDTO deleteMyComment(Long commentId){
-        checkUserActivation();
         checkComment(commentId);
         Comment comment = getCommentEntityById(commentId);
         comment.setDeleted(true);
@@ -81,7 +72,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     public CommentDTO updateMyComment(CommentDTO commentDTO, Long commentId){
-        checkUserActivation();
         checkComment(commentId);
         commentDTO.setId(authService.getCurrentUserId());
         Comment comment = commentMapper.dtoToEntity(commentDTO);
@@ -93,40 +83,25 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO getCommentById(Long commentId){
-        CommentDTO commentDTO = commentMapper.entityToDto(getCommentEntityById(commentId));
-        return commentDTO;
+        return commentMapper.entityToDto(getCommentEntityById(commentId));
     }
-    private void checkUserActivation(){
-        Long userId = authService.getCurrentUserId();
-        User user = userService.getUserEntityById(userId);
-        if(!user.getIsActivated()){
-            throw new UserNotActivatedException();
-        }
-    }
-
 
     @Override
     public CommentDTO likeDislikeComment(Long commentId, boolean isDislike){
         Long userId = authService.getCurrentUserId();
-        checkUserActivation();
 
-        if(!commentRepository.existsById(commentId)){
-            throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, "id", String.valueOf(commentId));
-        }
-        if(!userRepository.existsById(userId)){
-            throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
-        }
+        getCommentById(commentId);
 
         boolean isAlreadyLiked = commentRepository.isCommentLikedByUser(commentId, userId);
 
         if(isDislike){
             if(!isAlreadyLiked){
-                throw new ContentIsNotLikedException(ContentNotFoundEnum.COMMENT);
+                throw new ContentIsNotLikedException(Content.COMMENT);
             }
             commentRepository.dislikeCommentById(commentId, userId);
         }else{
             if(isAlreadyLiked){
-                throw new ContentIsAlreadyLikedException(ContentNotFoundEnum.COMMENT);
+                throw new ContentIsAlreadyLikedException(Content.COMMENT);
             }
             commentRepository.likeCommentById(commentId, userId);
         }
@@ -138,13 +113,13 @@ public class CommentServiceImpl implements CommentService {
         commentDTO.setId(null);
         commentDTO.setReference(reference);
         commentDTO.setReferenceId(referenceId);
-        checkUserActivation();
 
         Comment comment = commentMapper.dtoToEntity(commentDTO);
         comment.setCreationDate(LocalDate.now());
 
         commentDTO.setId(commentRepository.save(comment).getId());
 
+        // FIXME: 09.12.2022
 //        if(reference == CommentReference.PLACE){
 //            commentRepository.insertPlaceComment(commentDTO.getId(), referenceId);
 //        }else if(reference == CommentReference.BLOG){
@@ -172,10 +147,10 @@ public class CommentServiceImpl implements CommentService {
         return commentDTO;
     }
 
-    private Comment getCommentEntityById(Long commentId){
+    public Comment getCommentEntityById(Long commentId){
         return commentRepository.findById(commentId).orElseThrow(
                 () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.COMMENT, "id", String.valueOf(commentId));
+                    throw new ContentNotFoundException(Content.COMMENT, "id", String.valueOf(commentId));
                 });
     }
 }

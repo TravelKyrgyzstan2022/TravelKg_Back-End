@@ -2,48 +2,38 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.PlanDTO;
 import com.example.benomad.entity.Plan;
-import com.example.benomad.enums.ContentNotFoundEnum;
-import com.example.benomad.exception.ContentNotFoundException;
-import com.example.benomad.repository.PlaceRepository;
-import com.example.benomad.repository.UserRepository;
+import com.example.benomad.service.impl.PlaceServiceImpl;
+import com.example.benomad.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PlanMapper {
-    private final UserRepository userRepository;
-    private final PlaceRepository placeRepository;
 
-    public PlanDTO entityToDto(Plan entity){
+    private final UserMapper userMapper;
+    private final PlaceMapper placeMapper;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' HH:mm");
+
+    public PlanDTO entityToDto(Plan plan){
         return PlanDTO.builder()
-                .id(entity.getId())
-                .date(entity.getDate())
-                .userId(entity.getUser().getId())
-                .placeId(entity.getPlace().getId())
-                .note(entity.getNote())
+                .id(plan.getId())
+                .date(plan.getDate())
+                .user(userMapper.entityToDto(plan.getUser()))
+                .place(placeMapper.entityToDto(plan.getPlace()))
+                .note(plan.getNote())
                 .build();
     }
 
-    public Plan dtoToEntity(PlanDTO dto){
+    public Plan dtoToEntity(PlanDTO planDTO){
         return Plan.builder()
-                .id(dto.getId())
-                .user(userRepository.findById(dto.getUserId()).orElseThrow(
-                        () -> {
-                            throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(dto.getUserId()));
-                        }
-                ))
-                .place(placeRepository.findById(dto.getPlaceId()).orElseThrow(
-                        () -> {
-                            throw new ContentNotFoundException(ContentNotFoundEnum.PLACE,  "id", String.valueOf(dto.getPlaceId()));
-                        }
-                ))
-                .date(dto.getDate())
-                .note(dto.getNote())
+                .id(planDTO.getId())
+                .date(planDTO.getDate())
+                .note(planDTO.getNote())
                 .build();
     }
 

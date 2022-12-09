@@ -1,6 +1,6 @@
 package com.example.benomad.controller;
 
-import com.example.benomad.service.impl.SupportServiceImpl;
+import com.example.benomad.service.impl.SupportRequestServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,31 +10,26 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("api/v1/supports")
+@RequestMapping("api/v1/admin/support/")
 @Tag(name = "Support Resource", description = "The Support API ")
-public class SupportController {
+public class AdminSupportController {
 
-    private final SupportServiceImpl supportService;
+    private final SupportRequestServiceImpl supportService;
 
-    @GetMapping(value = {""}, produces = "application/json")
+    // FIXME: 09.12.2022 do hidden forward slash fix and Support to Support Request
+    @GetMapping(value = {"", "/"}, produces = "application/json")
     public ResponseEntity<?> getAllSupports(){
-        return ResponseEntity.ok(supportService.getAllSupports());
+        return ResponseEntity.ok(supportService.getAllSupportRequests());
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> getSupportById(@PathVariable Long id){
-        return ResponseEntity.ok(supportService.getSupportById(id));
-    }
-
-
-    @PostMapping(value = {"/{id}", ""})
-    public ResponseEntity<?> insertSupport(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.CREATED).body(supportService.insertSupport(id));
+        return ResponseEntity.ok(supportService.getSupportRequestById(id));
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteSupport(@PathVariable("id") Long id){
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(supportService.deleteSupportById(id));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(supportService.deleteSupportRequestById(id));
     }
 
 }

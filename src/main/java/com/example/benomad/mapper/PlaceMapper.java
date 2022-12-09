@@ -3,7 +3,7 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.entity.Place;
-import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.enums.Content;
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.repository.RatingRepository;
 import com.example.benomad.repository.UserRepository;
@@ -11,7 +11,6 @@ import com.example.benomad.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,8 +51,8 @@ public class PlaceMapper {
                 .address(place.getAddress())
                 .averageRating(ratingRepository.findAverageRatingByPlaceId(place.getId()))
                 .ratingCount(ratingRepository.findRatingCountByPlaceId(place.getId()))
-                .favoriteOfCurrentUser(userId != null && userRepository.findById(userId).orElseThrow(
-                        () -> new ContentNotFoundException(ContentNotFoundEnum.USER, "userId", String.valueOf(userId))
+                .isFavoriteOfCurrentUser(userId != null && userRepository.findById(userId).orElseThrow(
+                        () -> new ContentNotFoundException(Content.USER, "userId", String.valueOf(userId))
                 ).getPlaces().contains(place))
                 .latitude(place.getLatitude())
                 .longitude(place.getLongitude())

@@ -1,6 +1,6 @@
 package com.example.benomad.exception;
 
-import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.enums.Content;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ public class ContentNotFoundException extends CustomException{
     private final Integer statusCode = 404;
     private String message;
 
-    public ContentNotFoundException(ContentNotFoundEnum content, String attribute, String value){
+    public ContentNotFoundException(Content content, String attribute, String value){
         this.message = String.format(messageFormat, content.toString(), attribute, value);
     }
 }

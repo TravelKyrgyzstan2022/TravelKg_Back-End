@@ -2,17 +2,13 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.entity.Comment;
-import com.example.benomad.enums.ContentNotFoundEnum;
-import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.repository.CommentRepository;
-import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.impl.AuthServiceImpl;
 import com.example.benomad.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

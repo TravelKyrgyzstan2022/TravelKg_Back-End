@@ -19,11 +19,11 @@ public class PlanDTO {
     @JsonProperty("date")
     private LocalDate date;
 
-    @JsonProperty("user_id")
-    private Long userId;
+    @JsonProperty(value = "user", access = JsonProperty.Access.READ_ONLY)
+    private UserDTO user;
 
-    @JsonProperty("place_id")
-    private Long placeId;
+    @JsonProperty(value = "place", access = JsonProperty.Access.READ_ONLY)
+    private PlaceDTO place;
 
     private String note;
 }

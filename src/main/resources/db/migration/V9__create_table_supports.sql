@@ -1,0 +1,1 @@
+create table support_requests(id bigserial not null primary key, user_id bigint, date timestamp, foreign key (user_id) references users(id));

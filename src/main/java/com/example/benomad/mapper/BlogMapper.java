@@ -2,15 +2,10 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
-import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.enums.ReviewStatus;
-import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.repository.BlogRepository;
-import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.impl.AuthServiceImpl;
-import com.example.benomad.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

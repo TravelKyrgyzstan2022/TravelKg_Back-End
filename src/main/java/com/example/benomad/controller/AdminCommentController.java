@@ -95,7 +95,7 @@ public class AdminCommentController {
         return ResponseEntity.ok(commentService.getCommentById(id));
     }
 
-    @Operation(summary = "Inserts a comment to the database (admin)")
+    @Operation(summary = "Inserts a comment to the database")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",

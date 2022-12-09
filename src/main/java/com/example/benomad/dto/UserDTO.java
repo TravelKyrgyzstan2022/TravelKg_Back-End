@@ -5,19 +5,12 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.List;
-
 
 @Getter
 @Setter
@@ -51,21 +44,19 @@ public class UserDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String role;
 
-    //fixme
-    @NotNull(message = "Role can't be null or empty")
-    private Set<Role> roles = new HashSet<>();
-
     @JsonProperty(value = "registration_date", access = JsonProperty.Access.READ_ONLY)
     private String registrationDate;
 
-    @JsonProperty(value = "last_visit_date", access = JsonProperty.Access.READ_ONLY)
-    private String lastVisitDate;
+    @JsonProperty(value = "last_visit_datetime", access = JsonProperty.Access.READ_ONLY)
+    private String lastVisitDateTime;
+
+    private Set<Role> roles;
 
     @JsonProperty(value = "is_activated", access = JsonProperty.Access.READ_ONLY)
-    private Boolean activated;
+    private Boolean isActivated;
 
     @JsonProperty(value = "is_deleted", access = JsonProperty.Access.READ_ONLY)
-    private Boolean deleted;
+    private Boolean isDeleted;
 
     @JsonProperty(value = "deletion_info", access = JsonProperty.Access.READ_ONLY)
     private DeletionInfoDTO deletionInfoDTO;

@@ -1,6 +1,6 @@
 package com.example.benomad.exception;
 
-import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.enums.Content;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ public class ContentIsNotRatedException extends CustomException{
     private final Integer statusCode = 409;
     private String message;
 
-    public ContentIsNotRatedException(ContentNotFoundEnum content){
+    public ContentIsNotRatedException(Content content){
         this.message = String.format(messageFormat, content.toString(), content.toString());
     }
 }

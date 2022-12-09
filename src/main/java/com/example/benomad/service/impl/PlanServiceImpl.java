@@ -3,63 +3,56 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.PlanDTO;
 import com.example.benomad.entity.Plan;
 import com.example.benomad.entity.User;
-import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.enums.Content;
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.exception.NoAccessException;
 import com.example.benomad.mapper.PlanMapper;
 import com.example.benomad.repository.PlanRepository;
-import com.example.benomad.repository.UserRepository;
 import com.example.benomad.security.request.GetPlanRequest;
 import com.example.benomad.service.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PlanServiceImpl implements PlanService {
 
     private final AuthServiceImpl authService;
     private final PlanMapper planMapper;
     private final PlanRepository planRepository;
-    private final UserRepository userRepository;
     private final UserServiceImpl userService;
+    private final PlaceServiceImpl placeService;
 
     @Override
     public List<PlanDTO> getPlansByUserId(Long userId) throws ContentNotFoundException {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(userId));
-                }
-        );
-        List<PlanDTO> dtos = planMapper.entityListToDtoList(planRepository.findByUser(user));
-        return dtos;
+        User user = userService.getUserEntityById(userId);
+        return planMapper.entityListToDtoList(planRepository.findByUser(user));
     }
 
     @Override
     public PlanDTO getPlanById(Long planId) throws ContentNotFoundException {
-        return planMapper.entityToDto(planRepository.findById(planId).orElseThrow(
-                () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.PLAN, "id", String.valueOf(planId));
-                })
-        );
+        return planMapper.entityToDto(getPlanEntityById(planId));
     }
 
     @Override
+    // FIXME: 09.12.2022 full fixmne
     public List<PlanDTO> getPlansByDate(GetPlanRequest request){
-        User user = userRepository.findById(request.getUserId()).orElseThrow(
-                () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(request.getUserId()));
-                }
-        );
-        List<PlanDTO> dtos = planMapper.entityListToDtoList(planRepository.findByDate(request.getUserId(), request.getDate()));
-        return dtos;
+        Long userId = authService.getCurrentUserId();
+        userService.getUserEntityById(userId);
+        return planMapper.entityListToDtoList(planRepository.findByDate(userId, request.getDate()));
     }
 
     @Override
-    public PlanDTO insertPlan(PlanDTO planDTO) {
-        planRepository.save(planMapper.dtoToEntity(planDTO));
+    public PlanDTO insertPlan(PlanDTO planDTO, Long placeId) {
+        Plan plan = planMapper.dtoToEntity(planDTO);
+        plan.setId(null);
+        plan.setUser(userService.getUserEntityById(authService.getCurrentUserId()));
+        plan.setPlace(placeService.getPlaceEntityById(placeId));
+        planRepository.save(plan);
         return planDTO;
     }
 
@@ -67,9 +60,7 @@ public class PlanServiceImpl implements PlanService {
     public PlanDTO updatePlan(PlanDTO planDTO, Long planId) throws ContentNotFoundException {
         checkPlan(planId);
 
-        if(!planRepository.existsById(planId)){
-            throw new ContentNotFoundException(ContentNotFoundEnum.PLAN, "id", String.valueOf(planId));
-        }
+        getPlanEntityById(planId);
 
         planDTO.setId(planId);
         planRepository.save(planMapper.dtoToEntity(planDTO));
@@ -80,11 +71,7 @@ public class PlanServiceImpl implements PlanService {
     public PlanDTO deletePlanById(Long planId) {
         checkPlan(planId);
 
-        Plan plan = planRepository.findById(planId).orElseThrow(
-                () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.PLAN, "id", String.valueOf(planId));
-                });
-
+        Plan plan = getPlanEntityById(planId);
         planRepository.delete(plan);
         return planMapper.entityToDto(plan);
     }
@@ -101,7 +88,7 @@ public class PlanServiceImpl implements PlanService {
     private Plan getPlanEntityById(Long planId){
         return planRepository.findById(planId).orElseThrow(
                 () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.PLAN, "id", String.valueOf(planId));
+                    throw new ContentNotFoundException(Content.PLAN, "id", String.valueOf(planId));
                 });
     }
 }
