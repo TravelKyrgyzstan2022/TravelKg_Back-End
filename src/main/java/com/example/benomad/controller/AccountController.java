@@ -157,8 +157,8 @@ public class AccountController {
 
     @Operation(summary = "Sends 'forgot password' verification code to the given email")
     @PostMapping(value = "/forgot-password", produces = "application/json")
-    public ResponseEntity<MessageResponse> sendVerificationCode(@RequestParam(name = "email") String email){
-        return ResponseEntity.ok(authService.sendForgotPasswordCode(email));
+    public ResponseEntity<MessageResponse> sendVerificationCode(@Valid @RequestBody CodeRequest codeRequest){
+        return ResponseEntity.ok(authService.sendForgotPasswordCode(codeRequest));
     }
 
     @Operation(summary = "Validates both code and email (idk why did I add this)")
@@ -173,11 +173,11 @@ public class AccountController {
         return ResponseEntity.ok(authService.resetPassword(resetPasswordRequest));
     }
 
-//    @Operation(summary = "Sends activation code to current authorized email")
-//    @PostMapping(value = "/activation", produces = "application/json")
-//    public ResponseEntity<MessageResponse> sendActivationCode(){
-//        return ResponseEntity.ok(authService.sendActivationCode());
-//    }
+    @Operation(summary = "Sends activation code to email")
+    @PostMapping(value = "/send-activation-code", produces = "application/json")
+    public ResponseEntity<MessageResponse> sendActivationCode(@Valid @RequestBody CodeRequest codeRequest){
+        return ResponseEntity.ok(authService.sendActivationCode(codeRequest));
+    }
 
     @Operation(summary = "Activates current account")
     @PostMapping(value = "/activate", produces = "application/json")

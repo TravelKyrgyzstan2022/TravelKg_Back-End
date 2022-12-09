@@ -107,7 +107,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     //fixme maybe need to move code related to mail sending to verification code service
-    public MessageResponse sendActivationCode(String email) {
+    public MessageResponse sendActivationCode(CodeRequest codeRequest) {
+        String email = codeRequest.getEmail();
         if(userService.getUserEntityByEmail(email).getIsActivated()){
             throw new UserAlreadyActivatedException();
         }
@@ -145,7 +146,7 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(encoder.encode(user.getPassword()));
 
         userRepository.save(user);
-        sendActivationCode(userDTO.getEmail());
+        sendActivationCode(new CodeRequest(userDTO.getEmail()));
         return userMapper.entityToDto(user);
     }
 
@@ -164,8 +165,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    //fixme
-    public MessageResponse sendForgotPasswordCode(String email) {
+    public MessageResponse sendForgotPasswordCode(CodeRequest codeRequest) {
+        String email = codeRequest.getEmail();
+
         userService.getUserByEmail(email);
 
         String code = CodeGenerator.generateResetPasswordCode();
