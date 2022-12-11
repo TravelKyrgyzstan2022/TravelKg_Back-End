@@ -58,4 +58,6 @@ public class BlogDTO {
     @Schema(required = true)
     @JsonProperty(value = "image_url", access = JsonProperty.Access.READ_ONLY)
     private String imageUrl;
+
+
 }

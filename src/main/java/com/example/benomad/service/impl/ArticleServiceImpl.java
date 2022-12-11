@@ -1,6 +1,7 @@
 package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.ArticleDTO;
+import com.example.benomad.dto.ImageDTO;
 import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.entity.Article;
 import com.example.benomad.enums.Content;
@@ -47,12 +48,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ArticleDTO insertArticle(ArticleDTO articleDTO) {
+    public Long insertArticle(ArticleDTO articleDTO) {
         articleDTO.setId(null);
         Article article = articleMapper.dtoToEntity(articleDTO);
         article.setUser(userService.getUserEntityById(authService.getCurrentUserId()));
-        articleDTO.setId(articleRepository.save(article).getId());
-        return articleDTO;
+        return articleRepository.save(article).getId();
     }
 
     @Override
@@ -83,6 +83,14 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleMapper.dtoToEntity(articleDTO);
         article.setUser(userService.getUserEntityById(authService.getCurrentUserId()));
         return articleMapper.entityToDto(articleRepository.save(article));
+    }
+
+    @Override
+    public MessageResponse insertImages64ByArticleId(Long id, ImageDTO[] files) {
+        Article article = getArticleEntityById(id);
+        article.setImageUrls(imageService.uploadImages64(files,ImagePath.ARTICLE));
+        articleRepository.save(article);
+        return new MessageResponse("Images have been successfully added to the article!", 200);
     }
 
     public Article getArticleEntityById(Long articleId){

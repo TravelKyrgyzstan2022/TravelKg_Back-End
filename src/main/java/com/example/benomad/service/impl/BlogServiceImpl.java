@@ -1,31 +1,27 @@
 package com.example.benomad.service.impl;
 
-import com.example.benomad.dto.BlogDTO;
-import com.example.benomad.dto.DeletionInfoDTO;
-import com.example.benomad.dto.MessageResponse;
-import com.example.benomad.dto.UserDTO;
+import com.example.benomad.dto.*;
 import com.example.benomad.entity.Blog;
 import com.example.benomad.entity.Comment;
-import com.example.benomad.entity.Place;
 import com.example.benomad.entity.User;
 import com.example.benomad.enums.Content;
 import com.example.benomad.enums.ImagePath;
 import com.example.benomad.enums.IncludeContent;
 import com.example.benomad.enums.ReviewStatus;
-import com.example.benomad.exception.*;
+import com.example.benomad.exception.ContentIsAlreadyLikedException;
+import com.example.benomad.exception.ContentIsNotLikedException;
+import com.example.benomad.exception.ContentNotFoundException;
+import com.example.benomad.exception.NoAccessException;
 import com.example.benomad.mapper.BlogMapper;
 import com.example.benomad.mapper.DeletionInfoMapper;
-import com.example.benomad.mapper.UserMapper;
 import com.example.benomad.repository.BlogRepository;
 import com.example.benomad.service.BlogService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -40,19 +36,18 @@ public class BlogServiceImpl implements BlogService {
     private final UserServiceImpl userService;
     private final AuthServiceImpl authService;
     private final BlogMapper blogMapper;
-    private final UserMapper userMapper;
     private final DeletionInfoMapper deletionInfoMapper;
     private final ImageServiceImpl imageService;
 
     @Override
-    public BlogDTO insertBlog(BlogDTO blogDTO) throws ContentNotFoundException {
+    public Long insertBlog(BlogDTO blogDTO) throws ContentNotFoundException {
         blogDTO.setId(null);
         blogDTO.setIsDeleted(false);
         Blog blog = blogMapper.dtoToEntity(blogDTO);
         blog.setAuthor(userService.getUserEntityById(authService.getCurrentUserId()));
         blog.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blogDTO.setId(blog.getId());
-        return blogDTO;
+        return blogRepository.save(blog).getId();
     }
 
     @Override
@@ -202,6 +197,15 @@ public class BlogServiceImpl implements BlogService {
         blog.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blog.setAuthor(userService.getUserEntityById(authService.getCurrentUserId()));
         return blogMapper.entityToDto(blogRepository.save(blog));
+    }
+
+    @Override
+    public MessageResponse insertImages64ByBlogId(Long id, ImageDTO[] files) {
+        Blog blog = getBlogEntityById(id);
+        blog.setImageUrls(imageService.uploadImages64(files,ImagePath.BLOG));
+        blogRepository.save(blog);
+        return new MessageResponse("Images have been successfully added to the blog!", 200);
+
     }
 
     public void addComment(Long blogId, Comment comment){

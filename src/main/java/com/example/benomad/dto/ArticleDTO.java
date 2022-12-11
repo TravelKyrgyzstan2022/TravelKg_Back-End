@@ -17,7 +17,7 @@ public class ArticleDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @JsonProperty("user_id")
+    @JsonProperty(value = "user_id",access = JsonProperty.Access.READ_ONLY)
     private Long userId;
 
     private String body;

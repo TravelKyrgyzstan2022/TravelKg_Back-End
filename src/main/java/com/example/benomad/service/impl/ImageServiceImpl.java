@@ -2,6 +2,7 @@ package com.example.benomad.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.example.benomad.dto.ImageDTO;
 import com.example.benomad.enums.ImagePath;
 import com.example.benomad.exception.ContentIsEmptyException;
 import com.example.benomad.exception.ContentIsNotImageException;
@@ -62,6 +63,30 @@ public class ImageServiceImpl implements ImageService {
     public String getRandomUUID() {
         String uniqueUUID =""+ UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID();
         return uniqueUUID.replaceAll("[^a-zA-z0-9]","");
+    }
+
+    @SneakyThrows
+    @Override
+    public List<String> uploadImages64(ImageDTO [] files,ImagePath path) {
+        List<String> imageUrls = new ArrayList<>();
+        for (ImageDTO file : files) {
+            imageUrls.add((String) cloudinary.uploader().upload(file.getImageUrl(), ObjectUtils.asMap(
+                    "folder",path.getPathToImage(),
+                    "public_id", getRandomUUID(),
+                    "unique_filename", "true"
+            )).get("secure_url"));
+        }
+        return imageUrls;
+    }
+
+    @SneakyThrows
+    @Override
+    public String uploadImage64(ImageDTO file,ImagePath path) {
+        return (String) cloudinary.uploader().upload(file.getImageUrl(), ObjectUtils.asMap(
+                "folder",path.getPathToImage(),
+                "public_id", getRandomUUID(),
+                "unique_filename", "true"
+        )).get("secure_url");
     }
 
 }

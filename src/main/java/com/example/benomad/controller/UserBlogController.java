@@ -2,8 +2,9 @@ package com.example.benomad.controller;
 
 import com.example.benomad.advice.ExceptionResponse;
 import com.example.benomad.dto.BlogDTO;
+import com.example.benomad.dto.ImageDTO;
+import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.service.impl.BlogServiceImpl;
-import com.sun.mail.iap.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @CrossOrigin
@@ -39,7 +41,7 @@ public class UserBlogController {
     }
 
     @Operation(summary = "Insert new blog")
-    @PostMapping(value = "/")
+    @PostMapping(value = {"/",""})
     public ResponseEntity<?> insertMyBlog(@RequestBody BlogDTO blogDTO){
         return ResponseEntity.ok(blogService.insertBlog(blogDTO));
     }
@@ -50,12 +52,13 @@ public class UserBlogController {
         return ResponseEntity.ok(blogService.deleteMyBlogById(blogId));
     }
 
-    @Operation(summary = "Inserts images by blog id")
+
+    @Operation(summary = "Inserts images to blog")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = boolean.class))
+                    content = @Content(schema = @Schema(implementation = MessageResponse.class))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -88,9 +91,9 @@ public class UserBlogController {
                     content = @Content
             )
     })
-    @PutMapping(value = "/{blogId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = "application/json")
-    public ResponseEntity<?> insertImagesByBlogId(@PathVariable("blogId") Long blogId, @RequestParam("files") MultipartFile[] files){
-        return ResponseEntity.ok(blogService.insertImagesByBlogId(blogId,files));
+    @PutMapping(value = {"/{id}/images64","{id}/images64"})
+    public ResponseEntity<?> insertImagesToBlog(@RequestBody ImageDTO[] files,@PathVariable("id") Long id) {
+        return ResponseEntity.ok(blogService.insertImages64ByBlogId(id,files));
     }
 
     @Operation(summary = "Inserts new blog with images")
@@ -131,8 +134,51 @@ public class UserBlogController {
                     content = @Content
             )
     })
-    @PostMapping(value = {"","/"},consumes = { "multipart/form-data","application/json" })
+    @PostMapping(value = {"multipart","/multipart"},consumes = { "multipart/form-data","application/json" })
     public ResponseEntity<?> insertMyBlogWithImages(@RequestPart("blogDTO") BlogDTO blogDTO, @RequestPart() MultipartFile[] files){
         return ResponseEntity.ok(blogService.insertMyBlogWithImages(blogDTO,files));
+    }
+
+    @Operation(summary = "Inserts images by blog id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = boolean.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @PutMapping(value = {"/{id}/images","{id}/images"}, produces = "application/json")
+    public ResponseEntity<?> insertImagesByBlogId(@PathVariable("id") Long blogId, @RequestParam("files") MultipartFile[] files){
+        return ResponseEntity.ok(blogService.insertImagesByBlogId(blogId,files));
     }
 }
