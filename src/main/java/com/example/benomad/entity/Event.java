@@ -30,7 +30,8 @@ public class Event {
 
     @Column(name = "image_urls")
     @ElementCollection(targetClass=String.class)
-    private List<String> imageUrls = new ArrayList<>();
+    private List<String>
+            imageUrls = new ArrayList<>();
 
     @Column(nullable = false, name = "link_url")
     private String linkUrl;

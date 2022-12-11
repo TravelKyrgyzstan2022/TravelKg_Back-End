@@ -2,6 +2,8 @@ package com.example.benomad.controller;
 
 import com.example.benomad.advice.ExceptionResponse;
 import com.example.benomad.dto.ArticleDTO;
+import com.example.benomad.dto.ImageDTO;
+import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.service.impl.ArticleServiceImpl;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -222,8 +224,52 @@ public class AdminArticleController {
                     content = @Content
             )
     })
-    @PostMapping(value = {"","/"},consumes = { "multipart/form-data","application/json" })
+    @PostMapping(value = {"multipart","/multipart"},consumes = { "multipart/form-data","application/json" })
     public ResponseEntity<?> insertArticleWithImages(@RequestPart("articleDTO") ArticleDTO articleDTO, @RequestPart("files") MultipartFile[] files){
         return ResponseEntity.ok(articleService.insertArticleWithImages(articleDTO,files));
+    }
+
+
+    @Operation(summary = "Inserts images to article")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = MessageResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @PutMapping(value = {"/{id}/images64","{id}/images64"})
+    public ResponseEntity<?> insertImagesToBlog(@RequestBody ImageDTO[] files, @PathVariable("id") Long id) {
+        return ResponseEntity.ok(articleService.insertImages64ByArticleId(id,files));
     }
 }

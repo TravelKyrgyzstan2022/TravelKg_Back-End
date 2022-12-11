@@ -1,9 +1,7 @@
 package com.example.benomad.controller;
 
 import com.example.benomad.advice.ExceptionResponse;
-import com.example.benomad.dto.CommentDTO;
-import com.example.benomad.dto.PlaceDTO;
-import com.example.benomad.dto.UserDTO;
+import com.example.benomad.dto.*;
 import com.example.benomad.service.impl.PlaceServiceImpl;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -195,13 +193,12 @@ public class AdminPlaceController {
     public ResponseEntity<?> insertImagesByPlaceId(@PathVariable("placeId") Long placeId, @RequestParam("files") MultipartFile[] files){
         return ResponseEntity.ok(placeService.insertImagesByPlaceId(placeId,files));
     }
-
     @Operation(summary = "Inserts new place with along the images")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = boolean.class))
+                    content = @Content(schema = @Schema(implementation = MessageResponse.class))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -234,9 +231,52 @@ public class AdminPlaceController {
                     content = @Content
             )
     })
-    @PostMapping(value = {"","/"},consumes = { "multipart/form-data","application/json" })
+    @PostMapping(value = {"/multipart","multipart"},consumes = { "multipart/form-data","application/json" })
     public ResponseEntity<?> insertPlaceWithImages(@RequestPart("placeDTO") PlaceDTO placeDTO, @RequestPart("files") MultipartFile[] files){
         return ResponseEntity.ok(placeService.insertPlaceWithImages(placeDTO,files));
+    }
+
+    @Operation(summary = "Inserts images to places")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = MessageResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @PutMapping(value = {"/{id}/images64","{id}/images64"})
+    public ResponseEntity<?> insertImagesToPlace(@RequestBody ImageDTO[] files, @PathVariable("id") Long id) {
+        return ResponseEntity.ok(placeService.insertImages64ByPLaceId(id,files));
     }
 
 
