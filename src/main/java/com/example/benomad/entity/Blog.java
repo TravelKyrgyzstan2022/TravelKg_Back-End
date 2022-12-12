@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,7 +22,7 @@ public class Blog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JoinColumn(columnDefinition = "author_id",
                 referencedColumnName = "id")
     private User author;
@@ -44,7 +46,7 @@ public class Blog {
     @Column(name = "update_date")
     private LocalDate updateDate;
 
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(
@@ -63,11 +65,7 @@ public class Blog {
     )
     private Set<Comment> comments;
 
-    @Getter(AccessLevel.NONE)
-    @Column(name = "image_url")
-    private String imageUrl;
-
-    public Optional<String> getImageUrl() {
-        return Optional.ofNullable(imageUrl);
-    }
+    @Column(name = "image_urls")
+    @ElementCollection(targetClass=String.class)
+    private List<String> imageUrls = new ArrayList<>();
 }

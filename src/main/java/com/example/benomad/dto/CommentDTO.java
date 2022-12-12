@@ -20,8 +20,8 @@ public class CommentDTO {
     @JsonProperty("reference_id")
     private Long referenceId;
 
-    @JsonProperty("user_id")
-    private Long userId;
+    @JsonProperty("user")
+    private UserDTO user;
 
     private String body;
 
@@ -32,7 +32,7 @@ public class CommentDTO {
     private String updateDate;
 
     @JsonProperty(value = "like_count", access = JsonProperty.Access.READ_ONLY)
-    private Long likeCount;
+    private Integer likeCount;
 
     @JsonProperty(value = "is_liked_by_current_user", access = JsonProperty.Access.READ_ONLY)
     private Boolean isLikedByCurrentUser;

@@ -14,18 +14,19 @@ import java.time.LocalDate;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanDTO {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @JsonProperty("start_date")
-    private LocalDate startDate;
+    @JsonProperty("date")
+    private String date;
 
-    @JsonProperty("end_date")
-    private LocalDate endDate;
+    @JsonProperty(value = "user", access = JsonProperty.Access.READ_ONLY)
+    private UserDTO user;
 
-    @JsonProperty("user_id")
-    private Long userId;
+    @JsonProperty(value = "place", access = JsonProperty.Access.READ_ONLY)
+    private PlaceDTO place;
 
-    @JsonProperty("place_id")
+    @JsonProperty(value = "place_id", access = JsonProperty.Access.WRITE_ONLY)
     private Long placeId;
 
     private String note;

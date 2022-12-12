@@ -22,12 +22,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-public class WebSecurityConfig {
+public class WebSecurityConfig{
 
     private final AuthEntryPointHandler unauthorizedHandler;
     private final AuthAccessDeniedHandler accessDeniedHandler;
+    private final AuthenticationConfiguration authenticationConfiguration;
+
     private final String[] PERMIT_ALL = {
-            "/api/auth/**",
+            "/api/account/**",
             "/documentation/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
@@ -37,60 +39,48 @@ public class WebSecurityConfig {
     private final String[] REGISTERED_COMMON = {};
 
     private final String[] USER = {
-            "/api/auth/acc/**",
-            "/api/auth/acc"
+            "/api/v1/user/**",
+            "/api/account/my-account",
+            "/api/account/my-account/**"
     };
 
     private final String[] ADMIN_COMMON = {
             "/api/v1/admin/**",
     };
 
+    private final String[] SUPER_ADMIN_ONLY = {
+            "/api/superadmin/**"
+    };
+
     private final String[] ADMIN_GET = {
             "/actuator/**",
-            "/api/dev/**",
-            "/api/v1/users",
-            "/api/v1/users/**",
-            "/api/auth/acc",
-            "/api/auth/acc/**"
     };
 
     private final String[] PERMIT_ALL_GET = {
-            "/api/v1/**",
-            "/api/auth/acc",
-            "/api/auth/acc/**"
+            "/api/v1/**"
     };
 
     private final String[] ADMIN_POST = {
-            "/api/v1/**",
-            "/api/auth/acc",
-            "/api/auth/acc/**"
+            "/api/v1/**"
     };
 
     private final String[] ADMIN_PUT = {
-            "/api/v1/**",
-            "/api/auth/**",
-            "/api/auth/acc",
-            "/api/auth/acc/**"
+            "/api/v1/**"
     };
 
     private final String[] ADMIN_DELETE = {
-            "/api/v1/**",
-            "/api/auth/**",
-            "/api/auth/acc",
-            "/api/auth/acc/**"
+            "/api/v1/**"
     };
-
-
-    @Bean
-    public JwtTokenFilter authenticationJwtTokenFilter() {
-        return new JwtTokenFilter();
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @Bean
+    public JwtTokenFilter authenticationJwtTokenFilter() throws Exception {
+        return new JwtTokenFilter(authenticationManager(authenticationConfiguration));
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -101,6 +91,7 @@ public class WebSecurityConfig {
                     .authorizeRequests()
                     .antMatchers(USER).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
                     .antMatchers(ADMIN_COMMON).hasAnyRole("ADMIN", "SUPERADMIN")
+                    .antMatchers(SUPER_ADMIN_ONLY).hasRole("SUPERADMIN")
                     .antMatchers(PERMIT_ALL).permitAll()
                     .antMatchers(HttpMethod.GET, ADMIN_GET).hasAnyRole("ADMIN", "SUPERADMIN")
                     .antMatchers(HttpMethod.GET, PERMIT_ALL_GET).permitAll()

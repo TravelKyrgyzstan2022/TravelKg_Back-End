@@ -2,16 +2,13 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.BlogDTO;
 import com.example.benomad.entity.Blog;
-import com.example.benomad.enums.ContentNotFoundEnum;
 import com.example.benomad.enums.ReviewStatus;
-import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.repository.BlogRepository;
-import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,10 +17,10 @@ import java.util.stream.Collectors;
 public class BlogMapper {
 
     private final BlogRepository blogRepository;
-    private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AuthServiceImpl authService;
     private final DeletionInfoMapper deletionInfoMapper;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public BlogDTO entityToDto(Blog blog){
         Long userId = authService.getCurrentUserId();
@@ -32,40 +29,25 @@ public class BlogMapper {
                 .reviewStatus(blog.getReviewStatus())
                 .title(blog.getTitle())
                 .body(blog.getBody())
-                .creationDate(blog.getCreationDate())
-                .updateDate(blog.getUpdateDate())
-                .isDeleted(blog.isDeleted())
+                .creationDate(formatter.format(blog.getCreationDate()))
+                .updateDate(blog.getUpdateDate() != null ? formatter.format(blog.getUpdateDate()) : null)
+                .isDeleted(blog.getIsDeleted())
                 .deletionInfoDTO(blog.getDeletionInfo() != null ?
                         deletionInfoMapper.entityToDto(blog.getDeletionInfo()) : null)
-                .authorId((userMapper.entityToDto(blog.getAuthor()).getId()))
-                .likes(blogRepository.getLikesNumberById(blog.getId()))
+                .author((userMapper.entityToDto(blog.getAuthor())))
+                .likeCount(blogRepository.getLikesNumberById(blog.getId()))
+                .commentCount(blog.getComments().size())
                 .isLikedByCurrentUser(userId != null ?
                         blogRepository.isBlogLikedByUser(blog.getId(), userId) : null)
-                .imageUrl(blog.getImageUrl().orElse(null))
+                .imageUrls(blog.getImageUrls())
                 .build();
     }
 
     public Blog dtoToEntity(BlogDTO blogDTO){
-        if(blogDTO.getReviewStatus() == null){
-            blogDTO.setReviewStatus(ReviewStatus.PENDING);
-        }
         return Blog.builder()
-                .id(blogDTO.getId())
-                .author(
-                        userRepository.findById(blogDTO.getAuthorId()).orElseThrow(
-                                () -> {
-                                    throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(blogDTO.getAuthorId()));
-                                })
-                )
-                .creationDate(blogDTO.getCreationDate())
-                .updateDate(blogDTO.getUpdateDate())
-                .isDeleted(blogDTO.isDeleted())
-                .deletionInfo(blogDTO.getDeletionInfoDTO() != null ?
-                        deletionInfoMapper.dtoToEntity(blogDTO.getDeletionInfoDTO()) : null)
                 .title(blogDTO.getTitle())
                 .body(blogDTO.getBody())
-                .reviewStatus(blogDTO.getReviewStatus())
-                .imageUrl(blogDTO.getImageUrl())
+                .imageUrls(blogDTO.getImageUrls())
                 .build();
     }
 
@@ -73,3 +55,5 @@ public class BlogMapper {
         return entities.stream().map(this::entityToDto).collect(Collectors.toList());
     }
 }
+
+

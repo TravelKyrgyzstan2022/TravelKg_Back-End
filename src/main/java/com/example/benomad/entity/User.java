@@ -9,6 +9,8 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
@@ -49,7 +51,7 @@ public class User {
     @Column(name = "registration_date")
     private LocalDate registrationDate;
 
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(
@@ -60,7 +62,7 @@ public class User {
 
     @Column(name = "is_activated")
     @JsonIgnore
-    private boolean isActivated;
+    private Boolean isActivated;
 
     @Column(name = "last_visit_date")
     private LocalDateTime lastVisitDate;
@@ -75,9 +77,16 @@ public class User {
     @JoinTable(name = "favorite_places",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "place_id"))
-    private Set<Place> places;
+    private List<Place> places;
 
     @ManyToMany(mappedBy = "likedUsers")
-    private Set<Blog> blogs;
+    private List<Blog> blogs;
 
+    @Getter(AccessLevel.NONE)
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    public Optional<String> getImageUrl() {
+        return Optional.ofNullable(imageUrl);
+    }
 }

@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
@@ -41,12 +43,15 @@ public class PlaceDTO {
     @JsonProperty(value = "rating_count", access = JsonProperty.Access.READ_ONLY)
     private Integer ratingCount;
 
+    @JsonProperty(value = "comment_count", access = JsonProperty.Access.READ_ONLY)
+    private Integer commentCount;
+
     @Schema(required = true)
     private String description;
 
     @Schema(required = true)
-    @JsonProperty(value = "image_url",access = JsonProperty.Access.READ_ONLY)
-    private String imageUrl;
+    @JsonProperty(value = "image_urls",access = JsonProperty.Access.READ_ONLY)
+    private List<String> imageUrls;
 
     @Schema(required = true)
     @JsonProperty("link_url")
@@ -55,6 +60,14 @@ public class PlaceDTO {
     @Schema(required = false)
     private String address;
 
-    @JsonProperty(value = "is_favorite_of_current_user",access = JsonProperty.Access.READ_ONLY)
-    private boolean isFavoriteOfCurrentUser;
+    @JsonProperty(value = "is_favorite_of_current_user", access = JsonProperty.Access.READ_ONLY)
+    private Boolean isFavoriteOfCurrentUser;
+    
+    @Schema(required = true)
+    @JsonProperty(value = "latitude")
+    private double latitude;
+
+    @Schema(required = true)
+    @JsonProperty(value = "longitude")
+    private double longitude;
 }

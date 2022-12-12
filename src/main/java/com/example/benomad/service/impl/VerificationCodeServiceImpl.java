@@ -6,12 +6,14 @@ import com.example.benomad.repository.VerificationCodeRepository;
 import com.example.benomad.service.VerificationCodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class VerificationCodeServiceImpl implements VerificationCodeService {
 
     private final VerificationCodeRepository codeRepository;

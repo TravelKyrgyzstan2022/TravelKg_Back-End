@@ -2,6 +2,7 @@ package com.example.benomad.security.response;
 
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.security.domain.Claims;
+import com.example.benomad.security.domain.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,5 +25,5 @@ public class JwtResponse {
     @JsonProperty("user_info")
     private UserDTO userDTO;
 
-    private Claims claims;
+    private Role role;
 }

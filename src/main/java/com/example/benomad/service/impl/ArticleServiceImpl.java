@@ -1,114 +1,103 @@
 package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.ArticleDTO;
+import com.example.benomad.dto.ImageDTO;
+import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.entity.Article;
-import com.example.benomad.enums.AwsBucket;
-import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.enums.Content;
 import com.example.benomad.enums.ImagePath;
 import com.example.benomad.exception.ContentNotFoundException;
-import com.example.benomad.logger.LogWriterServiceImpl;
-import com.example.benomad.exception.FailedWhileUploadingException;
 import com.example.benomad.mapper.ArticleMapper;
 import com.example.benomad.repository.ArticleRepository;
-import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
-@Slf4j
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
     private final ArticleMapper articleMapper;
     private final AuthServiceImpl authService;
+    private final UserServiceImpl userService;
     private final ImageServiceImpl imageService;
-    private final LogWriterServiceImpl logWriter;
 
     @Override
     public List<ArticleDTO> getAllArticles() {
-        List<ArticleDTO> dtos = articleMapper.entityListToDtoList(articleRepository.findAll());
-        logWriter.get(String.format("%s - Returned %d articles", authService.getCurrentEmail(), dtos.size()));
-        return dtos;
+        return articleMapper.entityListToDtoList(articleRepository.findAll());
     }
 
     @Override
     public ArticleDTO getArticleById(Long articleId) throws ContentNotFoundException {
-        logWriter.get(String.format("%s - Returned article with id = %d", authService.getCurrentEmail(), articleId));
-        return articleMapper.entityToDto(articleRepository.findById(articleId).orElseThrow(
-                () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
-                })
-        );
+        return articleMapper.entityToDto(getArticleEntityById(articleId));
     }
 
     @Override
     public ArticleDTO updateArticleById(Long articleId, ArticleDTO articleDTO) throws ContentNotFoundException {
-        if(!articleRepository.existsById(articleId)){
-            throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
-        }
-        if(!userRepository.existsById(articleDTO.getUserId())){
-            throw new ContentNotFoundException(ContentNotFoundEnum.USER, "id", String.valueOf(articleId));
-        }
+        getArticleEntityById(articleId);
         articleDTO.setId(articleId);
         articleRepository.save(articleMapper.dtoToEntity(articleDTO));
-        logWriter.update(String.format("%s - Updated article with id = %d", authService.getCurrentEmail(), articleId));
         return articleDTO;
     }
 
     @Override
-    public ArticleDTO insertArticle(ArticleDTO articleDTO) {
+    public Long insertArticle(ArticleDTO articleDTO) {
         articleDTO.setId(null);
-        articleDTO.setUserId(authService.getCurrentUserId());
-        articleDTO.setId(articleRepository.save(articleMapper.dtoToEntity(articleDTO)).getId());
-        logWriter.insert(String.format("%s - Inserted article with id = %d", authService.getCurrentEmail(), articleDTO.getId()));
-        return articleDTO;
+        Article article = articleMapper.dtoToEntity(articleDTO);
+        article.setUser(userService.getUserEntityById(authService.getCurrentUserId()));
+        return articleRepository.save(article).getId();
     }
 
     @Override
     public ArticleDTO deleteArticleById(Long articleId) throws ContentNotFoundException {
-        Article article = articleRepository.findById(articleId).orElseThrow(
-                () -> {
-                    throw new ContentNotFoundException(ContentNotFoundEnum.ARTICLE, "id", String.valueOf(articleId));
-                });
+        Article article = getArticleEntityById(articleId);
         articleRepository.delete(article);
-        logWriter.delete(String.format("%s - Deleted article with id = %d", authService.getCurrentEmail(), articleId));
         return articleMapper.entityToDto(article);
     }
 
     @Override
-    public Long insertImageByArticleId(Long id, MultipartFile file) {
-        Article article = articleRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFoundException(ContentNotFoundEnum.ARTICLE,"id",String.valueOf(id)));
-        imageService.checkIsNotEmpty(file);
-        imageService.checkIsImage(file);
-        Map<String, String> metadata = imageService.getMetaData(file);
-        String pathToFile = String.format("%s/%s", AwsBucket.MAIN_BUCKET.getBucketName(), ImagePath.ARTICLE.getPathToImage());
-        String uniqueFileName = String.format("%s-%s",file.getOriginalFilename(), UUID.randomUUID());
-        try {
-            imageService.saveImageAws(pathToFile,uniqueFileName, Optional.of(metadata),file.getInputStream());
-            article.setImageUrl(uniqueFileName);
-            articleRepository.save(article);
-            return article.getId();
-        } catch (IOException e) {
-            throw new FailedWhileUploadingException();
-        }
+    public MessageResponse insertImagesByArticleId(Long articleId, MultipartFile[] files) throws ContentNotFoundException {
+        Article article = getArticleEntityById(articleId);
+        article.setImageUrls(imageService.uploadImages(files, ImagePath.ARTICLE));
+        articleRepository.save(article);
+        return new MessageResponse("Images have been successfully added to the article!", 200);
     }
 
     @Override
-    public byte[] getImageByArticleId(Long id) {
-        Article article = articleRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFoundException(ContentNotFoundEnum.ARTICLE,"id",String.valueOf(id)));
-        String pathToFile = String.format("%s/%s", AwsBucket.MAIN_BUCKET.getBucketName(), ImagePath.ARTICLE.getPathToImage());
-        return article.getImageUrl().map(x -> imageService.getAwsImageByPathAndKey(pathToFile,x)).orElse(new byte[0]);
+    public List<String> getImagesById(Long articleId) throws ContentNotFoundException {
+        Article article = getArticleEntityById(articleId);
+        return article.getImageUrls();
+    }
+
+    @Override
+    public ArticleDTO insertArticleWithImages(ArticleDTO articleDTO, MultipartFile[] files) {
+        articleDTO.setId(null);
+        articleDTO.setImageUrls(imageService.uploadImages(files, ImagePath.ARTICLE));
+        Article article = articleMapper.dtoToEntity(articleDTO);
+        article.setUser(userService.getUserEntityById(authService.getCurrentUserId()));
+        return articleMapper.entityToDto(articleRepository.save(article));
+    }
+
+    @Override
+    public MessageResponse insertImages64ByArticleId(Long id, ImageDTO[] files) {
+        Article article = getArticleEntityById(id);
+        article.setImageUrls(imageService.uploadImages64(files,ImagePath.ARTICLE));
+        articleRepository.save(article);
+        return new MessageResponse("Images have been successfully added to the article!", 200);
+    }
+
+    @Override
+    public Article getArticleEntityById(Long articleId){
+        return articleRepository.findById(articleId)
+                .orElseThrow(
+                        () -> new ContentNotFoundException(Content.ARTICLE,"id",String.valueOf(articleId))
+                );
     }
 }

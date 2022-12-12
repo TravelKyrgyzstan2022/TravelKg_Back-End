@@ -21,14 +21,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     )
     Page<Comment> getPlaceCommentsById(@Param("place_id")Long placeId, Pageable pageable);
 
-    @Query(value = "INSERT INTO place_comments(comment_id, place_id) VALUES (:comment_id, :place_id)",
-            nativeQuery = true)
-    void insertPlaceComment(@Param("comment_id") Long commentId, @Param("place_id") Long placeId);
-
-    @Query(value = "INSERT INTO blog_comments(comment_id, blog_id) VALUES (:comment_id, :blog_id)",
-            nativeQuery = true)
-    void insertBlogComment(@Param("comment_id") Long commentId, @Param("blog_id") Long blogId);
-
     @Query(value = "SELECT * FROM comments c " +
             "WHERE c.id IN(SELECT comment_id FROM blog_comments WHERE blog_id=:blog_id)",
             nativeQuery = true,
@@ -36,20 +28,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                     " WHERE c.id IN (SELECT comment_id FROM blog_comments WHERE blog_id = :blog_id)")
     Page<Comment> getBlogCommentsById(@Param("blog_id")Long blogId, Pageable pageable);
 
-    @Query(value = "SELECT last_value FROM comment_id_seq", nativeQuery = true)
-    Long getLastValueOfSequence();
-
     @Query(value = "SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END FROM comment_likes t " +
             "WHERE t.comment_id = :comment_id " +
-            "and t.user_id = :user_id", nativeQuery = true)
-    boolean isCommentLikedByUser(@Param("comment_id") Long commentId, @Param("user_id") Long userId);
-
-    @Query(value = "INSERT INTO comment_likes(comment_id, user_id) VALUES(:comment_id, :user_id)", nativeQuery = true)
-    void likeCommentById(@Param("comment_id")Long commentId, @Param("user_id")Long userId);
-
-    @Query(value = "DELETE FROM comment_likes WHERE comment_id = :comment_id AND user_id = :user_id", nativeQuery = true)
-    void dislikeCommentById(@Param("comment_id")Long commentId, @Param("user_id")Long userId);
+            "and t.liked_users_id = :userId", nativeQuery = true)
+    boolean isCommentLikedByUser(@Param("comment_id") Long commentId, @Param("userId") Long userId);
 
     @Query(value = "SELECT COUNT(t) FROM comment_likes t WHERE t.comment_id = :comment_id", nativeQuery = true)
-    Long getLikesNumberById(@Param("comment_id") Long commentId);
+    Integer getLikesNumberById(@Param("comment_id") Long commentId);
 }

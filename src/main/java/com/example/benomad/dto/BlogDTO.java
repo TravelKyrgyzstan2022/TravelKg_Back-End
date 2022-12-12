@@ -1,6 +1,5 @@
 package com.example.benomad.dto;
 
-import com.example.benomad.entity.DeletionInfo;
 import com.example.benomad.enums.ReviewStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -8,10 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,28 +20,36 @@ public class BlogDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @JsonProperty("author_id")
-    private Long authorId;
+    @JsonProperty(value = "author", access = JsonProperty.Access.READ_ONLY)
+    private UserDTO author;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long likes;
+    @JsonProperty(value = "like_count", access = JsonProperty.Access.READ_ONLY)
+    private Integer likeCount;
+
+    @JsonProperty(value = "comment_count", access = JsonProperty.Access.READ_ONLY)
+    private Integer commentCount;
 
     private String title;
 
     private String body;
 
-    @Column(name = "creation_date")
-    private LocalDate creationDate;
+    @Schema(required = true)
+    @JsonProperty(value = "image_urls",access = JsonProperty.Access.READ_ONLY)
+    private List<String> imageUrls;
 
-    @Column(name = "update_date")
-    private LocalDate updateDate;
+    @JsonProperty(value = "creation_date", access = JsonProperty.Access.READ_ONLY)
+    private String creationDate;
 
-    @JsonProperty("is_deleted")
-    private boolean isDeleted;
+    @JsonProperty(value = "update_date", access = JsonProperty.Access.READ_ONLY)
+    private String updateDate;
 
-    @JsonProperty("deletion_info")
+    @JsonProperty(value = "is_deleted", access = JsonProperty.Access.READ_ONLY)
+    private Boolean isDeleted;
+
+    @JsonProperty(value = "deletion_info", access = JsonProperty.Access.READ_ONLY)
     private DeletionInfoDTO deletionInfoDTO;
 
+    @JsonProperty(value = "review_status", access = JsonProperty.Access.READ_ONLY)
     private ReviewStatus reviewStatus;
 
     @JsonProperty(value = "is_liked_by_current_user", access = JsonProperty.Access.READ_ONLY)
@@ -53,4 +58,6 @@ public class BlogDTO {
     @Schema(required = true)
     @JsonProperty(value = "image_url", access = JsonProperty.Access.READ_ONLY)
     private String imageUrl;
+
+
 }

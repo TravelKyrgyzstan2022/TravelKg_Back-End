@@ -1,80 +1,92 @@
 package com.example.benomad.service.impl;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.util.IOUtils;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import com.example.benomad.dto.ImageDTO;
+import com.example.benomad.enums.ImagePath;
 import com.example.benomad.exception.ContentIsEmptyException;
 import com.example.benomad.exception.ContentIsNotImageException;
-import com.example.benomad.exception.FailedWhileAccessingImageException;
-import com.example.benomad.exception.FailedWhileUploadingException;
 import com.example.benomad.service.ImageService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.http.entity.ContentType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
 
-    private final AmazonS3 s3;
-    @Override
-    public void saveImageAws(String dataPath,
-                                String dataName,
-                                Optional<Map<String, String>> optionalMetaData,
-                                InputStream inputStream)
-            throws AmazonServiceException {
-        ObjectMetadata objectMetadata = new ObjectMetadata();
-        optionalMetaData.ifPresent(map -> {
-            if (!map.isEmpty()) {
-                map.forEach(objectMetadata::addUserMetadata);
-            }
-        });
-        try {
-            s3.putObject(dataPath,dataName,inputStream,objectMetadata);
-        } catch (AmazonServiceException e) {
-            throw new FailedWhileUploadingException(dataName);
+    private final String cloudinaryUrl = "cloudinary://619757622473734:1ZQqo0b7Il7jP6K_RAOPIAzX0so@benomad";
+    private final Cloudinary cloudinary = new Cloudinary((cloudinaryUrl));
+
+
+    @SneakyThrows
+    public List<String> uploadImages(MultipartFile[] files, ImagePath path) {
+        List<String> urls = new ArrayList<>();
+        for (MultipartFile file : files) {
+            checkImage(file);
+            var upload = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+                    "folder",path.getPathToImage(),
+                    "public_id", getRandomUUID(),
+                    "unique_filename", "true"
+            ));
+            urls.add((String) upload.get("secure_url"));
         }
+        return urls;
     }
 
-    @Override
-    public byte[] getAwsImageByPathAndKey(String path, String key) throws FailedWhileAccessingImageException {
-        try {
-            return IOUtils.toByteArray(s3.getObject(path, key).getObjectContent());
-        }catch (AmazonServiceException | IOException e) {
-            throw new FailedWhileAccessingImageException(key);
-        }
+    @SneakyThrows
+    public String uploadImage(MultipartFile file,ImagePath path) {
+        checkImage(file);
+        return (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+                "folder",path.getPathToImage(),
+                "public_id", getRandomUUID(),
+                "unique_filename", "true"
+        )).get("secure_url");
     }
 
 
 
 
-    public Map<String, String> getMetaData(MultipartFile file) {
-        Map<String,String> metadata = new HashMap<>();
-        metadata.put("Content-Type", file.getContentType());
-        metadata.put("Content-Length", ""+ file.getSize());
-        return metadata;
-    }
-
-    public void checkIsImage(MultipartFile file) {
+    public void checkImage(MultipartFile file) {
         if(!Arrays.asList(ContentType.IMAGE_GIF.getMimeType(),
                         ContentType.IMAGE_JPEG.getMimeType(),
                         ContentType.IMAGE_PNG.getMimeType(),
                         ContentType.IMAGE_SVG.getMimeType()).
                 contains(file.getContentType()))
             throw new ContentIsNotImageException(file.getContentType());
-    }
-
-    public void checkIsNotEmpty(MultipartFile file) {
         if (file.isEmpty()) throw new ContentIsEmptyException(file.getOriginalFilename());
     }
 
+    public String getRandomUUID() {
+        String uniqueUUID =""+ UUID.randomUUID() + UUID.randomUUID() + UUID.randomUUID();
+        return uniqueUUID.replaceAll("[^a-zA-z0-9]","");
+    }
+
+    @SneakyThrows
+    @Override
+    public List<String> uploadImages64(ImageDTO [] files,ImagePath path) {
+        List<String> imageUrls = new ArrayList<>();
+        for (ImageDTO file : files) {
+            imageUrls.add((String) cloudinary.uploader().upload(file.getImageUrl(), ObjectUtils.asMap(
+                    "folder",path.getPathToImage(),
+                    "public_id", getRandomUUID(),
+                    "unique_filename", "true"
+            )).get("secure_url"));
+        }
+        return imageUrls;
+    }
+
+    @SneakyThrows
+    @Override
+    public String uploadImage64(ImageDTO file,ImagePath path) {
+        return (String) cloudinary.uploader().upload(file.getImageUrl(), ObjectUtils.asMap(
+                "folder",path.getPathToImage(),
+                "public_id", getRandomUUID(),
+                "unique_filename", "true"
+        )).get("secure_url");
+    }
 
 }

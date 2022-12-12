@@ -2,11 +2,13 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.entity.User;
+import com.example.benomad.security.domain.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,32 +25,44 @@ public class UserMapper {
                 .password(userDTO.getPassword())
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
-                .isDeleted(userDTO.isDeleted())
-                .isActivated(userDTO.isActivated())
+                .isDeleted(userDTO.getIsDeleted())
+                .isActivated(userDTO.getIsActivated())
                 .deletionInfo(userDTO.getDeletionInfoDTO() != null ?
                         deletionInfoMapper.dtoToEntity(userDTO.getDeletionInfoDTO()) : null)
                 .roles(userDTO.getRoles())
                 .email(userDTO.getEmail())
                 .phoneNumber(userDTO.getPhoneNumber())
+                .imageUrl(userDTO.getImageUrl())
                 .build();
     }
 
     public UserDTO entityToDto(User user){
+        String role;
+        Set<Role> roles = user.getRoles();
+        if(roles.contains(Role.ROLE_SUPERADMIN)){
+            role = Role.ROLE_SUPERADMIN.toString();
+        }else if(roles.contains(Role.ROLE_ADMIN)){
+            role = Role.ROLE_ADMIN.toString();
+        }else{
+            role = Role.ROLE_USER.toString();
+        }
         return UserDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .activated(user.isActivated())
-                .deleted(user.isDeleted())
-                .lastVisitDate(user.getLastVisitDate() != null ?
+                .isActivated(user.getIsActivated())
+                .isDeleted(user.getIsDeleted())
+                .lastVisitDateTime(user.getLastVisitDate() != null ?
                         formatter.format(user.getLastVisitDate()) : "Haven't visited yet")
                 .registrationDate(user.getRegistrationDate() != null ?
                         dateFormatter.format(user.getRegistrationDate()) : null)
                 .deletionInfoDTO(user.getDeletionInfo() != null ?
                         deletionInfoMapper.entityToDto(user.getDeletionInfo()) : null)
                 .phoneNumber(user.getPhoneNumber())
+                .role(role)
                 .roles(user.getRoles())
+                .imageUrl(user.getImageUrl().orElse(null))
                 .build();
     }
 

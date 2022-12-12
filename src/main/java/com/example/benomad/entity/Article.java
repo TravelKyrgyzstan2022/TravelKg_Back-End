@@ -3,6 +3,8 @@ package com.example.benomad.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -22,18 +24,16 @@ public class Article {
     @Column(nullable = false, length = 10000)
     private String body;
 
-    @Getter(AccessLevel.NONE)
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "image_urls")
+    @ElementCollection(targetClass=String.class)
+    private List<String> imageUrls = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             columnDefinition = "user_id",
             referencedColumnName = "id"
     )
     private User user;
 
-    public Optional<String> getImageUrl() {
-        return Optional.ofNullable(imageUrl);
-    }
+
 }

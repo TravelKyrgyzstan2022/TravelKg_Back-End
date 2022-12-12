@@ -18,6 +18,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +29,7 @@ import java.util.Map;
 public class AuthEntryPointHandler implements AuthenticationEntryPoint {
 
     private static final String AUTHORIZATION = "Authorization";
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
     @Autowired
     JwtUtils jwtUtils;
 
@@ -43,13 +47,15 @@ public class AuthEntryPointHandler implements AuthenticationEntryPoint {
         String headerAuth = request.getHeader(AUTHORIZATION);
         String message = authException.getMessage();
         String error = "Unauthorized";
+        int status = 401;
 
         if (StringUtils.hasText(headerAuth)) {
             String token = headerAuth.substring(7);
             if(headerAuth.startsWith("Bearer ")){
-                String email = jwtUtils.getUsernameFromJwtToken(token);
+
                 try {
                     Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+                    String email = jwtUtils.getUsernameFromJwtToken(token);
                     if(!userRepository.existsByEmail(email)){
                         throw new ContentNotFoundException();
                     }
@@ -64,19 +70,18 @@ public class AuthEntryPointHandler implements AuthenticationEntryPoint {
                 } catch (IllegalArgumentException e) {
                     message = ("JWT claims string is empty: " + e.getMessage());
                 } catch (ContentNotFoundException e){
-                    message = (String.format("Invalid JWT: User %s doesn't exist", email));
+                    message = ("Invalid JWT: User doesn't exist");
                 }
             }else{
                 message = "Invalid JWT type: Bearer not found";
             }
         }
-//        log.error("Unauthorized error: {}", authException.getMessage());
+        log.error("Unauthorized error: {}", authException.getMessage());
 
         final Map<String, Object> body = new HashMap<>();
-        body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-        body.put("error", error);
+        body.put("status", status);
         body.put("message", message);
-        body.put("path", request.getServletPath());
+        body.put("timestamp", formatter.format(LocalDateTime.now(ZoneId.of("Asia/Bishkek"))));
 
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);

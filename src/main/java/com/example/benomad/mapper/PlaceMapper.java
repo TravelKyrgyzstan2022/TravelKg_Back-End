@@ -3,15 +3,15 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.entity.Place;
-import com.example.benomad.enums.ContentNotFoundEnum;
+import com.example.benomad.enums.Content;
 import com.example.benomad.exception.ContentNotFoundException;
+import com.example.benomad.repository.CommentRepository;
 import com.example.benomad.repository.RatingRepository;
 import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.impl.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class PlaceMapper {
 
     private final RatingRepository ratingRepository;
+    private final CommentRepository commentRepository;
     private final AuthServiceImpl authService;
     private final UserRepository userRepository;
     public Place dtoToEntity(PlaceDTO placeDTO) {
@@ -30,9 +31,11 @@ public class PlaceMapper {
                 .region(placeDTO.getRegion())
                 .placeType(placeDTO.getPlaceType())
                 .description(placeDTO.getDescription())
-                .imageUrl(placeDTO.getImageUrl())
+                .imageUrls(placeDTO.getImageUrls())
                 .linkUrl(placeDTO.getLinkUrl())
                 .address(placeDTO.getAddress())
+                .latitude(placeDTO.getLatitude())
+                .longitude(placeDTO.getLongitude())
                 .build();
     }
 
@@ -45,14 +48,17 @@ public class PlaceMapper {
                 .placeCategory(place.getPlaceCategory())
                 .placeType(place.getPlaceType())
                 .description(place.getDescription())
-                .imageUrl(place.getImageUrl().orElse(null))
+                .imageUrls(place.getImageUrls())
                 .linkUrl(place.getLinkUrl())
                 .address(place.getAddress())
                 .averageRating(ratingRepository.findAverageRatingByPlaceId(place.getId()))
                 .ratingCount(ratingRepository.findRatingCountByPlaceId(place.getId()))
+                .commentCount(place.getComments().size())
                 .isFavoriteOfCurrentUser(userId != null && userRepository.findById(userId).orElseThrow(
-                        () -> new ContentNotFoundException(ContentNotFoundEnum.USER, "userId", String.valueOf(userId))
+                        () -> new ContentNotFoundException(Content.USER, "userId", String.valueOf(userId))
                 ).getPlaces().contains(place))
+                .latitude(place.getLatitude())
+                .longitude(place.getLongitude())
                 .build();
     }
 

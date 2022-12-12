@@ -1,5 +1,9 @@
 package com.example.benomad.service;
 
+import com.example.benomad.dto.ImageDTO;
+import com.example.benomad.dto.MessageResponse;
+import com.example.benomad.entity.Comment;
+import com.example.benomad.entity.Place;
 import com.example.benomad.enums.PlaceCategory;
 import com.example.benomad.enums.PlaceType;
 import com.example.benomad.enums.Region;
@@ -11,15 +15,20 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface PlaceService {
-    List<PlaceDTO> getPlacesByAttributes(String name, Region region, PlaceType placeType, String address,Boolean match,PageRequest pageRequest) throws ContentNotFoundException;
-    PlaceDTO getPlaceById(Long id) throws ContentNotFoundException;
-    PlaceDTO insertPlace(PlaceDTO placeDTO);
-    PlaceDTO deletePlaceById(Long id) throws ContentNotFoundException;
-    PlaceDTO updatePlaceById(Long id, PlaceDTO placeDTO) throws ContentNotFoundException;
-    PlaceDTO ratePlaceById(Long placeId, Integer rating, boolean isRemoval) throws ContentNotFoundException;
-    List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories, List<PlaceType> types, Pageable pageable);
-    Long insertImageByPlaceId(Long id, MultipartFile file) throws ContentNotFoundException;
-    byte[] getImageByPlaceId(Long id);
-
-    PlaceDTO addPlaceToFavorites(Long id) throws ContentNotFoundException;
+    List<PlaceDTO> getMyFavorites();
+    List<PlaceDTO> getPlacesByAttributes(String name, String address,Boolean match,PageRequest pageRequest);
+    PlaceDTO getPlaceById(Long id);
+    Long insertPlace(PlaceDTO placeDTO);
+    PlaceDTO deletePlaceById(Long id);
+    PlaceDTO updatePlaceById(Long id, PlaceDTO placeDTO);
+    PlaceDTO ratePlaceById(Long placeId, Integer rating, boolean isRemoval);
+    List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories,
+                                                 List<PlaceType> types, List<Region> regions,Pageable pageable);
+    PlaceDTO addPlaceToFavorites(Long id);
+    MessageResponse insertImagesByPlaceId(Long placeId, MultipartFile[] files);
+    List<String> getImagesById(Long id);
+    PlaceDTO insertPlaceWithImages(PlaceDTO placeDTO, MultipartFile[] files);
+    MessageResponse insertImages64ByPLaceId(Long id, ImageDTO[] files);
+    void addComment(Long placeId, Comment comment);
+    Place getPlaceEntityById(Long placeId);
 }
