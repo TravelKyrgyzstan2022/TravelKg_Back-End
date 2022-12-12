@@ -183,8 +183,10 @@ public class UserBlogController {
         return ResponseEntity.ok(blogService.insertImagesByBlogId(blogId,files));
     }
     
+   
+    
     @PutMapping("/{id}/ios/images")
-    public ResponseEntity<?> uploadAllImagesFromIos(@RequestBody ImageDTO[] files) {
-        return ResponseEntity.ok().body(new MessageResponse("Success",200));
+    public ResponseEntity<?> uploadAllImagesFromIos(@PathVariable("id") Long id,@RequestBody ImageDTO[] files) {
+        return ResponseEntity.ok().body(blogService.insertImages64ByBlogId(id,files));
     }
 }
