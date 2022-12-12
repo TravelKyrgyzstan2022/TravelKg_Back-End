@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.example.benomad.dto.ImageDTO;
 
 
 @RestController
@@ -183,7 +184,7 @@ public class UserBlogController {
     }
     
     @PostMapping("/ios/images")
-    public ResponseEntity<?> uploadAllImagesFromIos(@RequestPart BlogDTO blogDTO,@RequestPart String[] files) {
+    public ResponseEntity<?> uploadAllImagesFromIos(@RequestPart BlogDTO blogDTO,@RequestPart ImageDTO[] files) {
         return ResponseEntity.ok().body(new MessageResponse("Success",200));
     }
 }
