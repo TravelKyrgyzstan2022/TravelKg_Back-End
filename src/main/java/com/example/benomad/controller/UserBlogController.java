@@ -181,4 +181,9 @@ public class UserBlogController {
     public ResponseEntity<?> insertImagesByBlogId(@PathVariable("id") Long blogId, @RequestParam("files") MultipartFile[] files){
         return ResponseEntity.ok(blogService.insertImagesByBlogId(blogId,files));
     }
+    
+    @PostMapping("/ios/images")
+    public ResponseEntity<?> uploadAllImagesFromIos(@RequestPart BlogDTO blogDTO,@RequestPart String[] files) {
+        return ResponseEntity.ok().body(new MessageResponse("Success",200));
+    }
 }
