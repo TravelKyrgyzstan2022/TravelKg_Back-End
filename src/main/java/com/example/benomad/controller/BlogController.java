@@ -75,16 +75,6 @@ public class BlogController {
                 title, includeContent, reviewStatus, MATCH_ALL));
     }
 
-    @Hidden
-    @GetMapping(value = {"/"}, produces = "application/json")
-    public ResponseEntity<?> forwardSlashFix(@RequestParam(name = "title", required = false) String title,
-                                             @RequestParam(name = "include", defaultValue = "ALL") IncludeContent includeContent,
-                                             @RequestParam(name = "status", required = false) ReviewStatus reviewStatus,
-                                             @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
-        return ResponseEntity.status(HttpStatus.OK).body(blogService.getBlogsByAttributes(
-                title, includeContent, reviewStatus, MATCH_ALL));
-    }
-
     @Operation(summary = "Get all authors")
     @ApiResponses(value = {
             @ApiResponse(
@@ -107,6 +97,11 @@ public class BlogController {
     public ResponseEntity<?> getAllAuthors(@RequestParam(name = "first_name", required = false) String firstName,
                                            @RequestParam(name = "last_name", required = false) String lastName){
         return ResponseEntity.ok(blogService.getAuthors(firstName, lastName));
+    }
+
+    @GetMapping(value = "/authors/{authorId}")
+    public ResponseEntity<?> getBlogByAuthorId(@PathVariable("authorId") Long authorId){
+        return ResponseEntity.ok(blogService.getBlogsByAuthorId(authorId));
     }
 
     @Operation(summary = "Finds blog by ID",

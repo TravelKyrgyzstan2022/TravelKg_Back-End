@@ -16,14 +16,32 @@ public class EmailSender {
     private String username;
 
 
-    public void send(String emailTo, String subject, String message) {
+    public void send(String email, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
         mailMessage.setFrom(username);
-        mailMessage.setTo(emailTo);
+        mailMessage.setTo(email);
         mailMessage.setSubject(subject);
         mailMessage.setText(message);
 
         mailSender.send(mailMessage);
+    }
+
+    public void sendForgotPasswordCode(String email, String code){
+        String mailMessage = String.format("""
+                Your email verification code for Benomad account:
+                
+                %s
+
+                Expiration time - 10 minutes.""", code);
+        send(email, "Reset password: email verification", mailMessage);
+    }
+
+    public void sendActivationCode(String email, String code){
+        String mailMessage = String.format("""
+                Your activation code for Benomad account is <%s>.
+
+                Expiration time - 10 minutes.""", code);
+        send(email, "Activation code", mailMessage);
     }
 }

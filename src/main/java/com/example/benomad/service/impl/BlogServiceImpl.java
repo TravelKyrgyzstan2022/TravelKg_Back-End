@@ -15,6 +15,7 @@ import com.example.benomad.exception.NoAccessException;
 import com.example.benomad.mapper.BlogMapper;
 import com.example.benomad.mapper.DeletionInfoMapper;
 import com.example.benomad.repository.BlogRepository;
+import com.example.benomad.security.domain.Role;
 import com.example.benomad.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -39,16 +40,7 @@ public class BlogServiceImpl implements BlogService {
     private final DeletionInfoMapper deletionInfoMapper;
     private final ImageServiceImpl imageService;
 
-    @Override
-    public Long insertBlog(BlogDTO blogDTO) throws ContentNotFoundException {
-        blogDTO.setId(null);
-        blogDTO.setIsDeleted(false);
-        Blog blog = blogMapper.dtoToEntity(blogDTO);
-        blog.setAuthor(userService.getUserEntityById(authService.getCurrentUserId()));
-        blog.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
-        blogDTO.setId(blog.getId());
-        return blogRepository.save(blog).getId();
-    }
+
 
     @Override
     public BlogDTO getBlogById(Long blogId) throws ContentNotFoundException {
@@ -62,30 +54,27 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogDTO updateMyBlogById(BlogDTO blogDTO, Long blogId) {
+    public BlogDTO updateBlogById(Long blogId, BlogDTO blogDTO){
         checkBlog(blogId);
-        blogDTO.setId(blogId);
         Blog blog = blogMapper.dtoToEntity(blogDTO);
+        blog.setId(blogId);
         blog.setUpdateDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
-        blogRepository.save(blog);
-        return blogMapper.entityToDto(blog);
-    }
-
-    private void checkBlog(Long blogId){
-        Blog blog = getBlogEntityById(blogId);
-        if(!blog.getAuthor().getId().equals(authService.getCurrentUserId())){
-            throw new NoAccessException();
-        }
-    }
-
-    @Override
-    public BlogDTO deleteMyBlogById(Long blogId) {
-        checkBlog(blogId);
-        Blog blog = getBlogEntityById(blogId);
-        blog.setIsDeleted(true);
         return blogMapper.entityToDto(blogRepository.save(blog));
     }
 
+    @Override
+    public BlogDTO deleteBlogById(Long blogId, DeletionInfoDTO infoDTO){
+        checkBlog(blogId);
+        Blog blog = getBlogEntityById(blogId);
+        blog.setIsDeleted(true);
+        infoDTO = infoDTO != null ? infoDTO :
+                new DeletionInfoDTO(null, "Blog was deleted by author", null, authService.getCurrentUserId());
+        infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        blog.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
+        return blogMapper.entityToDto(blogRepository.save(blog));
+    }
+
+    @Override
     public List<UserDTO> getAuthors(String firstName, String lastName){
         return userService.getBlogAuthors(firstName, lastName);
     }
@@ -108,8 +97,6 @@ public class BlogServiceImpl implements BlogService {
 
         return blogMapper.entityListToDtoList(blogs);
     }
-
-
 
     @Override
     public MessageResponse likeDislikeBlogById(Long blogId, boolean isDislike){
@@ -138,41 +125,26 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogDTO updateBlogById(Long blogId, BlogDTO blogDTO){
-        getBlogEntityById(blogId);
-        blogDTO.setId(blogId);
-        Blog blog = blogMapper.dtoToEntity(blogDTO);
-        blog.setCreationDate(null);
-        blog.setUpdateDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
-        blogRepository.save(blog);
-        return blogDTO;
-    }
-
-    @Override
-    public BlogDTO deleteBlogById(Long blogId, DeletionInfoDTO infoDTO){
-        Blog blog = getBlogEntityById(blogId);
-        blog.setIsDeleted(true);
-        infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
-        blog.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
-        blogRepository.save(blog);
-        return blogMapper.entityToDto(blog);
-    }
-
-    // FIXME: 09.12.2022
-    @Override
     public MessageResponse approveBlog(Long blogId) {
-        return null;
+        Blog blog = getBlogEntityById(blogId);
+        blog.setReviewStatus(ReviewStatus.APPROVED);
+        blogRepository.save(blog);
+        return new MessageResponse("Blog was successfully approved!", 200);
     }
 
     @Override
     public MessageResponse rejectBlog(Long blogId) {
-        return null;
+        Blog blog = getBlogEntityById(blogId);
+        blog.setReviewStatus(ReviewStatus.REJECTED);
+        blogRepository.save(blog);
+        return new MessageResponse("Blog was successfully rejected!", 200);
     }
 
     @Override
     public List<BlogDTO> getBlogsByAuthorId(Long userId) {
         return blogMapper.entityListToDtoList(blogRepository.findByAuthor(userService.getUserEntityById(userId)));
     }
+
 
     @Override
     public MessageResponse insertImagesByBlogId(Long blogId, MultipartFile[] files){
@@ -189,11 +161,10 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogDTO insertMyBlogWithImages(BlogDTO blogDTO, MultipartFile[] files) {
-        blogDTO.setId(null);
-        blogDTO.setIsDeleted(false);
-        blogDTO.setImageUrls(imageService.uploadImages(files, ImagePath.BLOG));
+    public BlogDTO insertBlogWithImages(BlogDTO blogDTO, MultipartFile[] files) {
         Blog blog = blogMapper.dtoToEntity(blogDTO);
+        blog.setIsDeleted(false);
+        blog.setImageUrls(imageService.uploadImages(files, ImagePath.BLOG));
         blog.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blog.setAuthor(userService.getUserEntityById(authService.getCurrentUserId()));
         return blogMapper.entityToDto(blogRepository.save(blog));
@@ -205,9 +176,9 @@ public class BlogServiceImpl implements BlogService {
         blog.setImageUrls(imageService.uploadImages64(files,ImagePath.BLOG));
         blogRepository.save(blog);
         return new MessageResponse("Images have been successfully added to the blog!", 200);
-
     }
 
+    @Override
     public void addComment(Long blogId, Comment comment){
         Blog blog = getBlogEntityById(blogId);
         Set<Comment> comments = blog.getComments();
@@ -216,10 +187,20 @@ public class BlogServiceImpl implements BlogService {
         blogRepository.save(blog);
     }
 
+    @Override
     public Blog getBlogEntityById(Long blogId){
         return blogRepository.findById(blogId).orElseThrow(() -> {
             throw new ContentNotFoundException(Content.BLOG, "id", String.valueOf(blogId));
         });
+    }
+
+    private void checkBlog(Long blogId){
+        Blog blog = getBlogEntityById(blogId);
+        if(!blog.getAuthor().getId().equals(authService.getCurrentUserId())
+                && !blog.getAuthor().getRoles().contains(Role.ROLE_ADMIN)
+                && !blog.getAuthor().getRoles().contains(Role.ROLE_SUPERADMIN)){
+            throw new NoAccessException();
+        }
     }
 
     private ExampleMatcher getExample(boolean MATCH_ALL, IncludeContent includeContent){

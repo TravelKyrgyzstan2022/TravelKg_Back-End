@@ -64,12 +64,6 @@ public class AdminPlaceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(placeService.insertPlace(placeDTO));
     }
 
-    @Hidden
-    @PostMapping(value = {"/"}, produces = "application/json")
-    public ResponseEntity<?> forwardSlashFix2(@RequestBody PlaceDTO placeDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(placeService.insertPlace(placeDTO));
-    }
-
     @Operation(summary = "Deletes place by ID")
     @ApiResponses(value = {
             @ApiResponse(
@@ -103,9 +97,9 @@ public class AdminPlaceController {
                     content = @Content
             )
     })
-    @DeleteMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> deletePlaceById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok().body(placeService.deletePlaceById(id));
+    @DeleteMapping(value = "/{placeId}", produces = "application/json")
+    public ResponseEntity<?> deletePlaceById(@PathVariable("placeId") Long placeId) {
+        return ResponseEntity.ok().body(placeService.deletePlaceById(placeId));
     }
 
     @Operation(summary = "Updates place by ID")
@@ -146,9 +140,9 @@ public class AdminPlaceController {
                     content = @Content
             )
     })
-    @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> updatePlaceById(@PathVariable Long id, @RequestBody PlaceDTO placeDTO){
-        return ResponseEntity.ok(placeService.updatePlaceById(id,placeDTO));
+    @PutMapping(value = "/{placeId}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> updatePlaceById(@PathVariable("placeId") Long placeId, @RequestBody PlaceDTO placeDTO){
+        return ResponseEntity.ok(placeService.updatePlaceById(placeId, placeDTO));
     }
 
     @Operation(summary = "Inserts images by place id")
@@ -190,8 +184,9 @@ public class AdminPlaceController {
             )
     })
     @PutMapping(value = "/{placeId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = "application/json")
-    public ResponseEntity<?> insertImagesByPlaceId(@PathVariable("placeId") Long placeId, @RequestParam("files") MultipartFile[] files){
-        return ResponseEntity.ok(placeService.insertImagesByPlaceId(placeId,files));
+    public ResponseEntity<?> insertImagesByPlaceId(@PathVariable("placeId") Long placeId,
+                                                   @RequestParam("files") MultipartFile[] files){
+        return ResponseEntity.ok(placeService.insertImagesByPlaceId(placeId, files));
     }
     @Operation(summary = "Inserts new place with along the images")
     @ApiResponses(value = {
@@ -232,8 +227,9 @@ public class AdminPlaceController {
             )
     })
     @PostMapping(value = {"/multipart","multipart"},consumes = { "multipart/form-data","application/json" })
-    public ResponseEntity<?> insertPlaceWithImages(@RequestPart("placeDTO") PlaceDTO placeDTO, @RequestPart("files") MultipartFile[] files){
-        return ResponseEntity.ok(placeService.insertPlaceWithImages(placeDTO,files));
+    public ResponseEntity<?> insertPlaceWithImages(@RequestPart("placeDTO") PlaceDTO placeDTO,
+                                                   @RequestPart("files") MultipartFile[] files){
+        return ResponseEntity.ok(placeService.insertPlaceWithImages(placeDTO, files));
     }
 
     @Operation(summary = "Inserts images to places")
@@ -274,9 +270,10 @@ public class AdminPlaceController {
                     content = @Content
             )
     })
-    @PutMapping(value = {"/{id}/images64","{id}/images64"})
-    public ResponseEntity<?> insertImagesToPlace(@RequestBody ImageDTO[] files, @PathVariable("id") Long id) {
-        return ResponseEntity.ok(placeService.insertImages64ByPLaceId(id,files));
+    @PutMapping(value = "/{placeId}/images64")
+    public ResponseEntity<?> insertImagesToPlace(@RequestBody ImageDTO[] files,
+                                                 @PathVariable("placeId") Long placeId) {
+        return ResponseEntity.ok(placeService.insertImages64ByPLaceId(placeId, files));
     }
 
 

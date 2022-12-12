@@ -1,6 +1,7 @@
 package com.example.benomad.controller;
 
 import com.example.benomad.service.impl.SupportRequestServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,10 +17,9 @@ public class UserSupportController {
 
     private final SupportRequestServiceImpl supportService;
 
-    // FIXME: 09.12.2022 do hidden forward slash fix and Support to Support Request
-
-    @PostMapping(value = {"/{id}", ""})
-    public ResponseEntity<?> insertSupport(@PathVariable Long id){
+    @Operation(summary = "Inserts support request")
+    @PostMapping(value = {""})
+    public ResponseEntity<?> insertSupport(){
         return ResponseEntity.status(HttpStatus.CREATED).body(supportService.insertSupportRequest());
     }
 

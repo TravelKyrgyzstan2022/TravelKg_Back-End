@@ -61,26 +61,19 @@ public class AuthEntryPointHandler implements AuthenticationEntryPoint {
                     }
                 } catch (SignatureException e) {
                     message = ("Invalid JWT signature: " + e.getMessage());
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 } catch (MalformedJwtException e) {
                     message = ("Invalid JWT token: " + e.getMessage());
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 } catch (ExpiredJwtException e) {
                     message = ("JWT token is expired: " + e.getMessage());
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 } catch (UnsupportedJwtException e) {
                     message = ("JWT token is unsupported: " + e.getMessage());
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 } catch (IllegalArgumentException e) {
                     message = ("JWT claims string is empty: " + e.getMessage());
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 } catch (ContentNotFoundException e){
                     message = ("Invalid JWT: User doesn't exist");
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 }
             }else{
                 message = "Invalid JWT type: Bearer not found";
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             }
         }
         log.error("Unauthorized error: {}", authException.getMessage());

@@ -32,7 +32,6 @@ public class PlanMapper {
 
     public Plan dtoToEntity(PlanDTO planDTO){
         return Plan.builder()
-                .id(planDTO.getId())
                 .date(LocalDate.parse(planDTO.getDate(), formatter))
                 .note(planDTO.getNote())
                 .build();

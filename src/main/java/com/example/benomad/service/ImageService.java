@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.List;
 
 public interface ImageService {
-    List<String> uploadImages(MultipartFile[] files, ImagePath path) throws ContentNotFoundException, ContentIsEmptyException, ContentIsNotImageException;
+    List<String> uploadImages(MultipartFile[] files, ImagePath path);
     void checkImage(MultipartFile file);
     String getRandomUUID();
 

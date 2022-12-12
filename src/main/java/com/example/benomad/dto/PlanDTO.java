@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanDTO {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @JsonProperty("date")
@@ -24,6 +25,9 @@ public class PlanDTO {
 
     @JsonProperty(value = "place", access = JsonProperty.Access.READ_ONLY)
     private PlaceDTO place;
+
+    @JsonProperty(value = "place_id", access = JsonProperty.Access.WRITE_ONLY)
+    private Long placeId;
 
     private String note;
 }

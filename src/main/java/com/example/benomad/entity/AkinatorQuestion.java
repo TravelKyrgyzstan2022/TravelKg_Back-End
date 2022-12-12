@@ -20,3 +20,5 @@ public class AkinatorQuestion {
     private String secondOptionQuery; // like < p.place_category != 'Nature' >
     private String neutralOptionQuery;
 }
+
+// coming soon...

@@ -61,12 +61,6 @@ public class AdminArticleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(articleService.insertArticle(articleDTO));
     }
 
-    @Hidden
-    @PostMapping(value = "/", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> forwardSlashFix(@RequestBody ArticleDTO articleDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(articleService.insertArticle(articleDTO));
-    }
-
     @Operation(summary = "Deletes article by ID")
     @ApiResponses(value = {
             @ApiResponse(
@@ -100,9 +94,9 @@ public class AdminArticleController {
                     content = @Content
             )
     })
-    @DeleteMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> deleteArticleById(@PathVariable Long id){
-        return ResponseEntity.ok(articleService.deleteArticleById(id));
+    @DeleteMapping(value = "/{articleId}", produces = "application/json")
+    public ResponseEntity<?> deleteArticleById(@PathVariable("articleId") Long articleId){
+        return ResponseEntity.ok(articleService.deleteArticleById(articleId));
     }
 
     @Operation(summary = "Updates article by ID")
@@ -138,9 +132,9 @@ public class AdminArticleController {
                     content = @Content
             )
     })
-    @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> updateArticleById(@PathVariable Long id, @RequestBody ArticleDTO articleDTO){
-        return ResponseEntity.ok(articleService.updateArticleById(id, articleDTO));
+    @PutMapping(value = "/{articleId}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> updateArticleById(@PathVariable("articleId") Long articleId, @RequestBody ArticleDTO articleDTO){
+        return ResponseEntity.ok(articleService.updateArticleById(articleId, articleDTO));
     }
 
     @Operation(summary = "Inserts images by article id")
@@ -186,7 +180,7 @@ public class AdminArticleController {
         return ResponseEntity.ok(articleService.insertImagesByArticleId(articleId,files));
     }
 
-    @Operation(summary = "Inserts new article with along the images")
+    @Operation(summary = "Inserts new article with the images")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",

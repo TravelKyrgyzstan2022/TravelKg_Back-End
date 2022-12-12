@@ -2,6 +2,7 @@ package com.example.benomad.controller;
 
 import com.example.benomad.dto.CommentDTO;
 import com.example.benomad.service.impl.CommentServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,16 @@ public class UserCommentController {
 
     private final CommentServiceImpl commentService;
 
+    @Operation(summary = "Deletes current user's comment by ID")
     @DeleteMapping("/{commentId}")
     public ResponseEntity<CommentDTO> deleteMyComment(@PathVariable("commentId") Long commentId) {
-        return ResponseEntity.ok(commentService.deleteMyComment(commentId));
+        return ResponseEntity.ok(commentService.deleteCommentById(commentId, null));
     }
 
+    @Operation(summary = "Updates current user's comment by ID")
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentDTO> updateMyComment(@PathVariable("commentId") Long commentId,
                                                       @RequestBody CommentDTO commentDTO){
-        return ResponseEntity.ok(commentService.updateMyComment(commentDTO, commentId));
+        return ResponseEntity.ok(commentService.updateCommentById(commentId, commentDTO));
     }
 }

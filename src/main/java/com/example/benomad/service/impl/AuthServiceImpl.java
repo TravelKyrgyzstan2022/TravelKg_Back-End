@@ -62,20 +62,16 @@ public class AuthServiceImpl implements AuthService {
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         Role role;
         String jwt;
-        Claims claims = new Claims();
 
         if(roles.contains("ROLE_SUPERADMIN")){
             role = Role.ROLE_SUPERADMIN;
             jwt = jwtUtils.generateAdminTokenFromEmail(email);
-//            claims = getClaims(Role.ROLE_SUPERADMIN);
         }else if(roles.contains("ROLE_ADMIN")){
             role = Role.ROLE_ADMIN;
             jwt = jwtUtils.generateAdminTokenFromEmail(email);
-//            claims = getClaims(Role.ROLE_ADMIN);
         }else{
             role = Role.ROLE_USER;
             jwt = jwtUtils.generateTokenFromEmail(email);
-//            claims = getClaims(Role.ROLE_USER);
         }
 
         UserDTO userDTO = userService.getUserById(userDetails.getId());
@@ -88,7 +84,6 @@ public class AuthServiceImpl implements AuthService {
         RefreshToken refreshToken = refreshTokenService.createToken(userDetails.getId());
         return JwtResponse.builder()
                 .role(role)
-                .claims(claims)
                 .token(jwt)
                 .refreshToken(refreshToken.getToken())
                 .userDTO(userDTO)
@@ -104,7 +99,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    //fixme maybe need to move code related to mail sending to verification code service
     public MessageResponse sendActivationCode(CodeRequest codeRequest) {
         String email = codeRequest.getEmail();
         if(userService.getUserEntityByEmail(email).getIsActivated()){
@@ -112,15 +106,12 @@ public class AuthServiceImpl implements AuthService {
         }
         String code = CodeGenerator.generateActivationCode();
         codeService.newCode(email, code);
-        String mailMessage = String.format("""
-                Your activation code for Benomad account is <%s>.
-
-                Expiration time - 10 minutes.""", code);
-        emailSender.send(email, "Activation code", mailMessage);
+        emailSender.sendActivationCode(email, code);
         return new MessageResponse("Activation code has been sent to email - " + email,
                 200);
     }
 
+    @Override
     public UserDTO registerUser(RegistrationRequest request) {
 
         UserDTO userDTO = UserDTO.builder()
@@ -168,13 +159,7 @@ public class AuthServiceImpl implements AuthService {
         userService.getUserByEmail(email);
         String code = CodeGenerator.generateResetPasswordCode();
         codeService.newCode(email, code);
-        String mailMessage = String.format("""
-                Your email verification code for Benomad account:
-                
-                %s
-
-                Expiration time - 10 minutes.""", code);
-        emailSender.send(email, "Reset password: email verification", mailMessage);
+        emailSender.sendForgotPasswordCode(email, code);
         return new MessageResponse("Verification code has been sent to email - " + email, 200);
     }
 
@@ -224,6 +209,7 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
     public String getCurrentEmail(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -231,61 +217,4 @@ public class AuthServiceImpl implements AuthService {
         }
         return null;
     }
-
-    // FIXME: 08.12.2022
-//    private Claims getClaims(Role role){
-//        String[] superAdminGetClaims = {
-//                "**"
-//        };
-//        String[] superAdminPostClaims = {
-//                "**"
-//        };
-//        String[] superAdminPutClaims = {
-//                "**"
-//        };
-//        String[] superAdminDeleteClaims = {
-//                "**"
-//        };
-//        String[] adminGetClaims = {
-//                "/actuator/**",
-//                "/api/dev/**",
-//                "/api/v1/users",
-//                "/api/v1/users/**"
-//        };
-//        String[] userClaims = {
-//                "/api/auth/**",
-//                "/documentation/**",
-//                "/v3/api-docs/**",
-//                "/swagger-ui/**",
-//                "/v3/api-docs.yaml",
-//                "/error"
-//        };
-//        String[] guestClaims = {
-//                "/api/auth/**",
-//                "/documentation/**",
-//                "/v3/api-docs/**",
-//                "/swagger-ui/**",
-//                "/v3/api-docs.yaml",
-//                "/error"
-//        };
-//        List<String> userClaimsList = Arrays.stream(userClaims).toList();
-//
-//        List<String> adminClaimsList = Arrays.stream(adminGetClaims).toList();
-//        adminClaimsList.addAll(userClaimsList);
-//
-//        List<String> superAdminClaimsList = Arrays.stream(superAdminClaims).toList();
-//
-//        Claims claims = new Claims();
-//
-//        if(role == Role.ROLE_SUPERADMIN){
-//             claims.setGet(Arrays.stream(superAdminClaims).toList());
-//             claims.setPost(Arrays.stream(superAdminPostClaims).toList());
-//        }
-//        if(role == Role.ROLE_ADMIN){
-//            return Arrays.stream(adminGetClaims).toList();
-//        }else{
-//            return Arrays.stream(userClaims).toList();
-//        }
-//        return claims;
-//    }
 }

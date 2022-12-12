@@ -93,6 +93,7 @@ public class ArticleServiceImpl implements ArticleService {
         return new MessageResponse("Images have been successfully added to the article!", 200);
     }
 
+    @Override
     public Article getArticleEntityById(Long articleId){
         return articleRepository.findById(articleId)
                 .orElseThrow(

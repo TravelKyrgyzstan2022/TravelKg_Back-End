@@ -72,20 +72,6 @@ public class PlaceController {
         return ResponseEntity.ok(placeService.getPlacesByAttributes(name, address, match, pageRequest));
     }
 
-    @Hidden
-    @GetMapping(produces = "application/json", value = {"/"})
-    public ResponseEntity<?> forwardSlashFix(
-            @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
-            @RequestParam(name = "page", required = false) Optional<Integer> page,
-            @RequestParam(name = "size", required = false) Optional<Integer> size,
-            @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "address", required = false) String address,
-            @RequestParam(name = "match_all", required = false,defaultValue = "false") Boolean match) {
-
-        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(20), Sort.by(sortBy.orElse("id")));
-        return ResponseEntity.ok(placeService.getPlacesByAttributes(name,address, match, pageRequest));
-    }
-
     @Operation(summary = "Gets place by ID")
     @ApiResponses(value = {
             @ApiResponse(

@@ -4,11 +4,11 @@ import com.example.benomad.entity.AkinatorQuestion;
 
 import java.util.List;
 
-
+//coming soon
 public class AkinatorQueryBuilder {
 
     private static final String endQuery = " JOIN place_attributes p2 ON p.id = p2.place_id " +
-            "JOIN place_ratings r ON p.id = r.place_id GROUP BY r.place_id"; // prolly wont work fixme
+            "JOIN place_ratings r ON p.id = r.place_id GROUP BY r.place_id"; // fixme
 
     public static String build(List<AkinatorQuestion> questions, String answers){
         if(answers.length() != questions.size()){

@@ -26,6 +26,4 @@ public class JwtResponse {
     private UserDTO userDTO;
 
     private Role role;
-
-    private Claims claims;
 }

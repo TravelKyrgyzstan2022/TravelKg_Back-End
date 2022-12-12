@@ -19,15 +19,18 @@ import java.util.List;
 public interface UserService {
     String getUserAuthenticationToken(User user);
     UserDTO insertUser(UserDTO userDTO);
-    UserDTO getUserById(Long id) throws ContentNotFoundException;
+    void setActivated(String email);
+    void resetPassword(String email, String password);
+    UserDTO getUserById(Long id);
     List<UserDTO> getUsersByAttributes(String firstName, String lastName, IncludeContent includeContent,
                                        String email, String phoneNumber, boolean MATCH_ALL);
     List<UserDTO> getBlogAuthors(String firstName, String lastName);
-    UserDTO getUserByEmail(String email) throws ContentNotFoundException;
+    UserDTO getUserByEmail(String email);
     UserDTO getCurrentUser();
     UserDTO updateCurrentUser(UserDTO userDTO);
-    UserDTO updateUserById(Long id, UserDTO userDTO) throws ContentNotFoundException;
-    UserDTO deleteUserById(Long userId, DeletionInfoDTO infoDTO) throws ContentNotFoundException;
+    UserDTO updateUserById(Long id, UserDTO userDTO);
+    UserDTO deleteUserById(Long userId, DeletionInfoDTO infoDTO);
     MessageResponse insertMyImage(MultipartFile file);
-
+    User getUserEntityById(Long userId);
+    User getUserEntityByEmail(String email);
 }

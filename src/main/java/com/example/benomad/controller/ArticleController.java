@@ -61,12 +61,6 @@ public class ArticleController {
         return ResponseEntity.ok(articleServiceImpl.getAllArticles());
     }
 
-    @Hidden
-    @GetMapping(value = {"/"}, produces = "application/json")
-    public ResponseEntity<?> forwardSlashFix(){
-        return ResponseEntity.ok(articleServiceImpl.getAllArticles());
-    }
-
     @Operation(summary = "Finds article by ID")
     @ApiResponses(value = {
             @ApiResponse(
@@ -100,10 +94,10 @@ public class ArticleController {
                     content = @Content
             )
     })
-    @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> getArticleById(@PathVariable Long id){
+    @GetMapping(value = "/{articleId}", produces = "application/json")
+    public ResponseEntity<?> getArticleById(@PathVariable("articleId") Long articleId){
 
-        return ResponseEntity.ok(articleServiceImpl.getArticleById(id));
+        return ResponseEntity.ok(articleServiceImpl.getArticleById(articleId));
     }
 
     @Operation(summary = "Gets all images by article id",

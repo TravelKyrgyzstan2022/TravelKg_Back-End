@@ -122,7 +122,6 @@ public class AccountController {
             Adds user to the database with given attributes.
 
             Note:This operation doesn't sign-in user, meaning that after registration user will need to sign-in in order to get access token.""")
-
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",

@@ -1,11 +1,17 @@
 package com.example.benomad.controller;
 
+import com.example.benomad.dto.SupportRequestDTO;
 import com.example.benomad.service.impl.SupportRequestServiceImpl;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -16,20 +22,21 @@ public class AdminSupportController {
 
     private final SupportRequestServiceImpl supportService;
 
-    // FIXME: 09.12.2022 do hidden forward slash fix and Support to Support Request
-    @GetMapping(value = {"", "/"}, produces = "application/json")
-    public ResponseEntity<?> getAllSupports(){
+    @Operation(summary = "Get all support requests")
+    @GetMapping(value = {""}, produces = "application/json")
+    public ResponseEntity<List<SupportRequestDTO>> getAllSupportRequests(){
         return ResponseEntity.ok(supportService.getAllSupportRequests());
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> getSupportById(@PathVariable Long id){
-        return ResponseEntity.ok(supportService.getSupportRequestById(id));
+    @Operation(summary = "Gets support request by ID")
+    @GetMapping(value = "/{requestId}", produces = "application/json")
+    public ResponseEntity<SupportRequestDTO> getSupportRequestById(@PathVariable("requestId") Long requestId){
+        return ResponseEntity.ok(supportService.getSupportRequestById(requestId));
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteSupport(@PathVariable("id") Long id){
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(supportService.deleteSupportRequestById(id));
+    @Operation(summary = "Deletes support request by ID")
+    @DeleteMapping(value = "/{requestId}")
+    public ResponseEntity<SupportRequestDTO> deleteSupportRequestById(@PathVariable("requestId") Long requestId){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(supportService.deleteSupportRequestById(requestId));
     }
-
 }

@@ -93,20 +93,7 @@ public class AdminUserController {
                 phoneNumber, MATCH_ALL));
     }
 
-    @Hidden
-    @GetMapping(value = "/", produces = "application/json")
-    public ResponseEntity<?> forwardSlashFix(@RequestParam(name = "first_name", required = false) String firstName,
-                                             @RequestParam(name = "last_name", required = false) String lastName,
-                                             @RequestParam(name = "email", required = false) String email,
-                                             @RequestParam(name = "phone_number", required = false) String phoneNumber,
-                                             @RequestParam(name = "include", defaultValue = "ALL")IncludeContent includeContent,
-                                             @RequestParam(name = "match_all", defaultValue = "false") boolean MATCH_ALL){
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
-        return ResponseEntity.ok(userService.getUsersByAttributes(firstName, lastName, includeContent, email,
-                phoneNumber, MATCH_ALL));
-    }
-
-    @Operation(summary = "Finds user by ID (ADMIN)",
+    @Operation(summary = "Finds user by ID",
     description = "Just finds user by ID :)")
     @ApiResponses(value = {
             @ApiResponse(
@@ -140,28 +127,9 @@ public class AdminUserController {
                     content = @Content
             )
     })
-    @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> getUserById(@PathVariable("id") Long userId){
+    @GetMapping(value = "/{userId}", produces = "application/json")
+    public ResponseEntity<?> getUserById(@PathVariable("userId") Long userId){
         return ResponseEntity.ok(userService.getUserById(userId));
-    }
-
-    @Operation(summary = "Gets current user (TESTING)")
-    @GetMapping(value = "/me")
-    public ResponseEntity<?> getCurrentUser(){
-        return ResponseEntity.ok(userService.getCurrentUser());
-    }
-
-    @Operation(summary = "Updates current user (TESTING)")
-    @PutMapping(value = "/me")
-    public ResponseEntity<?> updateCurrentUser(@RequestBody UserDTO userDTO){
-        return ResponseEntity.ok(userService.updateCurrentUser(userDTO));
-    }
-
-    //fixme
-    @Hidden
-    @GetMapping(value = "/exact", produces = "application/json")
-    public ResponseEntity<?> getUserByExactAttributes(){
-        return ResponseEntity.ok(userService.getUserById(1L));
     }
 
     @Operation(summary = "Updates user by ID")
@@ -202,13 +170,12 @@ public class AdminUserController {
                     content = @Content
             )
     })
-    @PutMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> updateUserById(@RequestBody UserDTO userDTO, @PathVariable("id") Long userId){
-        userDTO.setId(userId);
+    @PutMapping(value = "/{userId}", produces = "application/json")
+    public ResponseEntity<?> updateUserById(@RequestBody UserDTO userDTO, @PathVariable("userId") Long userId){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.updateUserById(userId, userDTO));
     }
 
-    @Operation(summary = "Deletes user by ID (ADMIN)")
+    @Operation(summary = "Deletes user by ID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -241,8 +208,8 @@ public class AdminUserController {
                     content = @Content
             )
     })
-    @DeleteMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> deleteUserById(@PathVariable("id") Long userId, @RequestBody DeletionInfoDTO infoDTO){
+    @DeleteMapping(value = "/{userid}", produces = "application/json")
+    public ResponseEntity<?> deleteUserById(@PathVariable("userId") Long userId, @RequestBody DeletionInfoDTO infoDTO){
         return ResponseEntity.ok(userService.deleteUserById(userId, infoDTO));
     }
 

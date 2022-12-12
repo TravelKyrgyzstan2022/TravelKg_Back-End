@@ -14,7 +14,7 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+//coming soon :)
 @RequiredArgsConstructor
 public class AkinatorServiceImpl implements AkinatorService{
 

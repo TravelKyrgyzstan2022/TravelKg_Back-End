@@ -170,6 +170,7 @@ public class PlaceServiceImpl implements PlaceService {
         return placeMapper.entityToDto(place);
     }
 
+    @Override
     public void addComment(Long placeId, Comment comment){
         Place place = getPlaceEntityById(placeId);
         Set<Comment> comments = place.getComments();
@@ -178,6 +179,7 @@ public class PlaceServiceImpl implements PlaceService {
         placeRepository.save(place);
     }
 
+    @Override
     public Place getPlaceEntityById(Long placeId){
         return placeRepository.findById(placeId)
                 .orElseThrow(

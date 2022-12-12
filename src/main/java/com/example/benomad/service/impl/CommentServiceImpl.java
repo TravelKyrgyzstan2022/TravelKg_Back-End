@@ -11,6 +11,7 @@ import com.example.benomad.entity.Comment;
 import com.example.benomad.mapper.CommentMapper;
 import com.example.benomad.mapper.DeletionInfoMapper;
 import com.example.benomad.repository.CommentRepository;
+import com.example.benomad.security.domain.Role;
 import com.example.benomad.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -55,28 +56,25 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.entityListToDtoList(page.stream().collect(Collectors.toList()));
     }
 
-    private void checkComment(Long commentId){
-        User user = userService.getUserEntityById(authService.getCurrentUserId());
-        Comment comment = getCommentEntityById(commentId);
-        if(!comment.getUser().getId().equals(user.getId())){
-            throw new NoAccessException();
-        }
-    }
-
-    public CommentDTO deleteMyComment(Long commentId){
+    @Override
+    public CommentDTO deleteCommentById(Long commentId, DeletionInfoDTO infoDTO){
         checkComment(commentId);
         Comment comment = getCommentEntityById(commentId);
         comment.setIsDeleted(true);
-        commentRepository.save(comment);
+        infoDTO = infoDTO != null ? infoDTO :
+                new DeletionInfoDTO(null, "Comment was deleted by author", null, authService.getCurrentUserId());
+        infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        comment.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
         return commentMapper.entityToDto(comment);
     }
 
-    public CommentDTO updateMyComment(CommentDTO commentDTO, Long commentId){
+    @Override
+    public CommentDTO updateCommentById(Long commentId, CommentDTO commentDTO){
         checkComment(commentId);
-        commentDTO.setId(authService.getCurrentUserId());
         Comment comment = commentMapper.dtoToEntity(commentDTO);
         comment.setUpdateDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         comment.setId(commentId);
+        comment.setUser(userService.getUserEntityById(authService.getCurrentUserId()));
         commentDTO = commentMapper.entityToDto(commentRepository.save(comment));
         return commentDTO;
     }
@@ -121,8 +119,9 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentMapper.dtoToEntity(commentDTO);
         comment.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         comment.setUser(userService.getUserEntityById(authService.getCurrentUserId()));
-        commentDTO.setId(commentRepository.save(comment).getId());
         comment = commentRepository.save(comment);
+        commentDTO.setId(comment.getId());
+
         if(reference == CommentReference.PLACE){
             placeService.addComment(referenceId, comment);
         }else if(reference == CommentReference.BLOG){
@@ -132,28 +131,20 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO deleteCommentById(Long commentId, DeletionInfoDTO infoDTO){
-        Comment comment = getCommentEntityById(commentId);
-        comment.setIsDeleted(true);
-        infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
-        comment.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
-        return commentMapper.entityToDto(comment);
-    }
-
-    @Override
-    public CommentDTO updateCommentById(Long commentId, CommentDTO commentDTO){
-        commentDTO.setId(commentId);
-        Comment comment = commentMapper.dtoToEntity(commentDTO);
-        comment.setUpdateDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
-        comment.setCreationDate(null);
-        commentRepository.save(comment);
-        return commentDTO;
-    }
-
     public Comment getCommentEntityById(Long commentId){
         return commentRepository.findById(commentId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(Content.COMMENT, "id", String.valueOf(commentId));
                 });
+    }
+
+    private void checkComment(Long commentId){
+        User user = userService.getUserEntityById(authService.getCurrentUserId());
+        Comment comment = getCommentEntityById(commentId);
+        if(!comment.getUser().getId().equals(user.getId())
+                && !user.getRoles().contains(Role.ROLE_ADMIN)
+                && !user.getRoles().contains(Role.ROLE_SUPERADMIN)){
+            throw new NoAccessException();
+        }
     }
 }

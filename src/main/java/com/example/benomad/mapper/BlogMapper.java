@@ -44,17 +44,9 @@ public class BlogMapper {
     }
 
     public Blog dtoToEntity(BlogDTO blogDTO){
-        if(blogDTO.getReviewStatus() == null){
-            blogDTO.setReviewStatus(ReviewStatus.PENDING);
-        }
         return Blog.builder()
-                .id(blogDTO.getId())
-                .isDeleted(blogDTO.getIsDeleted())
-                .deletionInfo(blogDTO.getDeletionInfoDTO() != null ?
-                        deletionInfoMapper.dtoToEntity(blogDTO.getDeletionInfoDTO()) : null)
                 .title(blogDTO.getTitle())
                 .body(blogDTO.getBody())
-                .reviewStatus(blogDTO.getReviewStatus())
                 .imageUrls(blogDTO.getImageUrls())
                 .build();
     }

@@ -2,10 +2,13 @@ package com.example.benomad.mapper;
 
 import com.example.benomad.dto.EventDTO;
 import com.example.benomad.entity.Event;
+import com.example.benomad.util.DateUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EventMapper {
@@ -26,13 +29,15 @@ public class EventMapper {
 
     public Event dtoToEntity(EventDTO eventDTO){
         return Event.builder()
-                .id(eventDTO.getId())
                 .name(eventDTO.getName())
                 .address(eventDTO.getAddress())
                 .description(eventDTO.getDescription())
-                .imageUrls(eventDTO.getImageUrls())
                 .linkUrl(eventDTO.getLinkUrl())
-                .dateTime(LocalDateTime.parse(eventDTO.getDateTime(), formatter))
+                .dateTime(DateUtils.parseDateTime(eventDTO.getDateTime(), formatter))
                 .build();
+    }
+
+    public List<EventDTO> entityListToDtoList(List<Event> entities){
+        return entities.stream().map(this::entityToDto).collect(Collectors.toList());
     }
 }

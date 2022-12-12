@@ -56,12 +56,6 @@ public class AdminCommentController {
         return ResponseEntity.ok(commentService.getAllComments());
     }
 
-    @Hidden
-    @GetMapping(value = {"/"}, produces = "application/json")
-    public ResponseEntity<?> forwardSlashFix(){
-        return ResponseEntity.ok(commentService.getAllComments());
-    }
-
     @Operation(summary = "Finds comment by id")
     @ApiResponses(value = {
             @ApiResponse(
@@ -90,9 +84,9 @@ public class AdminCommentController {
                     content = @Content
             )
     })
-    @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> getCommentById(@PathVariable Long id){
-        return ResponseEntity.ok(commentService.getCommentById(id));
+    @GetMapping(value = "/{commentId}", produces = "application/json")
+    public ResponseEntity<?> getCommentById(@PathVariable("commentId") Long commentId){
+        return ResponseEntity.ok(commentService.getCommentById(commentId));
     }
 
     @Operation(summary = "Inserts a comment to the database")
@@ -134,13 +128,6 @@ public class AdminCommentController {
                 commentService.insertComment(commentDTO.getReference(), commentDTO.getReferenceId(), commentDTO));
     }
 
-    @Hidden
-    @PostMapping(value = {"/"}, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> forwardSlashFix2(@RequestBody CommentDTO commentDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                commentService.insertComment(commentDTO.getReference(), commentDTO.getReferenceId(), commentDTO));
-    }
-
     @Operation(summary = "Deletes comment by ID")
     @ApiResponses(value = {
             @ApiResponse(
@@ -175,7 +162,8 @@ public class AdminCommentController {
             )
     })
     @DeleteMapping(value = "/{commentId}", produces = "application/json")
-    public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId, @RequestBody DeletionInfoDTO infoDTO){
+    public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId,
+                                               @RequestBody DeletionInfoDTO infoDTO){
         return ResponseEntity.ok(commentService.deleteCommentById(commentId, infoDTO));
     }
 
@@ -217,8 +205,9 @@ public class AdminCommentController {
                     content = @Content
             )
     })
-    @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> updateCommentById(@PathVariable Long id, @RequestBody CommentDTO commentDTO){
-        return ResponseEntity.ok(commentService.updateCommentById(id,commentDTO));
+    @PutMapping(value = "/{commentId}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> updateCommentById(@PathVariable("commentId") Long commentId,
+                                               @RequestBody CommentDTO commentDTO){
+        return ResponseEntity.ok(commentService.updateCommentById(commentId, commentDTO));
     }
 }

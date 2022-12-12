@@ -38,19 +38,13 @@ public class UserBlogController {
     @PutMapping(value = "/{blogId}")
     public ResponseEntity<?> updateMyBlogById(@PathVariable("blogId") Long blogId,
                                               @RequestBody BlogDTO blogDTO){
-        return ResponseEntity.ok(blogService.updateMyBlogById(blogDTO, blogId));
-    }
-
-    @Operation(summary = "Insert new blog")
-    @PostMapping(value = {"/",""})
-    public ResponseEntity<?> insertMyBlog(@RequestBody BlogDTO blogDTO){
-        return ResponseEntity.ok(blogService.insertBlog(blogDTO));
+        return ResponseEntity.ok(blogService.updateBlogById(blogId, blogDTO));
     }
 
     @Operation(summary = "Delete my blog by ID")
     @DeleteMapping(value = "/{blogId}")
     public ResponseEntity<?> deleteMyBlogId(@PathVariable("blogId") Long blogId){
-        return ResponseEntity.ok(blogService.deleteMyBlogById(blogId));
+        return ResponseEntity.ok(blogService.deleteBlogById(blogId, null));
     }
 
 
@@ -136,8 +130,8 @@ public class UserBlogController {
             )
     })
     @PostMapping(value = {"multipart","/multipart"},consumes = { "multipart/form-data","application/json" })
-    public ResponseEntity<?> insertMyBlogWithImages(@RequestPart("blogDTO") BlogDTO blogDTO, @RequestPart() MultipartFile[] files){
-        return ResponseEntity.ok(blogService.insertMyBlogWithImages(blogDTO,files));
+    public ResponseEntity<?> insertBlogWithImages(@RequestPart("blogDTO") BlogDTO blogDTO, @RequestPart() MultipartFile[] files){
+        return ResponseEntity.ok(blogService.insertBlogWithImages(blogDTO,files));
     }
 
     @Operation(summary = "Inserts images by blog id")

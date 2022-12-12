@@ -71,7 +71,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userMapper.entityToDto(getUserEntityById(userId));
     }
 
-    //is not used
     @Override
     public UserDTO insertUser(UserDTO userDTO) throws UserAttributeTakenException {
         userDTO.setId(null);
@@ -85,6 +84,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userDTO;
     }
 
+    @Override
     public void setActivated(String email){
         User user = getUserEntityByEmail(email);
         user.setIsActivated(true);
@@ -185,18 +185,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new MessageResponse("Image has been successfully set as a profile picture!", 200);
     }
 
+    @Override
     public void resetPassword(String email, String password){
         User user = getUserEntityByEmail(email);
         user.setPassword(encoder.encode(password));
         userRepository.save(user);
     }
 
+    @Override
     public User getUserEntityById(Long userId){
         return userRepository.findById(userId).orElseThrow(
                 () -> new ContentNotFoundException(Content.USER, "id", String.valueOf(userId))
         );
     }
 
+    @Override
     public User getUserEntityByEmail(String email){
         return userRepository.findByEmail(email).orElseThrow(
                 () -> new ContentNotFoundException(Content.USER, "email", email)
@@ -236,7 +239,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }else{
             return MATCH_ALL ? MATCHER_ALL_WITH_DELETED : MATCHER_ANY_WITH_DELETED;
         }
-
     }
 
     private ExampleMatcher getExampleForAttribute(String attribute){
