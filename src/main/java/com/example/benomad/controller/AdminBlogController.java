@@ -182,6 +182,4 @@ public class AdminBlogController {
     public ResponseEntity<?> rejectBlogById(@PathVariable Long blogId){
         return ResponseEntity.ok(blogService.rejectBlog(blogId));
     }
-
-
 }

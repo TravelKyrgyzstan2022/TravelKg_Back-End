@@ -1,6 +1,8 @@
 package com.example.benomad.controller;
 
 import com.example.benomad.advice.ExceptionResponse;
+import com.example.benomad.dto.MessageResponse;
+import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.dto.UserDTO;
 import com.example.benomad.service.impl.PlaceServiceImpl;
 import com.example.benomad.service.impl.UserServiceImpl;
@@ -15,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
@@ -27,19 +31,19 @@ public class UserAccountController {
 
     @Operation(summary = "Gets current user")
     @GetMapping(value = "/profile")
-    public ResponseEntity<?> getCurrentUser(){
+    public ResponseEntity<UserDTO> getCurrentUser(){
         return ResponseEntity.ok(userService.getCurrentUser());
     }
 
     @Operation(summary = "Updates current user")
     @PutMapping(value = "/profile")
-    public ResponseEntity<?> updateCurrentUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> updateCurrentUser(@RequestBody UserDTO userDTO){
         return ResponseEntity.ok(userService.updateCurrentUser(userDTO));
     }
 
     @Operation(summary = "Inserts current user image")
     @PutMapping(value = "/profile/image")
-    public ResponseEntity<?> insertUserImage(@RequestPart("file") MultipartFile file){
+    public ResponseEntity<MessageResponse> insertUserImage(@RequestPart("file") MultipartFile file){
         return ResponseEntity.ok(userService.insertMyImage(file));
     }
 
@@ -78,13 +82,13 @@ public class UserAccountController {
             )
     })
     @PostMapping(value = "/favorites/{placeId}", produces = "application/json")
-    public ResponseEntity<?> addPlaceToUser(@PathVariable("placeId") Long placeId){
+    public ResponseEntity<PlaceDTO> addPlaceToUser(@PathVariable("placeId") Long placeId){
         return ResponseEntity.ok(placeService.addPlaceToFavorites(placeId));
     }
 
     @Operation(summary = "Gets all favorite places of current user")
     @GetMapping(value = "/favorites", produces = "application/json")
-    public ResponseEntity<?> getUserFavorites(){
+    public ResponseEntity<List<PlaceDTO>> getUserFavorites(){
         return ResponseEntity.ok(placeService.getMyFavorites());
     }
 }

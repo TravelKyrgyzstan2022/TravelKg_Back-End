@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.benomad.dto.ImageDTO;
 
+import java.util.List;
+
 
 @RestController
 @CrossOrigin
@@ -30,20 +32,20 @@ public class UserBlogController {
 
     @Operation(summary = "Get my blogs")
     @GetMapping(value = "")
-    public ResponseEntity<?> getMyBlogs(){
+    public ResponseEntity<List<BlogDTO>> getMyBlogs(){
         return ResponseEntity.ok(blogService.getMyBlogs());
     }
 
     @Operation(summary = "Update my blog by ID")
     @PutMapping(value = "/{blogId}")
-    public ResponseEntity<?> updateMyBlogById(@PathVariable("blogId") Long blogId,
+    public ResponseEntity<BlogDTO> updateMyBlogById(@PathVariable("blogId") Long blogId,
                                               @RequestBody BlogDTO blogDTO){
         return ResponseEntity.ok(blogService.updateBlogById(blogId, blogDTO));
     }
 
     @Operation(summary = "Delete my blog by ID")
     @DeleteMapping(value = "/{blogId}")
-    public ResponseEntity<?> deleteMyBlogId(@PathVariable("blogId") Long blogId){
+    public ResponseEntity<BlogDTO> deleteMyBlogId(@PathVariable("blogId") Long blogId){
         return ResponseEntity.ok(blogService.deleteBlogById(blogId, null));
     }
 
@@ -88,7 +90,7 @@ public class UserBlogController {
     })
     @PutMapping(value = {"/{id}/images64","{id}/images64"})
     public ResponseEntity<?> insertImagesToBlog(@RequestBody ImageDTO[] files,@PathVariable("id") Long id) {
-        return ResponseEntity.ok(blogService.insertImages64ByBlogId(id,files));
+        return ResponseEntity.ok(blogService.insertImages64ByBlogId(id, files));
     }
 
     @Operation(summary = "Inserts new blog with images")
@@ -131,7 +133,7 @@ public class UserBlogController {
     })
     @PostMapping(value = {"multipart","/multipart"},consumes = { "multipart/form-data","application/json" })
     public ResponseEntity<?> insertBlogWithImages(@RequestPart("blogDTO") BlogDTO blogDTO, @RequestPart() MultipartFile[] files){
-        return ResponseEntity.ok(blogService.insertBlogWithImages(blogDTO,files));
+        return ResponseEntity.ok(blogService.insertBlogWithImages(blogDTO, files));
     }
 
     @Operation(summary = "Inserts images by blog id")
@@ -172,15 +174,13 @@ public class UserBlogController {
                     content = @Content
             )
     })
-    @PutMapping(value = {"/{id}/images","{id}/images"}, produces = "application/json")
-    public ResponseEntity<?> insertImagesByBlogId(@PathVariable("id") Long blogId, @RequestParam("files") MultipartFile[] files){
-        return ResponseEntity.ok(blogService.insertImagesByBlogId(blogId,files));
+    @PutMapping(value = "/{blogId}/images", produces = "application/json")
+    public ResponseEntity<?> insertImagesByBlogId(@PathVariable("blogId") Long blogId, @RequestParam("files") MultipartFile[] files){
+        return ResponseEntity.ok(blogService.insertImagesByBlogId(blogId, files));
     }
-    
-   
-    
+
     @PutMapping("/{id}/ios/images")
-    public ResponseEntity<?> uploadAllImagesFromIos(@PathVariable("id") Long id,@RequestBody ImageDTO[] files) {
-        return ResponseEntity.ok().body(blogService.insertImages64ByBlogId(id,files));
+    public ResponseEntity<?> uploadAllImagesFromIos(@PathVariable("blogId") Long blogId,@RequestBody ImageDTO[] files) {
+        return ResponseEntity.ok().body(blogService.insertImages64ByBlogId(blogId, files));
     }
 }
