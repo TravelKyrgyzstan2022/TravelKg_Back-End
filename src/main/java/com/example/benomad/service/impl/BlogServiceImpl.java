@@ -188,6 +188,15 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    public Long insertBlog(BlogDTO blogDTO) {
+        blogDTO.setIsDeleted(false);
+        Blog blog = blogMapper.dtoToEntity(blogDTO);
+        blog.setAuthor(userService.getUserEntityById(authService.getCurrentUserId()));
+        blog.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        return blogRepository.save(blog).getId();
+    }
+
+    @Override
     public Blog getBlogEntityById(Long blogId){
         return blogRepository.findById(blogId).orElseThrow(() -> {
             throw new ContentNotFoundException(Content.BLOG, "id", String.valueOf(blogId));

@@ -12,12 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.example.benomad.dto.ImageDTO;
-
 import java.util.List;
 
 
@@ -41,6 +38,12 @@ public class UserBlogController {
     public ResponseEntity<BlogDTO> updateMyBlogById(@PathVariable("blogId") Long blogId,
                                               @RequestBody BlogDTO blogDTO){
         return ResponseEntity.ok(blogService.updateBlogById(blogId, blogDTO));
+    }
+
+    @Operation(summary = "Insert new blog")
+    @PostMapping(value = {"/",""})
+    public ResponseEntity<?> insertMyBlog(@RequestBody BlogDTO blogDTO){
+        return ResponseEntity.ok(blogService.insertBlog(blogDTO));
     }
 
     @Operation(summary = "Delete my blog by ID")
@@ -179,8 +182,6 @@ public class UserBlogController {
         return ResponseEntity.ok(blogService.insertImagesByBlogId(blogId, files));
     }
 
-    @PutMapping("/{id}/ios/images")
-    public ResponseEntity<?> uploadAllImagesFromIos(@PathVariable("blogId") Long blogId,@RequestBody ImageDTO[] files) {
-        return ResponseEntity.ok().body(blogService.insertImages64ByBlogId(blogId, files));
-    }
+
+
 }
