@@ -112,15 +112,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO insertComment(CommentReference reference, Long referenceId, CommentDTO commentDTO) {
-        commentDTO.setId(null);
-        commentDTO.setReference(reference);
-        commentDTO.setReferenceId(referenceId);
-
         Comment comment = commentMapper.dtoToEntity(commentDTO);
         comment.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        comment.setIsDeleted(false);
         comment.setUser(userService.getUserEntityById(authService.getCurrentUserId()));
         comment = commentRepository.save(comment);
-        commentDTO.setId(comment.getId());
+        commentDTO = commentMapper.entityToDto(comment);
 
         if(reference == CommentReference.PLACE){
             placeService.addComment(referenceId, comment);
