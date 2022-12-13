@@ -1,6 +1,7 @@
 package com.example.benomad.controller;
 
 import com.example.benomad.advice.ExceptionResponse;
+import com.example.benomad.dto.ImageDTO;
 import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.dto.UserDTO;
@@ -47,6 +48,12 @@ public class UserAccountController {
         return ResponseEntity.ok(userService.insertMyImage(file));
     }
 
+    @Operation(summary = "Inserts current user image using base 64")
+    @PutMapping(value = "/profile/image64")
+    public ResponseEntity<?> insertUserImage64(@RequestBody ImageDTO file){
+        return ResponseEntity.ok(userService.insertMyImage64(file));
+    }
+
     @Operation(summary = "Inserts place to current user's favorites",
             description = "Inserts place to current user's favorites using place id")
     @ApiResponses(value = {
@@ -91,4 +98,6 @@ public class UserAccountController {
     public ResponseEntity<List<PlaceDTO>> getUserFavorites(){
         return ResponseEntity.ok(placeService.getMyFavorites());
     }
+
+
 }

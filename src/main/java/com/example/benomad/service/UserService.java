@@ -1,6 +1,7 @@
 package com.example.benomad.service;
 
 import com.example.benomad.dto.DeletionInfoDTO;
+import com.example.benomad.dto.ImageDTO;
 import com.example.benomad.dto.UserDTO;
 
 import com.example.benomad.enums.IncludeContent;
@@ -33,4 +34,6 @@ public interface UserService {
     MessageResponse insertMyImage(MultipartFile file);
     User getUserEntityById(Long userId);
     User getUserEntityByEmail(String email);
+
+    MessageResponse insertMyImage64(ImageDTO file);
 }

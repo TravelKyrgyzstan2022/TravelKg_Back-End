@@ -1,6 +1,7 @@
 package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.DeletionInfoDTO;
+import com.example.benomad.dto.ImageDTO;
 import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.entity.User;
 
@@ -205,6 +206,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 () -> new ContentNotFoundException(Content.USER, "email", email)
         );
     }
+
+    @Override
+    public MessageResponse insertMyImage64(ImageDTO file) {
+        if (authService.getCurrentUserId() != null  && userRepository.findById(authService.getCurrentUserId()).isPresent()) {
+            User user = userRepository.findById(authService.getCurrentUserId()).get();
+            user.setImageUrl(imageService.uploadImage64(file, ImagePath.USER));
+            userRepository.save(user);
+        }
+        return new MessageResponse("Image has been successfully set as a profile picture!", 200);
+    }
+
 
     private ExampleMatcher getExample(boolean MATCH_ALL, IncludeContent includeContent){
         ExampleMatcher MATCHER_ANY_WITH_DELETED = ExampleMatcher.matchingAny()
