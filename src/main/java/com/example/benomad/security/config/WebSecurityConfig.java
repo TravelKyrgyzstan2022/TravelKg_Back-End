@@ -36,12 +36,11 @@ public class WebSecurityConfig{
             "/v3/api-docs.yaml",
             "/error"
     };
-    private final String[] REGISTERED_COMMON = {};
 
     private final String[] USER = {
             "/api/v1/user/**",
-            "/api/account/my-account",
-            "/api/account/my-account/**"
+	        "/api/v1/places/**",
+	        "/api/v1/blogs/**"
     };
 
     private final String[] ADMIN_COMMON = {
@@ -61,15 +60,15 @@ public class WebSecurityConfig{
     };
 
     private final String[] ADMIN_POST = {
-            "/api/v1/**"
+            "/api/v1/admin/**"
     };
 
     private final String[] ADMIN_PUT = {
-            "/api/v1/**"
+            "/api/v1/admin/**"
     };
 
     private final String[] ADMIN_DELETE = {
-            "/api/v1/**"
+            "/api/v1/admin/**"
     };
 
     @Bean
