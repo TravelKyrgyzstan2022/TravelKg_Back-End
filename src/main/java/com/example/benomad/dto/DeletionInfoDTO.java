@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @Getter
@@ -15,13 +16,15 @@ import java.time.LocalDate;
 @Builder
 public class DeletionInfoDTO {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
+    @NotBlank(message = "Reason can't be null or empty")
     private String reason;
 
-    @JsonProperty("deletion_date")
+    @JsonProperty(value = "deletion_date", access = JsonProperty.Access.READ_ONLY)
     private LocalDate deletionDate;
 
-    @JsonProperty("responsible_user_id")
+    @JsonProperty(value = "responsible_user_id", access = JsonProperty.Access.READ_ONLY)
     private Long responsibleUserId;
 }

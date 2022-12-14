@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class CodeRequest {
 
-    @NotBlank(message = "Email field can't be empty")
+    @NotBlank(message = "Email can't be null or empty")
     @Email(message = "Email is invalid")
     @JsonProperty(required = true)
     private String email;

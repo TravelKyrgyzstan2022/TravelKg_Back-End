@@ -1,9 +1,7 @@
 package com.example.benomad.controller;
 
 import com.example.benomad.dto.PlanDTO;
-import com.example.benomad.security.request.GetPlanRequest;
 import com.example.benomad.service.impl.PlanServiceImpl;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -56,7 +55,7 @@ public class UserPlanController {
 
     @Operation(summary = "Insert plan", description = "Format in which date should be passed : 30/01/2020")
     @PostMapping(value = {""})
-    public ResponseEntity<PlanDTO> insertPlan(@RequestBody PlanDTO planDTO){
+    public ResponseEntity<PlanDTO> insertPlan(@Valid @RequestBody PlanDTO planDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(planService.insertPlan(planDTO));
     }
 

@@ -63,20 +63,20 @@ public class AuthServiceImpl implements AuthService {
         Role role;
         String jwt;
 
-        if(roles.contains("ROLE_SUPERADMIN")){
+        if (roles.contains("ROLE_SUPERADMIN")) {
             role = Role.ROLE_SUPERADMIN;
             jwt = jwtUtils.generateAdminTokenFromEmail(email);
-        }else if(roles.contains("ROLE_ADMIN")){
+        } else if (roles.contains("ROLE_ADMIN")) {
             role = Role.ROLE_ADMIN;
             jwt = jwtUtils.generateAdminTokenFromEmail(email);
-        }else{
+        } else {
             role = Role.ROLE_USER;
             jwt = jwtUtils.generateTokenFromEmail(email);
         }
 
         UserDTO userDTO = userService.getUserById(userDetails.getId());
         User user = userService.getUserEntityById(userDetails.getId());
-        if(!user.getIsActivated()){
+        if (!user.getIsActivated()) {
             throw new UserNotActivatedException();
         }
         user.setLastVisitDate(LocalDateTime.now(ZoneId.of("Asia/Bishkek")));
@@ -91,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public MessageResponse validateVerificationCode(EmailVerificationRequest request){
+    public MessageResponse validateVerificationCode(EmailVerificationRequest request) {
         String email = request.getEmail();
         String code = request.getVerificationCode();
         codeService.isCodeValid(email, code);
@@ -101,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public MessageResponse sendActivationCode(CodeRequest codeRequest) {
         String email = codeRequest.getEmail();
-        if(userService.getUserEntityByEmail(email).getIsActivated()){
+        if (userService.getUserEntityByEmail(email).getIsActivated()) {
             throw new UserAlreadyActivatedException();
         }
         String code = CodeGenerator.generateActivationCode();
@@ -122,7 +122,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         User user = userMapper.dtoToEntity(userDTO);
 
-        if(userRepository.existsByEmail(userDTO.getEmail())){
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new UserAttributeTakenException("email: ('" + user.getEmail() + "')");
         }
 
@@ -143,10 +143,10 @@ public class AuthServiceImpl implements AuthService {
     public MessageResponse activateUser(EmailVerificationRequest request) {
         String email = request.getEmail();
         String code = request.getVerificationCode();
-        if(userService.getUserEntityByEmail(email).getIsActivated()){
+        if (userService.getUserEntityByEmail(email).getIsActivated()) {
             throw new UserAlreadyActivatedException();
         }
-        if(codeService.isCodeValid(email, code)){
+        if (codeService.isCodeValid(email, code)) {
             userService.setActivated(email);
             codeService.deleteCode(email, code);
         }
@@ -168,7 +168,7 @@ public class AuthServiceImpl implements AuthService {
         String email = request.getEmail();
         String newPassword = request.getNewPassword();
         String code = request.getVerificationCode();
-        if(codeService.isCodeValid(email, code)){
+        if (codeService.isCodeValid(email, code)) {
             codeService.deleteCode(email, code);
             userService.resetPassword(email, newPassword);
         }
@@ -193,26 +193,25 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public MessageResponse logoutUser(Long id) {
-        UserDTO userDTO = userService.getUserById(id);
-        refreshTokenService.deleteByUserId(userDTO.getId());
+    public MessageResponse logoutUser() {
+        refreshTokenService.deleteByUserId(getCurrentUserId());
         return new MessageResponse("User has been successfully logged out!", 200);
     }
 
     @Override
     public Long getCurrentUserId() {
         String username = getCurrentEmail();
-        if(username == null){
+        if (username == null) {
             return null;
-        }else{
+        } else {
             return userService.getUserByEmail(username).getId();
         }
     }
 
     @Override
-    public String getCurrentEmail(){
+    public String getCurrentEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!(authentication instanceof AnonymousAuthenticationToken)) {
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
             return authentication.getName();
         }
         return null;

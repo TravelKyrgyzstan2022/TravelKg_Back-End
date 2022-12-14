@@ -2,8 +2,6 @@ package com.example.benomad.service;
 
 import com.example.benomad.dto.PlanDTO;
 import com.example.benomad.entity.Plan;
-import com.example.benomad.exception.ContentNotFoundException;
-import com.example.benomad.security.request.GetPlanRequest;
 
 import java.util.List;
 

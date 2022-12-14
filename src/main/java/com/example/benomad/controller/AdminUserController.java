@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @RestController
 @CrossOrigin
@@ -171,7 +173,7 @@ public class AdminUserController {
             )
     })
     @PutMapping(value = "/{userId}", produces = "application/json")
-    public ResponseEntity<?> updateUserById(@RequestBody UserDTO userDTO, @PathVariable("userId") Long userId){
+    public ResponseEntity<?> updateUserById(@Valid  @RequestBody UserDTO userDTO, @PathVariable("userId") Long userId){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.updateUserById(userId, userDTO));
     }
 
@@ -209,7 +211,7 @@ public class AdminUserController {
             )
     })
     @DeleteMapping(value = "/{userid}", produces = "application/json")
-    public ResponseEntity<?> deleteUserById(@PathVariable("userId") Long userId, @RequestBody DeletionInfoDTO infoDTO){
+    public ResponseEntity<?> deleteUserById(@PathVariable("userId") Long userId, @Valid @RequestBody DeletionInfoDTO infoDTO){
         return ResponseEntity.ok(userService.deleteUserById(userId, infoDTO));
     }
 

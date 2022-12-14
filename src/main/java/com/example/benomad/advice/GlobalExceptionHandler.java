@@ -5,6 +5,7 @@ import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,9 +44,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Object> handleIllegalArgumentException(HttpServletRequest request,IllegalArgumentException exception) {
+    public ResponseEntity<Object> handleIllegalArgumentException(HttpServletRequest request, IllegalArgumentException exception) {
         ExceptionResponse exceptionResponse = ExceptionResponse.builder()
                 .status(500)
+                .message(exception.getMessage())
+                .timestamp(LocalDateTime.now(ZoneId.of("Asia/Bishkek")))
+                .build();
+        log.error(exception.getMessage());
+        exception.printStackTrace();
+        return ResponseEntity.status(exceptionResponse.getStatus()).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<Object> InvalidDao(HttpServletRequest request, IllegalArgumentException exception) {
+        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+                .status(400)
                 .message(exception.getMessage())
                 .timestamp(LocalDateTime.now(ZoneId.of("Asia/Bishkek")))
                 .build();

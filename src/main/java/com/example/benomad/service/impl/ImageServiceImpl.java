@@ -38,7 +38,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @SneakyThrows
-    public String uploadImage(MultipartFile file,ImagePath path) {
+    public String uploadImage(MultipartFile file, ImagePath path) {
         checkImage(file);
         return (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
                 "folder",path.getPathToImage(),
@@ -51,7 +51,7 @@ public class ImageServiceImpl implements ImageService {
 
 
     public void checkImage(MultipartFile file) {
-        if(!Arrays.asList(ContentType.IMAGE_GIF.getMimeType(),
+        if (!Arrays.asList(ContentType.IMAGE_GIF.getMimeType(),
                         ContentType.IMAGE_JPEG.getMimeType(),
                         ContentType.IMAGE_PNG.getMimeType(),
                         ContentType.IMAGE_SVG.getMimeType()).

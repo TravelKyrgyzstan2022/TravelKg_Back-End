@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,8 +30,10 @@ public class BlogDTO {
     @JsonProperty(value = "comment_count", access = JsonProperty.Access.READ_ONLY)
     private Integer commentCount;
 
+    @NotBlank(message = "Title can't be null or empty")
     private String title;
 
+    @NotBlank(message = "Body can't be null or empty")
     private String body;
 
     @Schema(required = true)

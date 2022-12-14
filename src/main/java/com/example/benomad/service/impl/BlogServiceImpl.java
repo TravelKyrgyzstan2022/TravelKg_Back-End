@@ -43,7 +43,7 @@ public class BlogServiceImpl implements BlogService {
 
 
     @Override
-    public BlogDTO getBlogById(Long blogId) throws ContentNotFoundException {
+    public BlogDTO getBlogById(Long blogId) {
         return blogMapper.entityToDto(getBlogEntityById(blogId));
     }
 
@@ -54,7 +54,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogDTO updateBlogById(Long blogId, BlogDTO blogDTO){
+    public BlogDTO updateBlogById(Long blogId, BlogDTO blogDTO) {
         checkBlog(blogId);
         Blog blog = blogMapper.dtoToEntity(blogDTO);
         blog.setId(blogId);
@@ -63,7 +63,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogDTO deleteBlogById(Long blogId, DeletionInfoDTO infoDTO){
+    public BlogDTO deleteBlogById(Long blogId, DeletionInfoDTO infoDTO) {
         checkBlog(blogId);
         Blog blog = getBlogEntityById(blogId);
         blog.setIsDeleted(true);
@@ -75,19 +75,19 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<UserDTO> getAuthors(String firstName, String lastName){
+    public List<UserDTO> getAuthors(String firstName, String lastName) {
         return userService.getBlogAuthors(firstName, lastName);
     }
 
     @Override
     public List<BlogDTO> getBlogsByAttributes(String title,
                                               IncludeContent includeContent,
-                                              ReviewStatus reviewStatus, boolean MATCH_ALL){
+                                              ReviewStatus reviewStatus, boolean MATCH_ALL) {
         Blog blog = Blog.builder()
                 .title(title)
                 .reviewStatus(reviewStatus)
                 .build();
-        if(includeContent != IncludeContent.ALL){
+        if (includeContent != IncludeContent.ALL) {
             blog.setIsDeleted(includeContent == IncludeContent.ONLY_DELETED);
         }
 
@@ -99,21 +99,21 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public MessageResponse likeDislikeBlogById(Long blogId, boolean isDislike){
+    public MessageResponse likeDislikeBlogById(Long blogId, boolean isDislike) {
         Long userId = authService.getCurrentUserId();
         User user = userService.getUserEntityById(userId);
         Blog blog = getBlogEntityById(blogId);
         Set<User> likedUsers = blog.getLikedUsers();
         boolean isAlreadyLiked = likedUsers.contains(user);
         String message;
-        if(isDislike){
-            if(!isAlreadyLiked){
+        if (isDislike) {
+            if (!isAlreadyLiked) {
                 throw new ContentIsNotLikedException(Content.BLOG);
             }
             likedUsers.remove(user);
             message = String.format("Like has been successfully removed from blog with id = {%d}!", blogId);
         }else{
-            if(isAlreadyLiked){
+            if (isAlreadyLiked) {
                 throw new ContentIsAlreadyLikedException(Content.BLOG);
             }
             likedUsers.add(user);
@@ -147,7 +147,7 @@ public class BlogServiceImpl implements BlogService {
 
 
     @Override
-    public MessageResponse insertImagesByBlogId(Long blogId, MultipartFile[] files){
+    public MessageResponse insertImagesByBlogId(Long blogId, MultipartFile[] files) {
         Blog blog = getBlogEntityById(blogId);
         blog.setImageUrls(imageService.uploadImages(files, ImagePath.BLOG));
         blogRepository.save(blog);
@@ -155,7 +155,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<String> getImagesById(Long blogId){
+    public List<String> getImagesById(Long blogId) {
         Blog blog = getBlogEntityById(blogId);
         return blog.getImageUrls();
     }
@@ -179,11 +179,9 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void addComment(Long blogId, Comment comment){
+    public void addComment(Long blogId, Comment comment) {
         Blog blog = getBlogEntityById(blogId);
-        Set<Comment> comments = blog.getComments();
-        comments.add(comment);
-        blog.setComments(comments);
+        blog.getComments().add(comment);
         blogRepository.save(blog);
     }
 
@@ -197,22 +195,22 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public Blog getBlogEntityById(Long blogId){
+    public Blog getBlogEntityById(Long blogId) {
         return blogRepository.findById(blogId).orElseThrow(() -> {
             throw new ContentNotFoundException(Content.BLOG, "id", String.valueOf(blogId));
         });
     }
 
-    private void checkBlog(Long blogId){
+    private void checkBlog(Long blogId) {
         Blog blog = getBlogEntityById(blogId);
-        if(!blog.getAuthor().getId().equals(authService.getCurrentUserId())
+        if (!blog.getAuthor().getId().equals(authService.getCurrentUserId())
                 && !blog.getAuthor().getRoles().contains(Role.ROLE_ADMIN)
-                && !blog.getAuthor().getRoles().contains(Role.ROLE_SUPERADMIN)){
+                && !blog.getAuthor().getRoles().contains(Role.ROLE_SUPERADMIN)) {
             throw new NoAccessException();
         }
     }
 
-    private ExampleMatcher getExample(boolean MATCH_ALL, IncludeContent includeContent){
+    private ExampleMatcher getExample(boolean MATCH_ALL, IncludeContent includeContent) {
         ExampleMatcher MATCHER_ANY_WITH_DELETED = ExampleMatcher.matchingAny()
                 .withMatcher("author", ExampleMatcher.GenericPropertyMatchers.exact())
                 .withMatcher("title", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
@@ -237,9 +235,9 @@ public class BlogServiceImpl implements BlogService {
                 .withMatcher("status", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withIgnorePaths("id", "likedUsers", "isDeleted");
 
-        if(includeContent == IncludeContent.ALL){
+        if (includeContent == IncludeContent.ALL) {
             return MATCH_ALL ? MATCHER_ALL_WITHOUT_DELETED : MATCHER_ANY_WITHOUT_DELETED;
-        }else{
+        } else {
             return MATCH_ALL ? MATCHER_ALL_WITH_DELETED : MATCHER_ANY_WITH_DELETED;
         }
     }

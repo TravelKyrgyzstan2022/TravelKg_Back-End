@@ -38,6 +38,7 @@ public class UserDTO {
     @Email(message = "Email is invalid")
     private String email;
 
+    @NotBlank(message = "Password can't be null or empty")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
@@ -50,6 +51,7 @@ public class UserDTO {
     @JsonProperty(value = "last_visit_datetime", access = JsonProperty.Access.READ_ONLY)
     private String lastVisitDateTime;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Set<Role> roles;
 
     @JsonProperty(value = "is_activated", access = JsonProperty.Access.READ_ONLY)

@@ -19,7 +19,7 @@ public class CommentMapper {
     private final CommentRepository commentRepository;
     private final AuthServiceImpl authService;
     private final UserMapper userMapper;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public Comment dtoToEntity(CommentDTO commentDTO) {
         return Comment.builder()

@@ -22,5 +22,4 @@ public class UserSupportController {
     public ResponseEntity<?> insertSupport(){
         return ResponseEntity.status(HttpStatus.CREATED).body(supportService.insertSupportRequest());
     }
-
 }

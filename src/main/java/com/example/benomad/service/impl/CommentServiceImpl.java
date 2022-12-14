@@ -46,10 +46,10 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDTO> getReferenceCommentsById(Long referenceId, CommentReference reference,
                                                      PageRequest pageRequest) {
         Page<Comment> page;
-        if(reference == CommentReference.BLOG){
+        if (reference == CommentReference.BLOG){
             blogService.getBlogEntityById(referenceId);
             page = commentRepository.getBlogCommentsById(referenceId, pageRequest);
-        }else{
+        } else {
             placeService.getPlaceEntityById(referenceId);
             page = commentRepository.getPlaceCommentsById(referenceId, pageRequest);
         }
@@ -57,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO deleteCommentById(Long commentId, DeletionInfoDTO infoDTO){
+    public CommentDTO deleteCommentById(Long commentId, DeletionInfoDTO infoDTO) {
         checkComment(commentId);
         Comment comment = getCommentEntityById(commentId);
         comment.setIsDeleted(true);
@@ -69,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO updateCommentById(Long commentId, CommentDTO commentDTO){
+    public CommentDTO updateCommentById(Long commentId, CommentDTO commentDTO) {
         checkComment(commentId);
         Comment comment = commentMapper.dtoToEntity(commentDTO);
         comment.setUpdateDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
@@ -80,26 +80,26 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO getCommentById(Long commentId){
+    public CommentDTO getCommentById(Long commentId) {
         return commentMapper.entityToDto(getCommentEntityById(commentId));
     }
 
     @Override
-    public MessageResponse likeDislikeComment(Long commentId, boolean isDislike){
+    public MessageResponse likeDislikeComment(Long commentId, boolean isDislike) {
         Long userId = authService.getCurrentUserId();
         User user = userService.getUserEntityById(userId);
         Comment comment = getCommentEntityById(commentId);
         Set<User> likedUsers = comment.getLikedUsers();
         boolean isAlreadyLiked = likedUsers.contains(user);
         String message;
-        if(isDislike){
-            if(!isAlreadyLiked){
+        if (isDislike) {
+            if (!isAlreadyLiked) {
                 throw new ContentIsNotLikedException(Content.COMMENT);
             }
             likedUsers.remove(user);
             message = String.format("Like has been successfully removed from comment with id = {%d}!", commentId);
-        }else{
-            if(isAlreadyLiked){
+        } else {
+            if (isAlreadyLiked) {
                 throw new ContentIsAlreadyLikedException(Content.COMMENT);
             }
             likedUsers.add(user);
@@ -119,28 +119,28 @@ public class CommentServiceImpl implements CommentService {
         comment = commentRepository.save(comment);
         commentDTO = commentMapper.entityToDto(comment);
 
-        if(reference == CommentReference.PLACE){
+        if (reference == CommentReference.PLACE) {
             placeService.addComment(referenceId, comment);
-        }else if(reference == CommentReference.BLOG){
+        }else if (reference == CommentReference.BLOG) {
             blogService.addComment(referenceId, comment);
         }
         return commentDTO;
     }
 
     @Override
-    public Comment getCommentEntityById(Long commentId){
+    public Comment getCommentEntityById(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(Content.COMMENT, "id", String.valueOf(commentId));
                 });
     }
 
-    private void checkComment(Long commentId){
+    private void checkComment(Long commentId) {
         User user = userService.getUserEntityById(authService.getCurrentUserId());
         Comment comment = getCommentEntityById(commentId);
-        if(!comment.getUser().getId().equals(user.getId())
+        if (!comment.getUser().getId().equals(user.getId())
                 && !user.getRoles().contains(Role.ROLE_ADMIN)
-                && !user.getRoles().contains(Role.ROLE_SUPERADMIN)){
+                && !user.getRoles().contains(Role.ROLE_SUPERADMIN)) {
             throw new NoAccessException();
         }
     }

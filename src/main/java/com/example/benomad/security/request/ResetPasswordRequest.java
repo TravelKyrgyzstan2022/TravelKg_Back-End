@@ -11,14 +11,16 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class ResetPasswordRequest {
 
-    @NotBlank(message = "Email field can't be empty")
+    @NotBlank(message = "Email can't be null or empty")
     @Email(message = "Email is invalid")
     @JsonProperty(required = true)
     private String email;
 
+    @NotBlank(message = "Code can't be null or empty")
     @JsonProperty(value = "verification_code", required = true)
     private String verificationCode;
 
+    @NotBlank(message = "New password can't be null or empty")
     @JsonProperty(value = "new_password", required = true)
     private String newPassword;
 }

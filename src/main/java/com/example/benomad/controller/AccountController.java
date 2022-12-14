@@ -113,8 +113,8 @@ public class AccountController {
             
             The access token must be deleted from client side, because it will still be valid until it expires.""")
     @PostMapping(value = "/logout", produces = "application/json")
-    public ResponseEntity<?> logoutUser(@Valid @RequestBody LogOutRequest logOutRequest) {
-        return ResponseEntity.ok(authService.logoutUser(logOutRequest.getUserId()));
+    public ResponseEntity<?> logoutUser() {
+        return ResponseEntity.ok(authService.logoutUser());
     }
 
     @Operation(summary = "Registers user to the system and sends email verification code",
@@ -150,7 +150,7 @@ public class AccountController {
             )
     })
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequest request) {
         return ResponseEntity.ok(authService.registerUser(request));
     }
 
@@ -180,7 +180,7 @@ public class AccountController {
 
     @Operation(summary = "Activates current account")
     @PostMapping(value = "/activate", produces = "application/json")
-    public ResponseEntity<MessageResponse> activateUser(@RequestBody EmailVerificationRequest emailVerificationRequest){
+    public ResponseEntity<MessageResponse> activateUser(@Valid @RequestBody EmailVerificationRequest emailVerificationRequest){
         return ResponseEntity.ok(authService.activateUser(emailVerificationRequest));
     }
 }

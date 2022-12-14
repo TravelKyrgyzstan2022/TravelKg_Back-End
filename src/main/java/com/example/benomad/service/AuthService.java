@@ -14,7 +14,7 @@ public interface AuthService {
     MessageResponse activateUser(EmailVerificationRequest request);
     MessageResponse sendForgotPasswordCode(CodeRequest request);
     MessageResponse sendActivationCode(CodeRequest request);
-    MessageResponse logoutUser(Long id);
+    MessageResponse logoutUser();
     MessageResponse resetPassword(ResetPasswordRequest request);
     Long getCurrentUserId();
     String getCurrentEmail();

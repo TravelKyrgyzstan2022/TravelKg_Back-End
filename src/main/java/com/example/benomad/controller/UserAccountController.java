@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -38,7 +39,7 @@ public class UserAccountController {
 
     @Operation(summary = "Updates current user")
     @PutMapping(value = "/profile")
-    public ResponseEntity<UserDTO> updateCurrentUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> updateCurrentUser(@Valid  @RequestBody UserDTO userDTO){
         return ResponseEntity.ok(userService.updateCurrentUser(userDTO));
     }
 
@@ -50,7 +51,7 @@ public class UserAccountController {
 
     @Operation(summary = "Inserts current user image using base 64")
     @PutMapping(value = "/profile/image64")
-    public ResponseEntity<?> insertUserImage64(@RequestBody ImageDTO file){
+    public ResponseEntity<?> insertUserImage64(@Valid @RequestBody ImageDTO file){
         return ResponseEntity.ok(userService.insertMyImage64(file));
     }
 
@@ -99,5 +100,9 @@ public class UserAccountController {
         return ResponseEntity.ok(placeService.getMyFavorites());
     }
 
-
+    @Operation(summary = "Removes place from current user's favorites")
+    @DeleteMapping(value = "/favorites/{placeId}")
+    public ResponseEntity<PlaceDTO> removePlaceFromFavorites(@PathVariable("placeId") Long placeId){
+        return ResponseEntity.ok(placeService.removePlaceFromFavorites(placeId));
+    }
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -27,14 +28,14 @@ public class AdminEventController {
 
     @Operation(summary = "Inserts event")
     @PostMapping("")
-    public ResponseEntity<EventDTO> insertEvent(@RequestBody EventDTO eventDTO){
+    public ResponseEntity<EventDTO> insertEvent(@Valid @RequestBody EventDTO eventDTO){
         return ResponseEntity.ok(eventService.insertEvent(eventDTO));
     }
 
     @Operation(summary = "Updates event by ID")
     @PutMapping("/{eventId}")
     public ResponseEntity<EventDTO> updateEventById(@PathVariable("eventId") Long eventId,
-                                                    @RequestBody EventDTO eventDTO){
+                                                    @Valid @RequestBody EventDTO eventDTO){
         return ResponseEntity.ok(eventService.updateEventById(eventId, eventDTO));
     }
 

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -20,8 +22,10 @@ public class ArticleDTO {
     @JsonProperty(value = "user_id",access = JsonProperty.Access.READ_ONLY)
     private Long userId;
 
+    @NotBlank(message = "Body can't be null or empty")
     private String body;
 
+    @NotBlank(message = "Title can't be null or empty")
     private String title;
 
     @Schema(required = true)
