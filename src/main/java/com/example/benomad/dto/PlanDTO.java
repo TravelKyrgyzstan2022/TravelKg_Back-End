@@ -28,6 +28,7 @@ public class PlanDTO {
     @JsonProperty(value = "place", access = JsonProperty.Access.READ_ONLY)
     private PlaceDTO place;
 
+    @NotBlank(message = "Place ID can't be empty or null")
     @JsonProperty(value = "place_id", access = JsonProperty.Access.WRITE_ONLY)
     private Long placeId;
 

@@ -61,7 +61,7 @@ public class UserAccountController {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = UserDTO.class))
+                    content = @Content(schema = @Schema(implementation = PlaceDTO.class))
             ),
             @ApiResponse(
                     responseCode = "Any error",
