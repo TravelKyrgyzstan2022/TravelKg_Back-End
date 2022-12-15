@@ -22,5 +22,5 @@ public interface BlogRepository extends JpaRepository <Blog, Long> {
     @Query(value = "SELECT COUNT(t) FROM blog_likes t WHERE t.blog_id = :blogId", nativeQuery = true)
     Integer getLikesNumberById(@Param("blogId") Long blogId);
 
-    List<Blog> findByAuthor(User author);
+    List<Blog> findByAuthorAndIsDeleted(User author, Boolean isDeleted);
 }

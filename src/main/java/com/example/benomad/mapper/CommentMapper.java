@@ -19,6 +19,7 @@ public class CommentMapper {
     private final CommentRepository commentRepository;
     private final AuthServiceImpl authService;
     private final UserMapper userMapper;
+    private final DeletionInfoMapper infoMapper;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public Comment dtoToEntity(CommentDTO commentDTO) {
@@ -36,6 +37,8 @@ public class CommentMapper {
                         formatter.format(comment.getUpdateDate()) : null)
                 .user(userMapper.entityToDto(comment.getUser()))
                 .body(comment.getBody())
+                .deletionInfo(comment.getDeletionInfo() != null ?
+                        infoMapper.entityToDto(comment.getDeletionInfo()) : null)
                 .likeCount(commentRepository.getLikesNumberById(comment.getId()))
                 .isLikedByCurrentUser(
                         userId != null ?

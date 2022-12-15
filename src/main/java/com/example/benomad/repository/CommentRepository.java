@@ -13,19 +13,23 @@ import org.springframework.stereotype.Repository;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query(value = "SELECT * FROM comments c " +
             "WHERE c.id IN (" +
-            "SELECT comment_id FROM place_comments WHERE place_id = :place_id)",
+            "SELECT comment_id FROM place_comments WHERE place_id = :place_id) " +
+            "AND c.is_deleted = false",
             nativeQuery = true,
             countQuery = "SELECT COUNT(*) FROM comments c " +
                     "WHERE c.id IN (" +
-                    "SELECT comment_id FROM place_comments WHERE place_id = :place_id)"
+                    "SELECT comment_id FROM place_comments WHERE place_id = :place_id) " +
+                    "AND c.is_deleted = false"
     )
     Page<Comment> getPlaceCommentsById(@Param("place_id")Long placeId, Pageable pageable);
 
     @Query(value = "SELECT * FROM comments c " +
-            "WHERE c.id IN(SELECT comment_id FROM blog_comments WHERE blog_id=:blog_id)",
+            "WHERE c.id IN(SELECT comment_id FROM blog_comments WHERE blog_id=:blog_id) " +
+            "AND c.is_deleted = false",
             nativeQuery = true,
-            countQuery = "SELECT COUNT(*) FROM comments c" +
-                    " WHERE c.id IN (SELECT comment_id FROM blog_comments WHERE blog_id = :blog_id)")
+            countQuery = "SELECT COUNT(*) FROM comments c " +
+                    "WHERE c.id IN (SELECT comment_id FROM blog_comments WHERE blog_id = :blog_id) " +
+                    "AND c.is_deleted = false")
     Page<Comment> getBlogCommentsById(@Param("blog_id")Long blogId, Pageable pageable);
 
     @Query(value = "SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END FROM comment_likes t " +

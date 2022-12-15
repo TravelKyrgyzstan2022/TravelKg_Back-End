@@ -51,7 +51,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public List<BlogDTO> getMyBlogs() {
         User user = userService.getUserEntityById(authService.getCurrentUserId());
-        return blogMapper.entityListToDtoList(blogRepository.findByAuthor(user));
+        return blogMapper.entityListToDtoList(blogRepository.findByAuthorAndIsDeleted(user, false));
     }
 
     @Override
@@ -67,6 +67,9 @@ public class BlogServiceImpl implements BlogService {
     public BlogDTO deleteBlogById(Long blogId, DeletionInfoDTO infoDTO) {
         checkBlog(blogId);
         Blog blog = getBlogEntityById(blogId);
+        if (blog.getIsDeleted()) {
+            throw new ContentNotFoundException(Content.BLOG, "id", String.valueOf(blogId));
+        }
         blog.setIsDeleted(true);
         infoDTO = infoDTO != null ? infoDTO :
                 new DeletionInfoDTO(null, "Blog was deleted by author", null, null);
@@ -145,7 +148,8 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public List<BlogDTO> getBlogsByAuthorId(Long userId) {
-        return blogMapper.entityListToDtoList(blogRepository.findByAuthor(userService.getUserEntityById(userId)));
+        return blogMapper.entityListToDtoList(
+                blogRepository.findByAuthorAndIsDeleted(userService.getUserEntityById(userId), false));
     }
 
 
