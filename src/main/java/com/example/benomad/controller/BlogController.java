@@ -338,7 +338,7 @@ public class BlogController {
                     content = @Content
             )
     })
-    @PutMapping(value = "/{blogId}/comments/{commentId}/removelike", produces = "application/json")
+    @PutMapping(value = "/{blogId}/comments/{commentId}/remove-like", produces = "application/json")
     public ResponseEntity<?> removeLikeComment(@PathVariable("commentId") Long commentId,
                                          @PathVariable("blogId") Long blogId){
         //fixme : need to check if comment belongs to blog
@@ -384,7 +384,7 @@ public class BlogController {
                     content = @Content
             )
     })
-    @PutMapping("/{blogId}/removelike")
+    @PutMapping("/{blogId}/remove-like")
     public ResponseEntity<?> removeLikeBlog(@PathVariable("blogId") Long blogId){
         return ResponseEntity.ok(blogService.likeDislikeBlogById(blogId, true));
     }

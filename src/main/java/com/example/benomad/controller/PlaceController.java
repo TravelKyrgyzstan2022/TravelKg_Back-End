@@ -223,8 +223,8 @@ public class PlaceController {
                     content = @Content
             )
     })
-    @PutMapping(value = "/rate")
-    public ResponseEntity<?> ratePlace(@RequestParam(name = "place_id") Long placeId,
+    @PutMapping(value = "/{placeId}/rate")
+    public ResponseEntity<?> ratePlace(@PathVariable("placeId") Long placeId,
                                        @RequestParam(name = "rating", defaultValue = "1") Integer rating,
                                        @RequestParam(name = "remove", defaultValue = "0") Boolean isRemoval){
         return ResponseEntity.ok(placeService.ratePlaceById(placeId, rating, isRemoval));

@@ -264,8 +264,8 @@ public class AdminArticleController {
                     content = @Content
             )
     })
-    @PutMapping(value = {"/{id}/images64","{id}/images64"})
-    public ResponseEntity<?> insertImagesToBlog(@Valid @RequestBody ImageDTO[] files, @PathVariable("id") Long id) {
+    @PutMapping(value ="/{articleId}/images64")
+    public ResponseEntity<?> insertImagesToBlog(@Valid @RequestBody ImageDTO[] files, @PathVariable("articleId") Long id) {
         return ResponseEntity.ok(articleService.insertImages64ByArticleId(id,files));
     }
 }

@@ -210,7 +210,7 @@ public class AdminUserController {
                     content = @Content
             )
     })
-    @DeleteMapping(value = "/{userid}", produces = "application/json")
+    @DeleteMapping(value = "/{userId}", produces = "application/json")
     public ResponseEntity<?> deleteUserById(@PathVariable("userId") Long userId, @Valid @RequestBody DeletionInfoDTO infoDTO){
         return ResponseEntity.ok(userService.deleteUserById(userId, infoDTO));
     }

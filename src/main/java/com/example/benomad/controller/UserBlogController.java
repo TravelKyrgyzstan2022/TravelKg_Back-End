@@ -93,8 +93,8 @@ public class UserBlogController {
                     content = @Content
             )
     })
-    @PutMapping(value = {"/{id}/images64","{id}/images64"})
-    public ResponseEntity<?> insertImagesToBlog(@Valid @RequestBody ImageDTO[] files,@PathVariable("id") Long id) {
+    @PutMapping(value = {"/{blogId}/images64"})
+    public ResponseEntity<?> insertImagesToBlog(@Valid @RequestBody ImageDTO[] files,@PathVariable("blogId") Long id) {
         return ResponseEntity.ok(blogService.insertImages64ByBlogId(id, files));
     }
 

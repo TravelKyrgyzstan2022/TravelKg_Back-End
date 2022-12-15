@@ -36,7 +36,6 @@ public class BlogDTO {
     @NotBlank(message = "Body can't be null or empty")
     private String body;
 
-    @Schema(required = true)
     @JsonProperty(value = "image_urls",access = JsonProperty.Access.READ_ONLY)
     private List<String> imageUrls;
 
@@ -58,9 +57,6 @@ public class BlogDTO {
     @JsonProperty(value = "is_liked_by_current_user", access = JsonProperty.Access.READ_ONLY)
     private Boolean isLikedByCurrentUser;
 
-    @Schema(required = true)
     @JsonProperty(value = "image_url", access = JsonProperty.Access.READ_ONLY)
     private String imageUrl;
-
-
 }
