@@ -20,7 +20,7 @@ public class BlogMapper {
     private final UserMapper userMapper;
     private final AuthServiceImpl authService;
     private final DeletionInfoMapper deletionInfoMapper;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public BlogDTO entityToDto(Blog blog){
         Long userId = authService.getCurrentUserId();

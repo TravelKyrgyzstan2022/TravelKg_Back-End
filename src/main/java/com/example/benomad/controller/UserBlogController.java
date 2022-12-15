@@ -12,12 +12,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.example.benomad.dto.ImageDTO;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -39,8 +38,14 @@ public class UserBlogController {
     @Operation(summary = "Update my blog by ID")
     @PutMapping(value = "/{blogId}")
     public ResponseEntity<BlogDTO> updateMyBlogById(@PathVariable("blogId") Long blogId,
-                                              @RequestBody BlogDTO blogDTO){
+                                              @Valid  @RequestBody BlogDTO blogDTO){
         return ResponseEntity.ok(blogService.updateBlogById(blogId, blogDTO));
+    }
+
+    @Operation(summary = "Insert new blog")
+    @PostMapping(value = {"/",""})
+    public ResponseEntity<?> insertMyBlog(@Valid @RequestBody BlogDTO blogDTO){
+        return ResponseEntity.ok(blogService.insertBlog(blogDTO));
     }
 
     @Operation(summary = "Delete my blog by ID")
@@ -88,8 +93,8 @@ public class UserBlogController {
                     content = @Content
             )
     })
-    @PutMapping(value = {"/{id}/images64","{id}/images64"})
-    public ResponseEntity<?> insertImagesToBlog(@RequestBody ImageDTO[] files,@PathVariable("id") Long id) {
+    @PutMapping(value = {"/{blogId}/images64"})
+    public ResponseEntity<?> insertImagesToBlog(@Valid @RequestBody ImageDTO[] files,@PathVariable("blogId") Long id) {
         return ResponseEntity.ok(blogService.insertImages64ByBlogId(id, files));
     }
 
@@ -179,8 +184,6 @@ public class UserBlogController {
         return ResponseEntity.ok(blogService.insertImagesByBlogId(blogId, files));
     }
 
-    @PutMapping("/{id}/ios/images")
-    public ResponseEntity<?> uploadAllImagesFromIos(@PathVariable("blogId") Long blogId,@RequestBody ImageDTO[] files) {
-        return ResponseEntity.ok().body(blogService.insertImages64ByBlogId(blogId, files));
-    }
+
+
 }

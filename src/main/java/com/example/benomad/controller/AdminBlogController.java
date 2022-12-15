@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin
@@ -64,7 +66,7 @@ public class AdminBlogController {
             )
     })
     @PutMapping(value = "/{blogId}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> updateBlog(@PathVariable Long blogId, @RequestBody BlogDTO blogDTO){
+    public ResponseEntity<?> updateBlog(@PathVariable Long blogId, @Valid @RequestBody BlogDTO blogDTO){
         blogDTO.setId(blogId);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.updateBlogById(blogId, blogDTO));
     }
@@ -103,7 +105,7 @@ public class AdminBlogController {
             )
     })
     @DeleteMapping(value = "/{blogId}", produces = "application/json")
-    public ResponseEntity<?> deleteBlogById(@PathVariable Long blogId, @RequestBody DeletionInfoDTO infoDTO){
+    public ResponseEntity<?> deleteBlogById(@PathVariable Long blogId, @Valid @RequestBody DeletionInfoDTO infoDTO){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(blogService.deleteBlogById(blogId, infoDTO));
     }
 

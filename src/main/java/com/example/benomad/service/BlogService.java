@@ -27,4 +27,6 @@ public interface BlogService {
     MessageResponse insertImages64ByBlogId(Long id, ImageDTO[] files);
     Blog getBlogEntityById(Long blogId);
     void addComment(Long blogId, Comment comment);
+
+    Long insertBlog(BlogDTO blogDTO);
 }

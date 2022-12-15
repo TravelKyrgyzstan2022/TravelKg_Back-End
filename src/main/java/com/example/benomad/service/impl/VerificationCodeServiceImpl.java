@@ -37,7 +37,7 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
         VerificationCode verificationCode = codeRepository.findByUserAndCode(
                 userService.getUserEntityByEmail(email), code).orElseThrow(
                         () -> new InvalidVerificationCodeException("Invalid verification code"));
-        if(isExpired(verificationCode)){
+        if (isExpired(verificationCode)) {
             throw new InvalidVerificationCodeException("Verification code has expired at " +
                     verificationCode.getExpiryDate());
         }

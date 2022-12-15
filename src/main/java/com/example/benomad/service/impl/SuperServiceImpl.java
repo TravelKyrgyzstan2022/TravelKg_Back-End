@@ -24,7 +24,7 @@ public class SuperServiceImpl implements SuperService {
     public MessageResponse makeAdmin(Long userId) {
         User user = userService.getUserEntityById(userId);
         Set<Role> roles = user.getRoles();
-        if(!roles.contains(Role.ROLE_ADMIN)){
+        if (!roles.contains(Role.ROLE_ADMIN)) {
             roles.add(Role.ROLE_ADMIN);
             user.setRoles(roles);
             userRepository.save(user);
@@ -39,8 +39,9 @@ public class SuperServiceImpl implements SuperService {
     public MessageResponse removeAdmin(Long userId) {
         User user = userService.getUserEntityById(userId);
         Set<Role> roles = user.getRoles();
-        if(roles.contains(Role.ROLE_ADMIN)){
+        if (roles.contains(Role.ROLE_ADMIN)) {
             roles.remove(Role.ROLE_ADMIN);
+            roles.add(Role.ROLE_USER);
             user.setRoles(roles);
             userRepository.save(user);
             return new MessageResponse(String.format("Administrative privileges has been successfully taken from user - %s",

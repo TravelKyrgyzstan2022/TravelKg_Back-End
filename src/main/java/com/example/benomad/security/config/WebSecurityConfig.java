@@ -36,12 +36,14 @@ public class WebSecurityConfig{
             "/v3/api-docs.yaml",
             "/error"
     };
-    private final String[] REGISTERED_COMMON = {};
+
+    private final String[] USER_COMMON = {
+            "/api/v1/user/**",
+    };
 
     private final String[] USER = {
-            "/api/v1/user/**",
-            "/api/account/my-account",
-            "/api/account/my-account/**"
+            "/api/v1/places/**",
+            "/api/v1/blogs/**"
     };
 
     private final String[] ADMIN_COMMON = {
@@ -61,15 +63,15 @@ public class WebSecurityConfig{
     };
 
     private final String[] ADMIN_POST = {
-            "/api/v1/**"
+            "/api/v1/admin/**"
     };
 
     private final String[] ADMIN_PUT = {
-            "/api/v1/**"
+            "/api/v1/admin/**"
     };
 
     private final String[] ADMIN_DELETE = {
-            "/api/v1/**"
+            "/api/v1/admin/**"
     };
 
     @Bean
@@ -89,7 +91,9 @@ public class WebSecurityConfig{
                 .cors()
                 .and()
                     .authorizeRequests()
-                    .antMatchers(USER).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
+                    .antMatchers(USER_COMMON).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
+                    .antMatchers(HttpMethod.POST, USER).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
+                    .antMatchers(HttpMethod.DELETE, USER).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
                     .antMatchers(ADMIN_COMMON).hasAnyRole("ADMIN", "SUPERADMIN")
                     .antMatchers(SUPER_ADMIN_ONLY).hasRole("SUPERADMIN")
                     .antMatchers(PERMIT_ALL).permitAll()

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class EventMapper {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' HH:mm");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm");
 
     public EventDTO entityToDto(Event event){
         return EventDTO.builder()

@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @RestController
 @CrossOrigin
@@ -123,7 +125,7 @@ public class AdminCommentController {
             )
     })
     @PostMapping(value = {""}, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> insertComment(@RequestBody CommentDTO commentDTO){
+    public ResponseEntity<?> insertComment(@Valid  @RequestBody CommentDTO commentDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 commentService.insertComment(commentDTO.getReference(), commentDTO.getReferenceId(), commentDTO));
     }
@@ -163,7 +165,7 @@ public class AdminCommentController {
     })
     @DeleteMapping(value = "/{commentId}", produces = "application/json")
     public ResponseEntity<?> deleteCommentById(@PathVariable Long commentId,
-                                               @RequestBody DeletionInfoDTO infoDTO){
+                                               @Valid @RequestBody DeletionInfoDTO infoDTO){
         return ResponseEntity.ok(commentService.deleteCommentById(commentId, infoDTO));
     }
 
@@ -207,7 +209,7 @@ public class AdminCommentController {
     })
     @PutMapping(value = "/{commentId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> updateCommentById(@PathVariable("commentId") Long commentId,
-                                               @RequestBody CommentDTO commentDTO){
+                                               @Valid @RequestBody CommentDTO commentDTO){
         return ResponseEntity.ok(commentService.updateCommentById(commentId, commentDTO));
     }
 }

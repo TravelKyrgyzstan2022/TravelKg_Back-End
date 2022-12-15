@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class UserCommentController {
     @Operation(summary = "Updates current user's comment by ID")
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentDTO> updateMyComment(@PathVariable("commentId") Long commentId,
-                                                      @RequestBody CommentDTO commentDTO){
+                                                      @Valid @RequestBody CommentDTO commentDTO){
         return ResponseEntity.ok(commentService.updateCommentById(commentId, commentDTO));
     }
 }

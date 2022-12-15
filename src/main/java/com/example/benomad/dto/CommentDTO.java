@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+
 @Builder
 @Getter
 @Setter
@@ -17,12 +19,13 @@ public class CommentDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
 
-    @JsonProperty("reference_id")
+    @JsonProperty(value = "reference_id", access = JsonProperty.Access.READ_ONLY)
     private Long referenceId;
 
-    @JsonProperty("user")
+    @JsonProperty(value = "user", access = JsonProperty.Access.READ_ONLY)
     private UserDTO user;
 
+    @NotBlank(message = "Body can't be null or empty")
     private String body;
 
     @JsonProperty(value = "creation_date", access = JsonProperty.Access.READ_ONLY)
@@ -40,5 +43,6 @@ public class CommentDTO {
     @JsonProperty(value = "deletion_info", access = JsonProperty.Access.READ_ONLY)
     private DeletionInfoDTO deletionInfo;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private CommentReference reference;
 }

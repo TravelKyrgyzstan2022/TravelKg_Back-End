@@ -31,7 +31,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
     }
 
     @Override
-    public SupportRequestDTO getSupportRequestById(Long requestId) throws ContentNotFoundException {
+    public SupportRequestDTO getSupportRequestById(Long requestId) {
         return supportRequestMapper.entityToDto(getSupportRequestEntityById(requestId));
     }
 
@@ -53,7 +53,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
     }
 
     @Override
-    public SupportRequest getSupportRequestEntityById(Long requestId){
+    public SupportRequest getSupportRequestEntityById(Long requestId) {
         return supportRequestRepository.findById(requestId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(Content.SUPPORT, "id", String.valueOf(requestId));

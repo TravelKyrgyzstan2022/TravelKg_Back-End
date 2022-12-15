@@ -1,6 +1,7 @@
 package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.DeletionInfoDTO;
+import com.example.benomad.dto.ImageDTO;
 import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.entity.User;
 
@@ -52,14 +53,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private ImageServiceImpl imageService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
         User user = getUserEntityByEmail(email);
         return UserDetailsImpl.build(user);
     }
 
     @Override
     public String getUserAuthenticationToken(User user) {
-        if(userRepository.existsByEmail(user.getEmail())) {
+        if (userRepository.existsByEmail(user.getEmail())) {
             return jwtUtils.generateTokenFromEmail(user.getEmail());
         } else {
             return null;
@@ -67,15 +68,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDTO getUserById(Long userId) throws ContentNotFoundException {
+    public UserDTO getUserById(Long userId) {
         return userMapper.entityToDto(getUserEntityById(userId));
     }
 
     @Override
-    public UserDTO insertUser(UserDTO userDTO) throws UserAttributeTakenException {
+    public UserDTO insertUser(UserDTO userDTO) {
         userDTO.setId(null);
         userDTO.setIsDeleted(false);
-        if(userRepository.existsByEmail(userDTO.getEmail())){
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new UserAttributeTakenException("email: ('" + userDTO.getEmail() + "')");
         }
         User user = userMapper.dtoToEntity(userDTO);
@@ -85,7 +86,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void setActivated(String email){
+    public void setActivated(String email) {
         User user = getUserEntityByEmail(email);
         user.setIsActivated(true);
         userRepository.save(user);
@@ -140,22 +141,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDTO updateUserById(Long userId, UserDTO userDTO){
+    public UserDTO updateUserById(Long userId, UserDTO userDTO) {
         User user = getUserEntityById(userId);
         boolean isAdmin = user.getRoles().contains(Role.ROLE_ADMIN);
-        if(!user.getEmail().equals(userDTO.getEmail())){
+        if (!user.getEmail().equals(userDTO.getEmail())) {
             Example<User> example = Example.of(user, getExampleForAttribute("email"));
-            if(userRepository.findAll(example).size() > 0){
+            if (userRepository.findAll(example).size() > 0) {
                 throw new UserAttributeTakenException("email: (CHANGING EMAIL IS NOT ALLOWED)");
             }
         }
-        if(!Objects.equals(user.getPhoneNumber(), userDTO.getPhoneNumber())){
+        if (!Objects.equals(user.getPhoneNumber(), userDTO.getPhoneNumber())) {
             Example<User> example = Example.of(user, getExampleForAttribute("phoneNumber"));
-            if(userRepository.findAll(example).size() > 0){
+            if (userRepository.findAll(example).size() > 0) {
                 throw new UserAttributeTakenException("phone_number: ('" + user.getPhoneNumber() + "')");
             }
         }
-        if(!isAdmin || authService.getCurrentEmail().equals(userDTO.getEmail())){
+        if (!isAdmin || authService.getCurrentEmail().equals(userDTO.getEmail())) {
             userDTO.setId(userId);
             userRepository.save(userMapper.dtoToEntity(userDTO));
         }
@@ -163,10 +164,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDTO deleteUserById(Long userId, DeletionInfoDTO infoDTO) throws ContentNotFoundException {
+    public UserDTO deleteUserById(Long userId, DeletionInfoDTO infoDTO) {
         User user = getUserEntityById(userId);
         boolean isAdmin = user.getRoles().contains(Role.ROLE_ADMIN) || user.getRoles().contains(Role.ROLE_SUPERADMIN);
-        if(!isAdmin){
+        if (!isAdmin) {
             user.setIsDeleted(true);
             infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
             user.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
@@ -177,34 +178,43 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public MessageResponse insertMyImage(MultipartFile file) {
-        if (authService.getCurrentUserId() != null  && userRepository.findById(authService.getCurrentUserId()).isPresent()) {
-            User user = userRepository.findById(authService.getCurrentUserId()).get();
-            user.setImageUrl(imageService.uploadImage(file, ImagePath.USER));
-            userRepository.save(user);
-        }
+        User user = getUserEntityById(authService.getCurrentUserId());
+        user.setImageUrl(imageService.uploadImage(file, ImagePath.USER));
+        userRepository.save(user);
         return new MessageResponse("Image has been successfully set as a profile picture!", 200);
     }
 
     @Override
-    public void resetPassword(String email, String password){
+    public void resetPassword(String email, String password) {
         User user = getUserEntityByEmail(email);
         user.setPassword(encoder.encode(password));
         userRepository.save(user);
     }
 
     @Override
-    public User getUserEntityById(Long userId){
+    public User getUserEntityById(Long userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new ContentNotFoundException(Content.USER, "id", String.valueOf(userId))
         );
     }
 
     @Override
-    public User getUserEntityByEmail(String email){
+    public User getUserEntityByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(
                 () -> new ContentNotFoundException(Content.USER, "email", email)
         );
     }
+
+    @Override
+    public MessageResponse insertMyImage64(ImageDTO file) {
+        if (authService.getCurrentUserId() != null  && userRepository.findById(authService.getCurrentUserId()).isPresent()) {
+            User user = userRepository.findById(authService.getCurrentUserId()).get();
+            user.setImageUrl(imageService.uploadImage64(file, ImagePath.USER));
+            userRepository.save(user);
+        }
+        return new MessageResponse("Image has been successfully set as a profile picture!", 200);
+    }
+
 
     private ExampleMatcher getExample(boolean MATCH_ALL, IncludeContent includeContent){
         ExampleMatcher MATCHER_ANY_WITH_DELETED = ExampleMatcher.matchingAny()

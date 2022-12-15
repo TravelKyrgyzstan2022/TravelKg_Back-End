@@ -32,19 +32,19 @@ public class PlanServiceImpl implements PlanService {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Override
-    public List<PlanDTO> getAllPlans(){
+    public List<PlanDTO> getAllPlans() {
         User user = userService.getUserEntityById(authService.getCurrentUserId());
         return planMapper.entityListToDtoList(planRepository.findByUser(user));
     }
 
     @Override
-    public PlanDTO getPlanById(Long planId){
+    public PlanDTO getPlanById(Long planId) {
         checkPlan(planId);
         return planMapper.entityToDto(getPlanEntityById(planId));
     }
 
     @Override
-    public List<PlanDTO> getPlansByDay(Integer year, Integer month, Integer day){
+    public List<PlanDTO> getPlansByDay(Integer year, Integer month, Integer day) {
         String dateString = DateUtils.integerToDateString(day) + "/" + DateUtils.integerToDateString(month) + "/" + year;
         return planMapper.entityListToDtoList(
                 planRepository.findByDate(authService.getCurrentUserId(), DateUtils.parseDate(dateString, formatter)));
@@ -74,7 +74,7 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public PlanDTO updatePlanById(Long planId, PlanDTO planDTO){
+    public PlanDTO updatePlanById(Long planId, PlanDTO planDTO) {
         checkPlan(planId);
         getPlanEntityById(planId);
         planDTO.setId(planId);
@@ -91,19 +91,19 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public Plan getPlanEntityById(Long planId){
+    public Plan getPlanEntityById(Long planId) {
         return planRepository.findById(planId).orElseThrow(
                 () -> {
                     throw new ContentNotFoundException(Content.PLAN, "id", String.valueOf(planId));
                 });
     }
 
-    private void checkPlan(Long planId){
+    private void checkPlan(Long planId) {
         User user = userService.getUserEntityById(authService.getCurrentUserId());
         Plan plan = getPlanEntityById(planId);
-        if(!plan.getUser().getId().equals(user.getId())
+        if (!plan.getUser().getId().equals(user.getId())
                 && !user.getRoles().contains(Role.ROLE_ADMIN)
-                && !user.getRoles().contains(Role.ROLE_SUPERADMIN)){
+                && !user.getRoles().contains(Role.ROLE_SUPERADMIN)) {
             throw new NoAccessException();
         }
     }

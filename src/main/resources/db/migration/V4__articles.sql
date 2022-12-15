@@ -54,11 +54,11 @@ INSERT INTO article_image_urls VALUES (1,'https://i.ibb.co/1G56yCY/article1.jpg'
 INSERT INTO article_image_urls VALUES (1,'https://i.ibb.co/0ts5ZJX/article31.jpg');
 INSERT INTO article_image_urls VALUES (1,'https://i.ibb.co/2F59dzt/article32.jpg');
 INSERT INTO article_image_urls VALUES (2,'https://i.ibb.co/0fMFH3C/article21.jpg');
-INSERT INTO article_image_urls VALUES (2,'https://i.ibb.co/d4GTXQR/article22.jpg');
+INSERT INTO article_image_urls VALUES (2,'https://i.ibb.co/8rpmGct/article22.jpg');
 INSERT INTO article_image_urls VALUES (2,'https://i.ibb.co/ZhXcrr0/article25.jpg');
 INSERT INTO article_image_urls VALUES (2,'https://i.ibb.co/Vgmp0NG/article24.jpg');
-INSERT INTO article_image_urls VALUES (3,'https://avatars.mds.yandex.net/get-altay/2425845/2a00000176f03468f3c7f012da2d057fe6e9/XXL');
-INSERT INTO article_image_urls VALUES (3,'https://images.unsplash.com/photo-1569629743817-70d8db6c323b?ixlib=rb-4.0.3&w=1080&fit=max&q=80&fm=jpg&crop=entropy&cs=tinysrgb');
-INSERT INTO article_image_urls VALUES (3,'https://media-cldnry.s-nbcnews.com/image/upload/newscms/2019_13/2798361/190325-rental-cars-cs-229p.jpg');
+INSERT INTO article_image_urls VALUES (3,'https://i.ibb.co/y599CFG/article3.jpg');
+INSERT INTO article_image_urls VALUES (3,'https://i.ibb.co/4g7gHLC/article32.jpg');
+INSERT INTO article_image_urls VALUES (3,'https://i.ibb.co/Ngq5JFx/article33.jpg');
 
 

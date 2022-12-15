@@ -1,6 +1,7 @@
 package com.example.benomad.controller;
 
 import com.example.benomad.advice.ExceptionResponse;
+import com.example.benomad.dto.ImageDTO;
 import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.dto.PlaceDTO;
 import com.example.benomad.dto.UserDTO;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -37,7 +39,7 @@ public class UserAccountController {
 
     @Operation(summary = "Updates current user")
     @PutMapping(value = "/profile")
-    public ResponseEntity<UserDTO> updateCurrentUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> updateCurrentUser(@Valid  @RequestBody UserDTO userDTO){
         return ResponseEntity.ok(userService.updateCurrentUser(userDTO));
     }
 
@@ -47,13 +49,19 @@ public class UserAccountController {
         return ResponseEntity.ok(userService.insertMyImage(file));
     }
 
+    @Operation(summary = "Inserts current user image using base 64")
+    @PutMapping(value = "/profile/image64")
+    public ResponseEntity<?> insertUserImage64(@Valid @RequestBody ImageDTO file){
+        return ResponseEntity.ok(userService.insertMyImage64(file));
+    }
+
     @Operation(summary = "Inserts place to current user's favorites",
             description = "Inserts place to current user's favorites using place id")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "OK",
-                    content = @Content(schema = @Schema(implementation = UserDTO.class))
+                    content = @Content(schema = @Schema(implementation = PlaceDTO.class))
             ),
             @ApiResponse(
                     responseCode = "Any error",
@@ -90,5 +98,11 @@ public class UserAccountController {
     @GetMapping(value = "/favorites", produces = "application/json")
     public ResponseEntity<List<PlaceDTO>> getUserFavorites(){
         return ResponseEntity.ok(placeService.getMyFavorites());
+    }
+
+    @Operation(summary = "Removes place from current user's favorites")
+    @DeleteMapping(value = "/favorites/{placeId}")
+    public ResponseEntity<PlaceDTO> removePlaceFromFavorites(@PathVariable("placeId") Long placeId){
+        return ResponseEntity.ok(placeService.removePlaceFromFavorites(placeId));
     }
 }

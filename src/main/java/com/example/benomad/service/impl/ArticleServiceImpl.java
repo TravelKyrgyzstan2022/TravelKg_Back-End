@@ -35,12 +35,12 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ArticleDTO getArticleById(Long articleId) throws ContentNotFoundException {
+    public ArticleDTO getArticleById(Long articleId) {
         return articleMapper.entityToDto(getArticleEntityById(articleId));
     }
 
     @Override
-    public ArticleDTO updateArticleById(Long articleId, ArticleDTO articleDTO) throws ContentNotFoundException {
+    public ArticleDTO updateArticleById(Long articleId, ArticleDTO articleDTO){
         getArticleEntityById(articleId);
         articleDTO.setId(articleId);
         articleRepository.save(articleMapper.dtoToEntity(articleDTO));
@@ -56,14 +56,14 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ArticleDTO deleteArticleById(Long articleId) throws ContentNotFoundException {
+    public ArticleDTO deleteArticleById(Long articleId) {
         Article article = getArticleEntityById(articleId);
         articleRepository.delete(article);
         return articleMapper.entityToDto(article);
     }
 
     @Override
-    public MessageResponse insertImagesByArticleId(Long articleId, MultipartFile[] files) throws ContentNotFoundException {
+    public MessageResponse insertImagesByArticleId(Long articleId, MultipartFile[] files) {
         Article article = getArticleEntityById(articleId);
         article.setImageUrls(imageService.uploadImages(files, ImagePath.ARTICLE));
         articleRepository.save(article);
@@ -71,7 +71,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<String> getImagesById(Long articleId) throws ContentNotFoundException {
+    public List<String> getImagesById(Long articleId) {
         Article article = getArticleEntityById(articleId);
         return article.getImageUrls();
     }
@@ -86,15 +86,15 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public MessageResponse insertImages64ByArticleId(Long id, ImageDTO[] files) {
-        Article article = getArticleEntityById(id);
-        article.setImageUrls(imageService.uploadImages64(files,ImagePath.ARTICLE));
+    public MessageResponse insertImages64ByArticleId(Long articleId, ImageDTO[] files) {
+        Article article = getArticleEntityById(articleId);
+        article.setImageUrls(imageService.uploadImages64(files, ImagePath.ARTICLE));
         articleRepository.save(article);
         return new MessageResponse("Images have been successfully added to the article!", 200);
     }
 
     @Override
-    public Article getArticleEntityById(Long articleId){
+    public Article getArticleEntityById(Long articleId) {
         return articleRepository.findById(articleId)
                 .orElseThrow(
                         () -> new ContentNotFoundException(Content.ARTICLE,"id",String.valueOf(articleId))

@@ -11,12 +11,12 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class EmailVerificationRequest {
 
-    @NotBlank(message = "Email field can't be empty")
+    @NotBlank(message = "Email can't be null or empty")
     @Email(message = "Email is invalid")
     @JsonProperty(required = true)
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Code can't be null or empty")
     @JsonProperty(value = "verification_code", required = true)
     private String verificationCode;
 }

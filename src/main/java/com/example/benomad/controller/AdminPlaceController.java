@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
@@ -60,7 +62,7 @@ public class AdminPlaceController {
             )
     })
     @PostMapping(value = {""}, produces = "application/json")
-    public ResponseEntity<?> savePlace(@RequestBody PlaceDTO placeDTO) {
+    public ResponseEntity<?> savePlace(@Valid  @RequestBody PlaceDTO placeDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(placeService.insertPlace(placeDTO));
     }
 
@@ -141,7 +143,7 @@ public class AdminPlaceController {
             )
     })
     @PutMapping(value = "/{placeId}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> updatePlaceById(@PathVariable("placeId") Long placeId, @RequestBody PlaceDTO placeDTO){
+    public ResponseEntity<?> updatePlaceById(@PathVariable("placeId") Long placeId, @Valid @RequestBody PlaceDTO placeDTO){
         return ResponseEntity.ok(placeService.updatePlaceById(placeId, placeDTO));
     }
 
@@ -271,7 +273,7 @@ public class AdminPlaceController {
             )
     })
     @PutMapping(value = "/{placeId}/images64")
-    public ResponseEntity<?> insertImagesToPlace(@RequestBody ImageDTO[] files,
+    public ResponseEntity<?> insertImagesToPlace(@Valid @RequestBody ImageDTO[] files,
                                                  @PathVariable("placeId") Long placeId) {
         return ResponseEntity.ok(placeService.insertImages64ByPLaceId(placeId, files));
     }

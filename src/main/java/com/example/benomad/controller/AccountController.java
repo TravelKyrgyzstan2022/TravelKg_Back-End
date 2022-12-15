@@ -6,10 +6,7 @@ import com.example.benomad.dto.UserDTO;
 import com.example.benomad.security.request.*;
 import com.example.benomad.security.response.JwtResponse;
 import com.example.benomad.security.response.TokenRefreshResponse;
-import com.example.benomad.service.CommentService;
 import com.example.benomad.service.impl.AuthServiceImpl;
-import com.example.benomad.service.impl.BlogServiceImpl;
-import com.example.benomad.service.impl.CommentServiceImpl;
 import com.example.benomad.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,10 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -35,7 +30,6 @@ import javax.validation.Valid;
 public class AccountController {
 
     private final AuthServiceImpl authService;
-    private final UserServiceImpl userService;
 
     @Operation(summary = "Signs in the user",
     description = """
@@ -113,8 +107,8 @@ public class AccountController {
             
             The access token must be deleted from client side, because it will still be valid until it expires.""")
     @PostMapping(value = "/logout", produces = "application/json")
-    public ResponseEntity<?> logoutUser(@Valid @RequestBody LogOutRequest logOutRequest) {
-        return ResponseEntity.ok(authService.logoutUser(logOutRequest.getUserId()));
+    public ResponseEntity<?> logoutUser() {
+        return ResponseEntity.ok(authService.logoutUser());
     }
 
     @Operation(summary = "Registers user to the system and sends email verification code",
@@ -150,7 +144,7 @@ public class AccountController {
             )
     })
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequest request) {
         return ResponseEntity.ok(authService.registerUser(request));
     }
 
@@ -180,7 +174,7 @@ public class AccountController {
 
     @Operation(summary = "Activates current account")
     @PostMapping(value = "/activate", produces = "application/json")
-    public ResponseEntity<MessageResponse> activateUser(@RequestBody EmailVerificationRequest emailVerificationRequest){
+    public ResponseEntity<MessageResponse> activateUser(@Valid @RequestBody EmailVerificationRequest emailVerificationRequest){
         return ResponseEntity.ok(authService.activateUser(emailVerificationRequest));
     }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Builder
@@ -17,12 +18,15 @@ public class EventDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
+    @NotBlank(message = "Name can't be null or empty")
     @Schema(required = true)
     private String name;
 
+    @NotBlank(message = "Datetime can't be null or empty")
     @JsonProperty(value = "datetime", required = true)
     private String dateTime;
 
+    @NotBlank(message = "Description can't be null or empty")
     @Schema(required = true)
     private String description;
 

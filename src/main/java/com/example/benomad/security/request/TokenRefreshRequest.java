@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 public class TokenRefreshRequest {
-    @NotBlank(message = "Refresh token can't be empty")
-    @JsonProperty("refreshtoken")
+    @NotBlank(message = "Refresh token can't be null or empty")
+    @JsonProperty(value = "refreshtoken", required = true)
     private String refreshToken;
 }

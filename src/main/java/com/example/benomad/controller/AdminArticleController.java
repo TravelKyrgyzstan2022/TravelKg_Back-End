@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin
@@ -57,7 +59,7 @@ public class AdminArticleController {
             )
     })
     @PostMapping(value = "", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> insertArticle(@RequestBody ArticleDTO articleDTO){
+    public ResponseEntity<?> insertArticle(@Valid @RequestBody ArticleDTO articleDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(articleService.insertArticle(articleDTO));
     }
 
@@ -133,7 +135,7 @@ public class AdminArticleController {
             )
     })
     @PutMapping(value = "/{articleId}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> updateArticleById(@PathVariable("articleId") Long articleId, @RequestBody ArticleDTO articleDTO){
+    public ResponseEntity<?> updateArticleById(@PathVariable("articleId") Long articleId, @Valid @RequestBody ArticleDTO articleDTO){
         return ResponseEntity.ok(articleService.updateArticleById(articleId, articleDTO));
     }
 
@@ -262,8 +264,8 @@ public class AdminArticleController {
                     content = @Content
             )
     })
-    @PutMapping(value = {"/{id}/images64","{id}/images64"})
-    public ResponseEntity<?> insertImagesToBlog(@RequestBody ImageDTO[] files, @PathVariable("id") Long id) {
+    @PutMapping(value ="/{articleId}/images64")
+    public ResponseEntity<?> insertImagesToBlog(@Valid @RequestBody ImageDTO[] files, @PathVariable("articleId") Long id) {
         return ResponseEntity.ok(articleService.insertImages64ByArticleId(id,files));
     }
 }

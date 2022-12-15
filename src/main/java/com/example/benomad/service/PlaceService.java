@@ -17,18 +17,19 @@ import java.util.List;
 public interface PlaceService {
     List<PlaceDTO> getMyFavorites();
     List<PlaceDTO> getPlacesByAttributes(String name, String address,Boolean match,PageRequest pageRequest);
-    PlaceDTO getPlaceById(Long id);
+    PlaceDTO getPlaceById(Long placeId);
     Long insertPlace(PlaceDTO placeDTO);
-    PlaceDTO deletePlaceById(Long id);
-    PlaceDTO updatePlaceById(Long id, PlaceDTO placeDTO);
+    PlaceDTO deletePlaceById(Long placeId);
+    PlaceDTO updatePlaceById(Long placeId, PlaceDTO placeDTO);
     PlaceDTO ratePlaceById(Long placeId, Integer rating, boolean isRemoval);
     List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories,
                                                  List<PlaceType> types, List<Region> regions,Pageable pageable);
-    PlaceDTO addPlaceToFavorites(Long id);
+    PlaceDTO addPlaceToFavorites(Long placeId);
+    PlaceDTO removePlaceFromFavorites(Long placeId);
     MessageResponse insertImagesByPlaceId(Long placeId, MultipartFile[] files);
-    List<String> getImagesById(Long id);
+    List<String> getImagesById(Long placeId);
     PlaceDTO insertPlaceWithImages(PlaceDTO placeDTO, MultipartFile[] files);
-    MessageResponse insertImages64ByPLaceId(Long id, ImageDTO[] files);
+    MessageResponse insertImages64ByPLaceId(Long placeId, ImageDTO[] files);
     void addComment(Long placeId, Comment comment);
     Place getPlaceEntityById(Long placeId);
 }

@@ -14,6 +14,7 @@ import com.example.benomad.exception.InvalidRatingException;
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.entity.User;
 import com.example.benomad.enums.*;
+import com.example.benomad.exception.FavoritePlaceException;
 import com.example.benomad.mapper.PlaceMapper;
 import com.example.benomad.repository.PlaceRepository;
 import com.example.benomad.repository.RatingRepository;
@@ -26,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,17 +49,17 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<PlaceDTO> getPlacesByAttributes(String name,
-                                                   String address,Boolean match,PageRequest pageRequest) {
+    public List<PlaceDTO> getPlacesByAttributes(String name, String address, Boolean MATCH_ALL,
+                                                PageRequest pageRequest) {
         Place builtPlace = Place.builder().name(name).address(address).build();
-        Example<Place> exampleOfPlace = Example.of(builtPlace,getExampleMatcher(match));
+        Example<Place> exampleOfPlace = Example.of(builtPlace,getExampleMatcher(MATCH_ALL));
         Page<Place> pages = placeRepository.findAll(exampleOfPlace,pageRequest);
         return placeMapper.entityListToDtoList(pages.stream().collect(Collectors.toList()));
     }
 
 
     @Override
-    public PlaceDTO getPlaceById(Long placeId) throws ContentNotFoundException {
+    public PlaceDTO getPlaceById(Long placeId){
         return placeMapper.entityToDto(getPlaceEntityById(placeId));
     }
 
@@ -70,14 +70,14 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public PlaceDTO deletePlaceById(Long placeId) throws ContentNotFoundException {
+    public PlaceDTO deletePlaceById(Long placeId) {
         Place place = getPlaceEntityById(placeId);
         placeRepository.delete(place);
         return placeMapper.entityToDto(place);
     }
 
     @Override
-    public PlaceDTO updatePlaceById(Long placeId, PlaceDTO placeDTO) throws ContentNotFoundException {
+    public PlaceDTO updatePlaceById(Long placeId, PlaceDTO placeDTO) {
         getPlaceEntityById(placeId);
         placeDTO.setId(placeId);
         placeRepository.save(placeMapper.dtoToEntity(placeDTO));
@@ -85,22 +85,21 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public PlaceDTO ratePlaceById(Long placeId, Integer rating, boolean isRemoval)
-            throws ContentNotFoundException, InvalidRatingException {
+    public PlaceDTO ratePlaceById(Long placeId, Integer rating, boolean isRemoval) {
         Long userId = authService.getCurrentUserId();
-        if(isRemoval){
-            rating = 1;
+        if (isRemoval) {
             Rating neededRating = getRating(placeId, userId);
             ratingRepository.delete(neededRating);
+            return placeMapper.entityToDto(getPlaceEntityById(placeId));
         }
-        if(rating < 1 || rating > 5){
+        if (rating < 1 || rating > 5) {
             throw new InvalidRatingException();
         }
-        try{
+        try {
             Rating neededRating = getRating(placeId, userId);
             neededRating.setRating(rating);
             ratingRepository.save(neededRating);
-        }catch (Exception e){
+        } catch (Exception e) {
             ratingRepository.save(Rating.builder()
                     .place(getPlaceEntityById(placeId))
                     .user(userService.getUserEntityById(userId))
@@ -121,7 +120,8 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories, List<PlaceType> types,List<Region> regions, Pageable pageable) {
+    public List<PlaceDTO> getPlacesByTypesAndCategories(List<PlaceCategory> categories, List<PlaceType> types,
+                                                        List<Region> regions, Pageable pageable) {
         List<String> sCategories = categories.stream().map(Enum::name).collect(Collectors.toList());
         List<String> sTypes = types.stream().map(Enum::name).collect(Collectors.toList());
         List<String> sRegions = regions.stream().map(Enum::name).collect(Collectors.toList());
@@ -153,53 +153,63 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public MessageResponse insertImages64ByPLaceId(Long id, ImageDTO[] files) {
-            Place place = getPlaceEntityById(id);
-            place.setImageUrls(imageService.uploadImages64(files,ImagePath.PLACE));
-            placeRepository.save(place);
-            return new MessageResponse("Images have been successfully added to the place!", 200);
+        Place place = getPlaceEntityById(id);
+        place.setImageUrls(imageService.uploadImages64(files,ImagePath.PLACE));
+        placeRepository.save(place);
+        return new MessageResponse("Images have been successfully added to the place!", 200);
     }
 
     @Override
-    public PlaceDTO addPlaceToFavorites(Long placeId) throws ContentNotFoundException {
-        Long userId = authService.getCurrentUserId();
-        User user = userService.getUserEntityById(userId);
+    public PlaceDTO addPlaceToFavorites(Long placeId) {
+        User user = userService.getUserEntityById(authService.getCurrentUserId());
         Place place = getPlaceEntityById(placeId);
-        if (user.getPlaces().contains(place))  user.getPlaces().remove(place);
-        else user.getPlaces().add(place);
+        if (user.getPlaces().contains(place)) {
+            throw new FavoritePlaceException(true);
+        }
+        user.getPlaces().add(place);
         userRepository.save(user);
         return placeMapper.entityToDto(place);
     }
 
     @Override
-    public void addComment(Long placeId, Comment comment){
+    public PlaceDTO removePlaceFromFavorites(Long placeId) {
+        User user = userService.getUserEntityById(authService.getCurrentUserId());
         Place place = getPlaceEntityById(placeId);
-        Set<Comment> comments = place.getComments();
-        comments.add(comment);
-        place.setComments(comments);
+        if (!user.getPlaces().contains(place)) {
+            throw new FavoritePlaceException(false);
+        }
+        user.getPlaces().remove(place);
+        userRepository.save(user);
+        return placeMapper.entityToDto(place);
+    }
+    @Override
+    public void addComment(Long placeId, Comment comment) {
+        Place place = getPlaceEntityById(placeId);
+        place.getComments().add(comment);
         placeRepository.save(place);
     }
 
     @Override
-    public Place getPlaceEntityById(Long placeId){
+    public Place getPlaceEntityById(Long placeId) {
         return placeRepository.findById(placeId)
                 .orElseThrow(
                         () -> new ContentNotFoundException(Content.PLACE,"id",String.valueOf(placeId))
                 );
     }
     
-    private ExampleMatcher getExampleMatcher(Boolean match) {
-        ExampleMatcher matches = ExampleMatcher.matchingAll()
+    private ExampleMatcher getExampleMatcher(Boolean MATCH_ALL) {
+        ExampleMatcher MATCHER_ALL = ExampleMatcher.matchingAll()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("region",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("placeType",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("address",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withIgnorePaths("id","description","imageUrl","linkUrl","placeCategory","region","latitude","longitude");
-        ExampleMatcher notMatches = ExampleMatcher.matchingAny()
+        ExampleMatcher MATCHER_ANY = ExampleMatcher.matchingAny()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("region",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("placeType",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withMatcher("address",ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
                 .withIgnorePaths("id","description","imageUrl","linkUrl","placeCategory","region","latitude","longitude");
-        return match ? matches : notMatches;
+        return MATCH_ALL ? MATCHER_ALL : MATCHER_ANY;
     }
 }

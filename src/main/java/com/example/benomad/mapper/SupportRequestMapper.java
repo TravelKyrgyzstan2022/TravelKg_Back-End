@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class SupportRequestMapper {
 
     private final UserMapper userMapper;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'at' HH:mm");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm");
 
     public SupportRequestDTO entityToDto(SupportRequest supportRequest){
         return SupportRequestDTO.builder()
