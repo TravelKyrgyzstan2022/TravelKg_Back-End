@@ -171,6 +171,7 @@ public class BlogServiceImpl implements BlogService {
     public BlogDTO insertBlogWithImages(BlogDTO blogDTO, MultipartFile[] files) {
         Blog blog = blogMapper.dtoToEntity(blogDTO);
         blog.setIsDeleted(false);
+        blog.setReviewStatus(ReviewStatus.PENDING);
         blog.setImageUrls(imageService.uploadImages(files, ImagePath.BLOG));
         blog.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         blog.setAuthor(userService.getUserEntityById(authService.getCurrentUserId()));
@@ -196,6 +197,7 @@ public class BlogServiceImpl implements BlogService {
     public Long insertBlog(BlogDTO blogDTO) {
         Blog blog = blogMapper.dtoToEntity(blogDTO);
         blog.setIsDeleted(false);
+        blog.setReviewStatus(ReviewStatus.PENDING);
         blog.setAuthor(userService.getUserEntityById(authService.getCurrentUserId()));
         blog.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         return blogRepository.save(blog).getId();

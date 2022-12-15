@@ -2,7 +2,7 @@ package com.example.benomad.dto;
 
 
 
-import com.example.benomad.enums.CommentReference;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -18,9 +18,6 @@ import javax.validation.constraints.NotBlank;
 public class CommentDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
-
-    @JsonProperty(value = "reference_id", access = JsonProperty.Access.READ_ONLY)
-    private Long referenceId;
 
     @JsonProperty(value = "user", access = JsonProperty.Access.READ_ONLY)
     private UserDTO user;
@@ -42,7 +39,4 @@ public class CommentDTO {
 
     @JsonProperty(value = "deletion_info", access = JsonProperty.Access.READ_ONLY)
     private DeletionInfoDTO deletionInfo;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private CommentReference reference;
 }
