@@ -3,6 +3,7 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.*;
 import com.example.benomad.entity.Blog;
 import com.example.benomad.entity.Comment;
+import com.example.benomad.entity.DeletionInfo;
 import com.example.benomad.entity.User;
 import com.example.benomad.enums.Content;
 import com.example.benomad.enums.ImagePath;
@@ -50,7 +51,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public List<BlogDTO> getMyBlogs() {
         User user = userService.getUserEntityById(authService.getCurrentUserId());
-        return blogMapper.entityListToDtoList(blogRepository.findByAuthor(user));
+        return blogMapper.entityListToDtoList(blogRepository.findByAuthorAndIsDeleted(user, false));
     }
 
     @Override
@@ -66,11 +67,16 @@ public class BlogServiceImpl implements BlogService {
     public BlogDTO deleteBlogById(Long blogId, DeletionInfoDTO infoDTO) {
         checkBlog(blogId);
         Blog blog = getBlogEntityById(blogId);
+        if (blog.getIsDeleted()) {
+            throw new ContentNotFoundException(Content.BLOG, "id", String.valueOf(blogId));
+        }
         blog.setIsDeleted(true);
         infoDTO = infoDTO != null ? infoDTO :
-                new DeletionInfoDTO(null, "Blog was deleted by author", null, authService.getCurrentUserId());
-        infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
-        blog.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
+                new DeletionInfoDTO(null, "Blog was deleted by author", null, null);
+        DeletionInfo info = deletionInfoMapper.dtoToEntity(infoDTO);
+        info.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        info.setResponsibleUser(userService.getUserEntityById(authService.getCurrentUserId()));
+        blog.setDeletionInfo(info);
         return blogMapper.entityToDto(blogRepository.save(blog));
     }
 
@@ -142,7 +148,8 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public List<BlogDTO> getBlogsByAuthorId(Long userId) {
-        return blogMapper.entityListToDtoList(blogRepository.findByAuthor(userService.getUserEntityById(userId)));
+        return blogMapper.entityListToDtoList(
+                blogRepository.findByAuthorAndIsDeleted(userService.getUserEntityById(userId), false));
     }
 
 
@@ -187,8 +194,8 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public Long insertBlog(BlogDTO blogDTO) {
-        blogDTO.setIsDeleted(false);
         Blog blog = blogMapper.dtoToEntity(blogDTO);
+        blog.setIsDeleted(false);
         blog.setAuthor(userService.getUserEntityById(authService.getCurrentUserId()));
         blog.setCreationDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         return blogRepository.save(blog).getId();

@@ -33,8 +33,6 @@ public interface UserRepository extends JpaRepository <User, Long> {
                                                      @Param("lastName") String lastName);
 
     Boolean existsByEmail(String email);
-    
-    Boolean existsByPhoneNumber(String phoneNumber);
 
     Optional<User> findByEmail(String email);
 }

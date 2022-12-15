@@ -9,11 +9,14 @@ import java.time.Instant;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "refreshtokens")
+@Table(name = "refresh_tokens",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_user_id", columnNames = "user_id")
+        })
 public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @OneToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

@@ -1,9 +1,9 @@
 package com.example.benomad.service.impl;
 
 import com.example.benomad.entity.RefreshToken;
+import com.example.benomad.entity.User;
 import com.example.benomad.exception.RefreshTokenException;
 import com.example.benomad.repository.RefreshTokenRepository;
-import com.example.benomad.repository.UserRepository;
 import com.example.benomad.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +23,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private Long refreshTokenDurationMs;
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserRepository userRepository;
+    private final UserServiceImpl userService;
 
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);
@@ -31,11 +31,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     public RefreshToken createToken(Long userId) {
         RefreshToken refreshToken = new RefreshToken();
-
-        refreshToken.setUser(userRepository.getById(userId));
+        User user = userService.getUserEntityById(userId);
+        refreshToken.setUser(user);
         refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
         refreshToken.setToken(UUID.randomUUID().toString());
-
+        if (refreshTokenRepository.existsByUser(user)) {
+            RefreshToken oldToken = refreshTokenRepository.findByUser(user).get();
+            refreshToken.setId(oldToken.getId());
+        }
         refreshToken = refreshTokenRepository.save(refreshToken);
         return refreshToken;
     }
@@ -49,6 +52,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     public int deleteByUserId(Long userId) {
-        return refreshTokenRepository.deleteByUser(userRepository.findById(userId).get());
+        return refreshTokenRepository.deleteByUser(userService.getUserEntityById(userId));
     }
 }
