@@ -37,10 +37,13 @@ public class WebSecurityConfig{
             "/error"
     };
 
-    private final String[] USER = {
+    private final String[] USER_COMMON = {
             "/api/v1/user/**",
-	        "/api/v1/places/**",
-	        "/api/v1/blogs/**"
+    };
+
+    private final String[] USER = {
+            "/api/v1/places/**",
+            "/api/v1/blogs/**"
     };
 
     private final String[] ADMIN_COMMON = {
@@ -88,7 +91,9 @@ public class WebSecurityConfig{
                 .cors()
                 .and()
                     .authorizeRequests()
-                    .antMatchers(USER).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
+                    .antMatchers(USER_COMMON).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
+                    .antMatchers(HttpMethod.POST, USER).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
+                    .antMatchers(HttpMethod.PUT, USER).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
                     .antMatchers(ADMIN_COMMON).hasAnyRole("ADMIN", "SUPERADMIN")
                     .antMatchers(SUPER_ADMIN_ONLY).hasRole("SUPERADMIN")
                     .antMatchers(PERMIT_ALL).permitAll()

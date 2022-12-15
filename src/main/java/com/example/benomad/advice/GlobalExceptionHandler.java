@@ -10,6 +10,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,10 +64,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(InvalidDataAccessApiUsageException.class)
-    public ResponseEntity<Object> handleInvalidDao(HttpServletRequest request, InvalidDataAccessApiUsageException exception) {
+    public ResponseEntity<Object> handleInvalidDAAUsageException(HttpServletRequest request, InvalidDataAccessApiUsageException exception) {
         ExceptionResponse exceptionResponse = ExceptionResponse.builder()
                 .status(400)
                 .message(exception.getMessage())
+                .timestamp(LocalDateTime.now(ZoneId.of("Asia/Bishkek")))
+                .build();
+        log.error(exception.getMessage());
+        return ResponseEntity.status(exceptionResponse.getStatus()).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> handleBadCredentialsException(HttpServletRequest request, BadCredentialsException exception) {
+        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+                .status(401)
+                .message("Bad credentials")
                 .timestamp(LocalDateTime.now(ZoneId.of("Asia/Bishkek")))
                 .build();
         log.error(exception.getMessage());
