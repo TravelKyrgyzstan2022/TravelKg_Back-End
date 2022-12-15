@@ -88,9 +88,9 @@ public class PlaceServiceImpl implements PlaceService {
     public PlaceDTO ratePlaceById(Long placeId, Integer rating, boolean isRemoval) {
         Long userId = authService.getCurrentUserId();
         if (isRemoval) {
-            rating = 1;
             Rating neededRating = getRating(placeId, userId);
             ratingRepository.delete(neededRating);
+            return placeMapper.entityToDto(getPlaceEntityById(placeId));
         }
         if (rating < 1 || rating > 5) {
             throw new InvalidRatingException();

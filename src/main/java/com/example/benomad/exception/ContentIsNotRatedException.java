@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Data
 @ResponseStatus(HttpStatus.CONFLICT)
 public class ContentIsNotRatedException extends CustomException{
-    private final String messageFormat = "Couldn't remove rating of the %s: the %s wasn't liked by the user before";
+    private final String messageFormat = "Couldn't remove rating of the %s: the %s wasn't rated by the user before";
     private final Integer statusCode = 409;
     private String message;
 

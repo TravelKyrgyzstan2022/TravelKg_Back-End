@@ -85,10 +85,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public MessageResponse likeDislikeComment(Long commentId, boolean isDislike) {
+    public MessageResponse likeDislikeComment(Long commentId, CommentReference reference, Long referenceId, boolean isDislike) {
         Long userId = authService.getCurrentUserId();
         User user = userService.getUserEntityById(userId);
         Comment comment = getCommentEntityById(commentId);
+        checkReference(reference, referenceId, comment);
         Set<User> likedUsers = comment.getLikedUsers();
         boolean isAlreadyLiked = likedUsers.contains(user);
         String message;
@@ -142,6 +143,18 @@ public class CommentServiceImpl implements CommentService {
                 && !user.getRoles().contains(Role.ROLE_ADMIN)
                 && !user.getRoles().contains(Role.ROLE_SUPERADMIN)) {
             throw new NoAccessException();
+        }
+    }
+
+    private void checkReference(CommentReference reference, Long referenceId, Comment comment){
+        if (reference == CommentReference.BLOG) {
+            if (!blogService.getBlogEntityById(referenceId).getComments().contains(comment)) {
+                throw new CommentReferenceException(CommentReference.BLOG);
+            }
+        } else if (reference == CommentReference.PLACE) {
+            if (!placeService.getPlaceEntityById(referenceId).getComments().contains(comment)) {
+                throw new CommentReferenceException(CommentReference.PLACE);
+            }
         }
     }
 }

@@ -212,51 +212,6 @@ public class BlogController {
         return ResponseEntity.ok(commentService.insertComment(CommentReference.BLOG, blogId, commentDTO));
     }
 
-    @Operation(summary = "Likes comment by ID")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
-            ),
-            @ApiResponse(
-                    responseCode = "Any error",
-                    description = "Every response starting with 4** or 5** will have this body",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad Request",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not Found",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "409",
-                    description = "Conflict",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content
-            )
-    })
-    @PutMapping(value = "/{blogId}/comments/{commentId}/like", produces = "application/json")
-    public ResponseEntity<?> likeComment(@PathVariable("commentId") Long commentId,
-                                                @PathVariable("blogId") Long blogId){
-        //fixme : need to check if comment belongs to blog
-        return ResponseEntity.ok(commentService.likeDislikeComment(commentId, false));
-    }
-
     @Operation(summary = "Likes the blog")
     @ApiResponses(value = {
             @ApiResponse(
@@ -295,54 +250,9 @@ public class BlogController {
                     content = @Content
             )
     })
-    @PutMapping("/{blogId}/like")
+    @PostMapping("/{blogId}/like")
     public ResponseEntity<?> likeBlog(@PathVariable("blogId") Long blogId){
         return ResponseEntity.ok(blogService.likeDislikeBlogById(blogId, false));
-    }
-
-    @Operation(summary = "Likes comment by ID")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
-            ),
-            @ApiResponse(
-                    responseCode = "Any error",
-                    description = "Every response starting with 4** or 5** will have this body",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad Request",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not Found",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "409",
-                    description = "Conflict",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content
-            )
-    })
-    @PutMapping(value = "/{blogId}/comments/{commentId}/remove-like", produces = "application/json")
-    public ResponseEntity<?> removeLikeComment(@PathVariable("commentId") Long commentId,
-                                         @PathVariable("blogId") Long blogId){
-        //fixme : need to check if comment belongs to blog
-        return ResponseEntity.ok(commentService.likeDislikeComment(commentId, true));
     }
 
     @Operation(summary = "Removes the like from blog",
@@ -384,9 +294,97 @@ public class BlogController {
                     content = @Content
             )
     })
-    @PutMapping("/{blogId}/remove-like")
+    @DeleteMapping("/{blogId}/remove-like")
     public ResponseEntity<?> removeLikeBlog(@PathVariable("blogId") Long blogId){
         return ResponseEntity.ok(blogService.likeDislikeBlogById(blogId, true));
+    }
+
+    @Operation(summary = "Likes comment by ID")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @PostMapping(value = "/{blogId}/comments/{commentId}/like", produces = "application/json")
+    public ResponseEntity<?> likeComment(@PathVariable("commentId") Long commentId,
+                                         @PathVariable("blogId") Long blogId){
+        return ResponseEntity.ok(commentService.likeDislikeComment(commentId, CommentReference.BLOG, blogId, false));
+    }
+
+    @Operation(summary = "Removes like from comment by ID")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @DeleteMapping(value = "/{blogId}/comments/{commentId}/remove-like", produces = "application/json")
+    public ResponseEntity<?> removeLikeComment(@PathVariable("commentId") Long commentId,
+                                         @PathVariable("blogId") Long blogId){
+        return ResponseEntity.ok(commentService.likeDislikeComment(commentId, CommentReference.BLOG, blogId, true));
     }
 
     @Operation(summary = "Gets all images by blog id",

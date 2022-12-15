@@ -93,7 +93,7 @@ public class WebSecurityConfig{
                     .authorizeRequests()
                     .antMatchers(USER_COMMON).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
                     .antMatchers(HttpMethod.POST, USER).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
-                    .antMatchers(HttpMethod.PUT, USER).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
+                    .antMatchers(HttpMethod.DELETE, USER).hasAnyRole("USER", "ADMIN", "SUPERADMIN")
                     .antMatchers(ADMIN_COMMON).hasAnyRole("ADMIN", "SUPERADMIN")
                     .antMatchers(SUPER_ADMIN_ONLY).hasRole("SUPERADMIN")
                     .antMatchers(PERMIT_ALL).permitAll()

@@ -15,7 +15,7 @@ public interface CommentService {
     List<CommentDTO> getAllComments();
     List<CommentDTO> getReferenceCommentsById(Long placeId, CommentReference reference, PageRequest pageRequest);
     CommentDTO getCommentById(Long id);
-    MessageResponse likeDislikeComment(Long commentId, boolean isDislike);
+    MessageResponse likeDislikeComment(Long commentId, CommentReference reference, Long referenceId, boolean isDislike);
     CommentDTO insertComment(CommentReference reference, Long referenceId, CommentDTO commentDTO);
     CommentDTO deleteCommentById(Long commentId, DeletionInfoDTO infoDTO);
     CommentDTO updateCommentById(Long commentId, CommentDTO commentDTO);

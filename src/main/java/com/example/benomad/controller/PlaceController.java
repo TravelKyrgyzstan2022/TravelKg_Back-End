@@ -145,7 +145,6 @@ public class PlaceController {
     }
 
 
-
     @Operation(summary = "Commenting place by ID")
     @PostMapping(value = "/{placeId}/comment", produces = "application/json")
     @ApiResponses(value = {
@@ -182,6 +181,94 @@ public class PlaceController {
     })
     public ResponseEntity<?> commentPlace(@PathVariable Long placeId, @RequestBody CommentDTO commentDTO){
         return ResponseEntity.ok(commentService.insertComment(CommentReference.PLACE, placeId, commentDTO));
+    }
+
+    @Operation(summary = "Likes comment by ID")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @PostMapping(value = "/{placeId}/comments/{commentId}/like", produces = "application/json")
+    public ResponseEntity<?> likeComment(@PathVariable("commentId") Long commentId,
+                                         @PathVariable("placeId") Long placeId){
+        return ResponseEntity.ok(commentService.likeDislikeComment(commentId, CommentReference.PLACE, placeId, false));
+    }
+
+    @Operation(summary = "Removes like from comment by ID")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @DeleteMapping(value = "/{placeId}/comments/{commentId}/remove-like", produces = "application/json")
+    public ResponseEntity<?> removeLikeComment(@PathVariable("commentId") Long commentId,
+                                               @PathVariable("placeId") Long placeId){
+        return ResponseEntity.ok(commentService.likeDislikeComment(commentId, CommentReference.PLACE, placeId, true));
     }
 
     @Operation(summary = "Rates place by ID",
@@ -223,11 +310,16 @@ public class PlaceController {
                     content = @Content
             )
     })
-    @PutMapping(value = "/{placeId}/rate")
+    @PostMapping(value = "/{placeId}/rate")
     public ResponseEntity<?> ratePlace(@PathVariable("placeId") Long placeId,
-                                       @RequestParam(name = "rating", defaultValue = "1") Integer rating,
-                                       @RequestParam(name = "remove", defaultValue = "0") Boolean isRemoval){
-        return ResponseEntity.ok(placeService.ratePlaceById(placeId, rating, isRemoval));
+                                       @RequestParam(name = "rating", defaultValue = "1") Integer rating){
+        return ResponseEntity.ok(placeService.ratePlaceById(placeId, rating, false));
+    }
+
+    @Operation(summary = "Removes rating from a given place")
+    @DeleteMapping(value = "/{placeId}/remove-rating")
+    public ResponseEntity<PlaceDTO> removeRatingFromPlace(@PathVariable("placeId") Long placeId){
+        return ResponseEntity.ok(placeService.ratePlaceById(placeId, 1, true));
     }
 
     @Operation(summary = "Gets all places by place type and place category",
