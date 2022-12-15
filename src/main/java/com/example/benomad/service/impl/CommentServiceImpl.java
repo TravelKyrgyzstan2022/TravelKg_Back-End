@@ -2,6 +2,7 @@ package com.example.benomad.service.impl;
 
 import com.example.benomad.dto.DeletionInfoDTO;
 import com.example.benomad.dto.MessageResponse;
+import com.example.benomad.entity.DeletionInfo;
 import com.example.benomad.entity.User;
 import com.example.benomad.enums.CommentReference;
 import com.example.benomad.enums.Content;
@@ -62,8 +63,10 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = getCommentEntityById(commentId);
         comment.setIsDeleted(true);
         infoDTO = infoDTO != null ? infoDTO :
-                new DeletionInfoDTO(null, "Comment was deleted by author", null, authService.getCurrentUserId());
-        infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+                new DeletionInfoDTO(null, "Comment was deleted by author", null, null);
+        DeletionInfo info = deletionInfoMapper.dtoToEntity(infoDTO);
+        info.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        info.setResponsibleUser(userService.getUserEntityById(authService.getCurrentUserId()));
         comment.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
         return commentMapper.entityToDto(comment);
     }

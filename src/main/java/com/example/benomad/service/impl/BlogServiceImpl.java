@@ -3,6 +3,7 @@ package com.example.benomad.service.impl;
 import com.example.benomad.dto.*;
 import com.example.benomad.entity.Blog;
 import com.example.benomad.entity.Comment;
+import com.example.benomad.entity.DeletionInfo;
 import com.example.benomad.entity.User;
 import com.example.benomad.enums.Content;
 import com.example.benomad.enums.ImagePath;
@@ -68,9 +69,11 @@ public class BlogServiceImpl implements BlogService {
         Blog blog = getBlogEntityById(blogId);
         blog.setIsDeleted(true);
         infoDTO = infoDTO != null ? infoDTO :
-                new DeletionInfoDTO(null, "Blog was deleted by author", null, authService.getCurrentUserId());
-        infoDTO.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
-        blog.setDeletionInfo(deletionInfoMapper.dtoToEntity(infoDTO));
+                new DeletionInfoDTO(null, "Blog was deleted by author", null, null);
+        DeletionInfo info = deletionInfoMapper.dtoToEntity(infoDTO);
+        info.setDeletionDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
+        info.setResponsibleUser(userService.getUserEntityById(authService.getCurrentUserId()));
+        blog.setDeletionInfo(info);
         return blogMapper.entityToDto(blogRepository.save(blog));
     }
 
