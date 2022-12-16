@@ -41,7 +41,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public List<DateDTO> getAllDates() {
-        List<Plan> plans = planRepository.findAllDistinctBy();
+        List<Plan> plans = planRepository.findPlansByDistinctDates(authService.getCurrentUserId());
         return DateMapper.plansToDates(plans);
     }
 
