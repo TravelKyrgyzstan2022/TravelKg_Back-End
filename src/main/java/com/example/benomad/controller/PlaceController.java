@@ -417,4 +417,48 @@ public class PlaceController {
     public ResponseEntity<?> getImagesById(@PathVariable("placeId") Long id) {
         return ResponseEntity.ok(placeService.getImagesById(id));
     }
+    
+    @Operation(summary = "Gets top places by place category",
+            description = "Gets top places by place category and limit")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK",
+                    content = @Content(schema = @Schema(implementation = List.class))
+            ),
+            @ApiResponse(
+                    responseCode = "Any error",
+                    description = "Every response starting with 4** or 5** will have this body",
+                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal Server Error",
+                    content = @Content
+            )
+    })
+    @GetMapping(value = {"/top"})
+    public ResponseEntity<?> getTopByCategory(@RequestParam(value = "top",required = false) Optional<Integer> limit,@RequestParam(value = "categories",required = false) Optional<List<PlaceCategory>> categories) {
+        return ResponseEntity.ok(placeService.getTopByCategories(limit.orElse(10),categories.orElse(List.of(PlaceCategory.values()))));
+    }
 }
