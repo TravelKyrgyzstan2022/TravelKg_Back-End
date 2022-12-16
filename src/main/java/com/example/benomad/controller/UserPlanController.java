@@ -1,5 +1,7 @@
 package com.example.benomad.controller;
 
+import com.example.benomad.dto.DateDTO;
+import com.example.benomad.dto.MessageResponse;
 import com.example.benomad.dto.PlanDTO;
 import com.example.benomad.service.impl.PlanServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +26,12 @@ public class UserPlanController {
     @Operation(summary = "Get all plans of current user")
     public ResponseEntity<List<PlanDTO>> getAllPlans(){
         return ResponseEntity.ok(planService.getAllPlans());
+    }
+
+    @GetMapping(value = "/dates")
+    @Operation(summary = "Get all dates of plans")
+    public ResponseEntity<List<DateDTO>> getAllDates(){
+        return ResponseEntity.ok(planService.getAllDates());
     }
 
     @Operation(summary = "Get plan by ID")

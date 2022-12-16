@@ -59,6 +59,7 @@ public class BlogServiceImpl implements BlogService {
         checkBlog(blogId);
         Blog blog = blogMapper.dtoToEntity(blogDTO);
         blog.setId(blogId);
+        blog.setReviewStatus(ReviewStatus.PENDING);
         blog.setUpdateDate(LocalDate.now(ZoneId.of("Asia/Bishkek")));
         return blogMapper.entityToDto(blogRepository.save(blog));
     }

@@ -24,4 +24,6 @@ public interface PlanRepository extends JpaRepository <Plan, Long> {
     @Query(value = "SELECT * FROM plans WHERE EXTRACT(MONTH FROM date) = " +
             "(SELECT EXTRACT(MONTH FROM CAST(:date AS DATE))) AND user_id = :userId", nativeQuery = true)
     List<Plan> findByMonth(@Param("userId") Long userId, @Param("date") LocalDate date);
+
+    List<Plan> findAllDistinctBy();
 }

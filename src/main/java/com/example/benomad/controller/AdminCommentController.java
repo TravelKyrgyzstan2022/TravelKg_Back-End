@@ -91,45 +91,6 @@ public class AdminCommentController {
         return ResponseEntity.ok(commentService.getCommentById(commentId));
     }
 
-    @Operation(summary = "Inserts a comment to the database")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(schema = @Schema(implementation = CommentDTO.class))
-            ),
-            @ApiResponse(
-                    responseCode = "Any error",
-                    description = "Every response starting with 4** or 5** will have this body",
-                    content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad Request",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not Found",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content
-            )
-    })
-    @PostMapping(value = {""}, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> insertComment(@Valid  @RequestBody CommentDTO commentDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                commentService.insertComment(commentDTO.getReference(), commentDTO.getReferenceId(), commentDTO));
-    }
-
     @Operation(summary = "Deletes comment by ID")
     @ApiResponses(value = {
             @ApiResponse(

@@ -1,5 +1,6 @@
 package com.example.benomad.service.impl;
 
+import com.example.benomad.dto.DateDTO;
 import com.example.benomad.dto.PlanDTO;
 import com.example.benomad.entity.Plan;
 import com.example.benomad.entity.User;
@@ -7,6 +8,7 @@ import com.example.benomad.enums.Content;
 import com.example.benomad.exception.ContentNotFoundException;
 import com.example.benomad.exception.InvalidDateException;
 import com.example.benomad.exception.NoAccessException;
+import com.example.benomad.mapper.DateMapper;
 import com.example.benomad.mapper.PlanMapper;
 import com.example.benomad.repository.PlanRepository;
 import com.example.benomad.security.domain.Role;
@@ -35,6 +37,12 @@ public class PlanServiceImpl implements PlanService {
     public List<PlanDTO> getAllPlans() {
         User user = userService.getUserEntityById(authService.getCurrentUserId());
         return planMapper.entityListToDtoList(planRepository.findByUser(user));
+    }
+
+    @Override
+    public List<DateDTO> getAllDates() {
+        List<Plan> plans = planRepository.findAllDistinctBy();
+        return DateMapper.plansToDates(plans);
     }
 
     @Override
