@@ -197,6 +197,12 @@ public class PlaceServiceImpl implements PlaceService {
                 );
     }
     
+    @Override
+    public List<PlaceDTO> getTopByCategories(Integer limit, List<PlaceCategory> categories) {
+        return placeMapper.entityListToDtoList(placeRepository.findTop5PlacesForPlaceCategory(categories.stream().map(Enum::name).toList(),limit));
+    }
+    
+    
     private ExampleMatcher getExampleMatcher(Boolean MATCH_ALL) {
         ExampleMatcher MATCHER_ALL = ExampleMatcher.matchingAll()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase(true))
