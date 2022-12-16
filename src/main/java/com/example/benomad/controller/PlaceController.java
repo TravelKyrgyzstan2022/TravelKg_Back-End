@@ -139,7 +139,7 @@ public class PlaceController {
             @RequestParam(name = "sort_by", required = false) Optional<String> sortBy,
             @RequestParam(name = "page", required = false) Optional<Integer> page,
             @RequestParam(name = "size", required = false) Optional<Integer> size){
-        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(1),
+        PageRequest pageRequest = PageRequest.of(page.orElse(0), size.orElse(20),
                 Sort.by(sortBy.orElse("id")));
         return ResponseEntity.ok(commentService.getReferenceCommentsById(placeId, CommentReference.PLACE, pageRequest));
     }
