@@ -32,4 +32,6 @@ public interface PlaceService {
     MessageResponse insertImages64ByPLaceId(Long placeId, ImageDTO[] files);
     void addComment(Long placeId, Comment comment);
     Place getPlaceEntityById(Long placeId);
+    List<PlaceDTO> getTopByCategories(Integer limit, List<PlaceCategory> categories);
+   
 }
